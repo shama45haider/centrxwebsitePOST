@@ -15,10 +15,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect width='20' height='20' rx='5' fill='%230A5CFF'/%3E%3Ccircle cx='10' cy='10' r='3.6' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="assets/css/tokens.css">
-  <link rel="stylesheet" href="assets/css/base.css">
-  <link rel="stylesheet" href="assets/css/components.css">
-  <link rel="stylesheet" href="assets/css/site.css">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=2">
+  <link rel="stylesheet" href="assets/css/base.css?v=2">
+  <link rel="stylesheet" href="assets/css/components.css?v=2">
+  <link rel="stylesheet" href="assets/css/site.css?v=2">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body class="site" data-page="home">
@@ -50,6 +50,7 @@
 
       <div class="container hero-stage">
         <div class="rings" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <span class="peek" data-person="peeker" aria-hidden="true"></span>
         <div class="mock" role="img" aria-label="The Centrx overview screen showing revenue, orders and recent activity">
           <div class="mock-bar" aria-hidden="true">
             <span class="mock-dots"><i></i><i></i><i></i></span>
@@ -214,24 +215,9 @@
           </div>
         </div>
 
-        <p class="tour-more" data-reveal>Also in every plan: meetup and dropoff with signatures and proof photos, team roles, two-factor sign-in, and connections to Square, Shippo, QuickBooks, Xero and Zapier. <a href="features.html">See every feature</a></p>
-      </div>
-    </section>
-
-    <!-- A day with Centrx -->
-    <section class="section tint">
-      <div class="container">
-        <div class="section-head" data-reveal>
-          <h2 class="h2">A Saturday at Harbor &amp; Pine.</h2>
-          <p class="lead">Two people, one furniture shop, and every job of the day done from the same screen.</p>
-        </div>
-        <div class="day" data-inview>
-          <div class="day-item" style="--d:0"><time>9:12 AM</time><span class="day-ring"></span><p>Maya orders a walnut side table from the shop's website.</p><div class="day-ui"><span class="badge accent">New order #1042</span></div></div>
-          <div class="day-item" style="--d:1"><time>9:13 AM</time><span class="day-ring"></span><p>A payment link goes to her phone by text.</p><div class="day-ui"><div class="copy-field"><span class="mono">centrx.co/pay/7Q4K2</span></div></div></div>
-          <div class="day-item" style="--d:2"><time>9:20 AM</time><span class="day-ring"></span><p>She pays, and the table is marked sold on its own.</p><div class="day-ui"><span class="badge success">Paid $248.00</span></div></div>
-          <div class="day-item" style="--d:3"><time>2:30 PM</time><span class="day-ring"></span><p>Sam delivers a sofa across town and collects the balance at the door.</p><div class="day-ui"><span class="badge success">Signed · 3 photos</span></div></div>
-          <div class="day-item" style="--d:4"><time>5:05 PM</time><span class="day-ring"></span><p>Leo's order is packed and the label prints from the order page.</p><div class="day-ui"><span class="badge neutral">UPS Ground</span></div></div>
-          <div class="day-item" style="--d:5"><time>6:00 PM</time><span class="day-ring"></span><p>Sunday's hours go out to 1,284 customers who opted in.</p><div class="day-ui"><span class="badge accent">Email sent</span></div></div>
+        <div class="tour-foot">
+          <p class="tour-more" data-reveal>Also in every plan: meetup and dropoff with signatures and proof photos, team roles, two-factor sign-in, and connections to Square, Shippo, QuickBooks, Xero and Zapier. <a href="features.html">See every feature</a></p>
+          <span data-person="courier" data-reveal style="--d:2" aria-hidden="true"></span>
         </div>
       </div>
     </section>
@@ -276,6 +262,7 @@
         </div>
 
         <div class="cta-band" data-reveal>
+          <span class="cta-person" data-person="waver" aria-hidden="true"></span>
           <div>
             <h2 class="h2">Bring your business into focus.</h2>
             <p class="lead">Start free for 30 days, or look around a demo shop first.</p>
@@ -291,9 +278,10 @@
 
   <footer class="site-footer" data-site-footer></footer>
 
-  <script src="assets/js/core/ns.js"></script>
-  <script src="assets/js/core/icons.js"></script>
-  <script src="assets/js/data/plans.js"></script>
-  <script src="assets/js/site.js"></script>
+  <script src="assets/js/core/ns.js?v=2"></script>
+  <script src="assets/js/core/icons.js?v=2"></script>
+  <script src="assets/js/data/plans.js?v=2"></script>
+  <script src="assets/js/people.js?v=2"></script>
+  <script src="assets/js/site.js?v=2"></script>
 </body>
 </html>

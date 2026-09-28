@@ -215,26 +215,6 @@
 .thumb [data-i] { width: 28px; height: 28px; }
 .pop { box-shadow: var(--shadow-pop); }
 
-/* ---------- A day in the life ---------- */
-.day { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 24px; }
-.day::before { content: ""; position: absolute; left: 0; right: 0; top: 38px; height: 1px; background: var(--border-strong); transform: scaleX(0); transform-origin: left; transition: transform 1600ms var(--ease); }
-.day.is-in::before { transform: scaleX(1); }
-.day-item time { display: block; height: 22px; font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
-.day-ring { display: block; width: 16px; height: 16px; margin: 8px 0 18px; border-radius: 50%; border: 2px solid var(--accent); background: var(--bg); position: relative; z-index: 1; transform: scale(0); transition: transform 420ms var(--ease); transition-delay: calc(250ms + var(--d, 0) * 200ms); }
-.day.is-in .day-ring { transform: scale(1); }
-.day-item p { font-size: 15px; line-height: 1.5; color: var(--ink-2); }
-.day-ui { margin-top: 14px; opacity: 0; transform: translateY(6px); transition: opacity 500ms var(--ease), transform 500ms var(--ease); transition-delay: calc(450ms + var(--d, 0) * 200ms); }
-.day.is-in .day-ui { opacity: 1; transform: none; }
-.day-ui .copy-field { height: 30px; font-size: 12px; padding: 0 10px; }
-@media (max-width: 1000px) {
-  .day { grid-template-columns: minmax(0, 1fr); gap: 0; padding-left: 32px; }
-  .day::before { left: 7px; right: auto; top: 4px; bottom: 24px; width: 1px; height: auto; transform: scaleY(0); transform-origin: top; }
-  .day.is-in::before { transform: scaleY(1); }
-  .day-item { position: relative; padding-bottom: 32px; }
-  .day-ring { position: absolute; left: -32px; top: 2px; margin: 0; }
-  .day-item time { height: auto; margin-bottom: 4px; }
-}
-
 /* ---------- Split sections ---------- */
 .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 80px; align-items: center; }
 .split.flip > :first-child { order: 2; }
@@ -465,6 +445,39 @@
 .table-scroll { overflow-x: auto; margin-top: 4px; }
 @media (max-width: 900px) { .legal-wrap { grid-template-columns: minmax(0, 1fr); gap: 24px; } .legal-toc { display: none; } }
 
+/* ---------- People (drawn by assets/js/people.js) ---------- */
+.pp { --pp-ink: var(--ink); --pp-fill: var(--bg); --pp-tint: var(--accent-tint-2); --pp-accent: var(--accent); --pp-ground: var(--border-strong);
+  display: block; width: 100%; height: auto; overflow: visible; fill: none; stroke: var(--pp-ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.pp .f { fill: var(--pp-fill); }
+.pp .t { fill: var(--pp-tint); }
+.pp .a { fill: var(--pp-accent); }
+.pp .k { fill: var(--pp-ink); stroke: none; }
+.pp .li { fill: none; stroke: var(--pp-fill); }
+.pp .li.t { stroke: var(--pp-tint); }
+.pp .li.a { stroke: var(--pp-accent); }
+.pp .gl { stroke: var(--pp-ground); stroke-width: 1.5; }
+.dark .pp { --pp-ink: #E9EEF5; --pp-fill: var(--ink); --pp-tint: #1D3A78; --pp-ground: rgba(255,255,255,.14); }
+[data-person] { display: block; pointer-events: none; }
+/* Someone leaning on the top edge of a window or card; the box clips them so they rise from behind it. */
+.peek { position: absolute; z-index: 2; bottom: 100%; overflow: hidden; }
+.hero-stage .peek { right: calc(var(--gutter) + 6%); width: 104px; }
+.form-card { position: relative; }
+.form-card .peek { right: 40px; width: 96px; --peek-delay: 800ms; }
+.tour-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; }
+.tour-foot [data-person] { flex: none; width: 88px; margin: 32px 5% 0 0; }
+.cta-person { position: absolute; right: 7%; bottom: 100%; width: 76px; }
+.stage-person { position: absolute; z-index: 1; left: 7%; bottom: 0; width: 88px; }
+.cta-person .gl, .stage-person .gl { display: none; }
+.faq-person { width: 132px; margin-top: 48px; }
+@media (max-width: 860px) { .faq-person { display: none; } }
+@media (max-width: 720px) {
+  .hero-stage .peek { width: 84px; }
+  .tour-foot { flex-direction: column; align-items: flex-end; gap: 16px; }
+  .tour-foot [data-person] { width: 76px; margin-top: 0; }
+  .cta-person { width: 62px; }
+}
+@media (max-width: 560px) { .stage-person { display: none; } }
+
 /* ---------- Footer ---------- */
 .site-footer { border-top: 1px solid var(--border); background: var(--bg); padding: 64px 0 40px; font-size: 14.5px; }
 .foot-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr)); gap: 32px; }
@@ -487,13 +500,14 @@
 .js .rings.is-in i:nth-child(1), .js .rings.is-in i:nth-child(2) { opacity: 1; }
 .js .rings.is-in i:nth-child(3) { opacity: .7; }
 .js .rings.is-in i:nth-child(4) { opacity: .45; }
+.js .peek .pp { transform: translateY(100%); transition: transform 700ms var(--ease) var(--peek-delay, 1100ms); }
+.js .is-in > .peek .pp { transform: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .js [data-reveal], .js .hero-stage .mock { opacity: 1; transform: none; transition: none; }
+  .js .peek .pp { transform: none; transition: none; }
   .js .rings i { opacity: 1; transition: none; }
-  .chart .reveal-rect, .day::before, .day-ring, .day-ui { transition: none; }
-  .day::before, .day-ring { transform: none; }
-  .day-ui { opacity: 1; transform: none; }
+  .chart .reveal-rect { transition: none; }
   .bars i, .bubble, .mock-toast, .price-amt, .from-swap, .paycard-state .badge, .tour-tab .desc { transition: none; }
   .bars i { transform: scaleY(var(--h, .5)); }
   .caret { display: none; }

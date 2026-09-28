@@ -25,6 +25,7 @@
 !/assets/js/
 /assets/js/*
 !/assets/js/site.js
+!/assets/js/people.js
 !/assets/js/core/
 /assets/js/core/*
 !/assets/js/core/ns.js
