@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- The panel used to live here: forward old #/pay, #/unsubscribe and ?demo links to it. -->
+  <script>if (/^#\//.test(location.hash) || /[?&]demo\b/.test(location.search)) location.replace('app.html' + location.search + location.hash);</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Centrx: customers, orders and payments in one place</title>
+  <meta name="description" content="Centrx brings customers, orders, payment links, inventory, shipping and messaging into one fast panel for local and retail businesses. Start a 30-day free trial.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Centrx: the center of your business">
+  <meta property="og:description" content="Customers, orders, payment links, inventory, shipping and messaging in one panel.">
+  <meta name="theme-color" content="#FFFFFF">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect width='20' height='20' rx='5' fill='%230A5CFF'/%3E%3Ccircle cx='10' cy='10' r='3.6' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script>document.documentElement.classList.add('js')</script>
+</head>
+<body class="site" data-page="home">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header" data-site-header></header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero-top">
+        <h1 class="display typer-h1" data-reveal>
+          <span class="sr-only">One panel for your customers, orders, payment links, inventory, messages and shipping.</span>
+          <span aria-hidden="true">One panel for your
+            <span class="typer" data-typer='["customers.", "orders.", "payment links.", "inventory.", "messages.", "shipping."]'>
+              <span class="typer-size">payment links.</span>
+              <span class="typer-text"><span data-typed>customers.</span><span class="caret"></span></span>
+            </span>
+          </span>
+        </h1>
+        <div class="hero-side" data-reveal style="--d:2">
+          <p class="lead">Customers, orders, payment links, inventory, shipping and messaging in one fast panel for local and retail businesses.</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary btn-xl" href="app.html#/signup">Start free trial <span class="nudge" data-i="arrowRight"></span></a>
+            <a class="btn btn-xl" href="app.html?demo#/">Try the live demo</a>
+          </div>
+          <p class="micro">30 days free. No card required.</p>
+        </div>
+      </div>
+
+      <div class="container hero-stage">
+        <div class="rings" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <div class="mock" role="img" aria-label="The Centrx overview screen showing revenue, orders and recent activity">
+          <div class="mock-bar" aria-hidden="true">
+            <span class="mock-dots"><i></i><i></i><i></i></span>
+            <span class="mock-url"><span data-i="lock"></span>app.centrx.co</span>
+            <span style="width:42px"></span>
+          </div>
+          <div class="mock-body" aria-hidden="true">
+            <aside class="mock-side">
+              <div class="mock-ws"><span class="monogram">HP</span><div><b>Harbor &amp; Pine</b><small>Growth plan</small></div></div>
+              <div class="mock-nav">
+                <span class="on"><span data-i="home"></span>Overview</span>
+                <span><span data-i="users"></span>Customers</span>
+                <span><span data-i="receipt"></span>Orders</span>
+                <span><span data-i="box"></span>Inventory</span>
+                <span><span data-i="link"></span>Payment links</span>
+                <span><span data-i="message"></span>Messages</span>
+                <span><span data-i="truck"></span>Shipping</span>
+                <span><span data-i="sliders"></span>Settings</span>
+              </div>
+            </aside>
+            <div class="mock-main">
+              <div class="mock-top">
+                <div><h3>Good morning, Alex</h3><p>Here's how Harbor &amp; Pine is doing this month.</p></div>
+                <span class="btn btn-sm btn-primary"><span data-i="plus"></span>New order</span>
+              </div>
+              <div class="kpis">
+                <div class="kpi"><div class="kpi-label">Revenue</div><div class="kpi-value" data-count="18420" data-fmt="money">$18,420</div><div class="kpi-delta up">↑ 12.4% <span>vs last month</span></div></div>
+                <div class="kpi"><div class="kpi-label">Orders</div><div class="kpi-value" data-count="342">342</div><div class="kpi-delta up">↑ 8.1% <span>vs last month</span></div></div>
+                <div class="kpi"><div class="kpi-label">New customers</div><div class="kpi-value" data-count="128">128</div><div class="kpi-delta up">↑ 5.6% <span>vs last month</span></div></div>
+                <div class="kpi"><div class="kpi-label">Repeat rate</div><div class="kpi-value" data-count="38.2" data-fmt="pct">38.2%</div><div class="kpi-delta up">↑ 2.3% <span>vs last month</span></div></div>
+              </div>
+              <div class="mock-split">
+                <div class="panel">
+                  <div class="panel-head"><h3>Revenue</h3><div class="segmented"><button class="on" tabindex="-1">30 days</button><button tabindex="-1">90 days</button></div></div>
+                  <div class="panel-body" data-chart></div>
+                </div>
+                <div class="panel">
+                  <div class="panel-head"><h3>Recent orders</h3><span class="xs muted">Today</span></div>
+                  <div class="panel-body mini-list" style="padding-top:4px;padding-bottom:4px">
+                    <div class="mini-row"><span class="avatar sm" style="background:#EEF3FF;color:#1D4ED8">MC</span><div class="grow"><b>Maya Chen</b><small>#1042</small></div><span class="badge success">Paid</span></div>
+                    <div class="mini-row"><span class="avatar sm" style="background:#ECFDF3;color:#067647">LP</span><div class="grow"><b>Leo Park</b><small>#1041</small></div><span class="badge accent">Shipped</span></div>
+                    <div class="mini-row"><span class="avatar sm" style="background:#FFF6ED;color:#B93815">AS</span><div class="grow"><b>Ava Singh</b><small>#1040</small></div><span class="badge warn">Due</span></div>
+                    <div class="mini-row"><span class="avatar sm" style="background:#F4F3FF;color:#5925DC">NK</span><div class="grow"><b>Noah Kim</b><small>#1039</small></div><span class="badge neutral">Pickup</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="toast mock-toast" data-toast aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product tour -->
+    <section class="section" id="product">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <h2 class="h2">Every part of a sale, in one place.</h2>
+          <p class="lead">Look up the customer, build the order, send the payment link, print the label. Each step fills in the next one for you.</p>
+        </div>
+
+        <div class="tour" data-tour data-reveal>
+          <div class="tour-tabs" role="tablist" aria-label="Product areas">
+            <button class="tour-tab" role="tab" data-tab id="t-customers" aria-controls="p-customers"><b>Customers</b><span class="desc">Every order, payment, message and note on one timeline.</span><span class="tour-bar"></span></button>
+            <button class="tour-tab" role="tab" data-tab id="t-orders" aria-controls="p-orders"><b>Orders</b><span class="desc">Shipping, pickup or meetup, with what's paid and what's still due.</span><span class="tour-bar"></span></button>
+            <button class="tour-tab" role="tab" data-tab id="t-pay" aria-controls="p-pay"><b>Payment links</b><span class="desc">Card or PayPal in a tap. The item stays reserved until it's paid.</span><span class="tour-bar"></span></button>
+            <button class="tour-tab" role="tab" data-tab id="t-inv" aria-controls="p-inv"><b>Inventory</b><span class="desc">Categories and fields shaped around what you sell.</span><span class="tour-bar"></span></button>
+            <button class="tour-tab" role="tab" data-tab id="t-msg" aria-controls="p-msg"><b>Messaging</b><span class="desc">Email and texts to customers who said yes, with opt-outs handled.</span><span class="tour-bar"></span></button>
+            <button class="tour-tab" role="tab" data-tab id="t-ship" aria-controls="p-ship"><b>Shipping</b><span class="desc">Labels from the order and every shipment in one list.</span><span class="tour-bar"></span></button>
+          </div>
+
+          <div class="tour-stage">
+            <div class="tour-pane" role="tabpanel" data-pane id="p-customers" aria-labelledby="t-customers">
+              <div class="panel pop">
+                <div class="panel-head">
+                  <div class="row gap-12"><span class="avatar" style="background:#EEF3FF;color:#1D4ED8">MC</span><div><div class="strong">Maya Chen</div><div class="xs muted">Customer since 2024 · Portland, OR</div></div></div>
+                  <span class="tag">VIP</span>
+                </div>
+                <div class="panel-body">
+                  <div class="row gap-16 small wrap"><span><b class="num">14</b> <span class="muted">orders</span></span><span><b class="num">$2,318</b> <span class="muted">lifetime</span></span><span class="badge success">Email</span><span class="badge success">SMS</span></div>
+                  <div class="timeline" style="margin-top:14px">
+                    <div class="timeline-item"><span class="timeline-dot success"><span data-i="check"></span></span><div><b>Paid $248.00</b> · payment link<small>2 min ago</small></div></div>
+                    <div class="timeline-item"><span class="timeline-dot accent"><span data-i="receipt"></span></span><div><b>Order #1042 placed</b> · 3 items<small>Today, 9:12 AM</small></div></div>
+                    <div class="timeline-item"><span class="timeline-dot"><span data-i="message"></span></span><div><b>Texted</b> "Is the walnut table still available?"<small>Yesterday</small></div></div>
+                    <div class="timeline-item"><span class="timeline-dot"><span data-i="note"></span></span><div><b>Note by Sam</b> · prefers Saturday pickup<small>Mar 4</small></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tour-pane" role="tabpanel" data-pane id="p-orders" aria-labelledby="t-orders" hidden>
+              <div class="panel pop">
+                <div class="panel-head"><h3>Orders</h3><div class="chips"><span class="chip on">All</span><span class="chip">Due</span><span class="chip">Pickup</span></div></div>
+                <div class="panel-body mini-list" style="padding-top:4px;padding-bottom:4px">
+                  <div class="mini-row"><div class="grow"><b>#1042 · Maya Chen</b><small>Walnut side table + 2 more</small></div><span class="amt">$248.00</span><span class="badge success">Paid</span></div>
+                  <div class="mini-row"><div class="grow"><b>#1041 · Leo Park</b><small>UPS Ground</small></div><span class="amt">$96.00</span><span class="badge accent">Shipped</span></div>
+                  <div class="mini-row"><div class="grow"><b>#1040 · Ava Singh</b><small>Meetup · 30% upfront</small></div><span class="amt">$412.50</span><span class="badge warn">Due</span></div>
+                  <div class="mini-row"><div class="grow"><b>#1039 · Noah Kim</b><small>Pickup · Saturday</small></div><span class="amt">$58.00</span><span class="badge neutral">Ready</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tour-pane" role="tabpanel" data-pane id="p-pay" aria-labelledby="t-pay" hidden>
+              <div class="paycard" data-paycard aria-label="Example customer payment page">
+                <div class="paycard-head">
+                  <span class="monogram" style="width:32px;height:32px;font-size:12px">HP</span>
+                  <div class="grow"><div class="medium">Harbor &amp; Pine</div><div class="xs muted">Order #1042</div></div>
+                  <div class="paycard-state" style="width:60px"><span class="badge warn" data-state="due">Due</span><span class="badge success gone" data-state="paid">Paid</span></div>
+                </div>
+                <div class="paycard-body">
+                  <div class="xs muted">Amount due</div>
+                  <div class="paycard-amt">$248.00</div>
+                  <div class="paycard-lines">
+                    <div><span>Walnut side table</span><span class="num">$210.00</span></div>
+                    <div><span>Linen throw</span><span class="num">$38.00</span></div>
+                    <div class="muted"><span>Item status</span><span data-inv><span class="badge warn">Reserved</span></span></div>
+                  </div>
+                  <button class="btn btn-lg btn-block btn-primary" data-pay-btn tabindex="-1">Pay $248.00</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="tour-pane" role="tabpanel" data-pane id="p-inv" aria-labelledby="t-inv" hidden>
+              <div class="panel pop">
+                <div class="panel-head"><h3>Inventory</h3><div class="segmented"><button class="on" tabindex="-1">Gallery</button><button tabindex="-1">Table</button></div></div>
+                <div class="panel-body" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+                  <div class="panel" style="padding:10px"><span class="thumb"><span data-i="shoe"></span></span><div class="medium small" style="margin-top:10px">Jordan 1 Retro High</div><div class="xs muted">Size 10 · Deadstock</div><div class="row between" style="margin-top:8px"><span class="num small strong">$340</span><span class="badge success">Available</span></div></div>
+                  <div class="panel" style="padding:10px;margin-top:0"><span class="thumb"><span data-i="watch"></span></span><div class="medium small" style="margin-top:10px">Omega Speedmaster</div><div class="xs muted">Box and papers</div><div class="row between" style="margin-top:8px"><span class="num small strong">$5,200</span><span class="badge warn">On hold</span></div></div>
+                  <div class="panel" style="padding:10px;margin-top:0"><span class="thumb"><span data-i="gem"></span></span><div class="medium small" style="margin-top:10px">Diamond studs</div><div class="xs muted">14k · 0.5 ct</div><div class="row between" style="margin-top:8px"><span class="num small strong">$890</span><span class="badge success">Available</span></div></div>
+                  <div class="panel" style="padding:10px;margin-top:0"><span class="thumb"><span data-i="sofa"></span></span><div class="medium small" style="margin-top:10px">Linen sofa</div><div class="xs muted">84 × 38 in</div><div class="row between" style="margin-top:8px"><span class="num small strong">$1,150</span><span class="badge neutral">Sold</span></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tour-pane" role="tabpanel" data-pane id="p-msg" aria-labelledby="t-msg" hidden>
+              <div class="phone-mock" data-phone>
+                <div class="phone-screen">
+                  <div class="phone-head"><span class="avatar" style="background:#F2F4F7">SS</span><b>Solestack</b>Text message</div>
+                  <div class="phone-body-m">
+                    <div class="bubble-meta">Today 10:14 AM</div>
+                    <div class="bubble">Solestack: Your Jordan 1 Retro High (size 10) is ready for pickup today until 7 pm. Reply STOP to opt out.</div>
+                    <div class="bubble me">Perfect, on my way!</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tour-pane" role="tabpanel" data-pane id="p-ship" aria-labelledby="t-ship" hidden>
+              <div class="panel pop">
+                <div class="panel-head"><h3>Shipping label</h3><span class="badge success">Label created</span></div>
+                <div class="panel-body">
+                  <dl class="dl">
+                    <dt>From</dt><dd>Harbor &amp; Pine · Portland, OR</dd>
+                    <dt>To</dt><dd>Leo Park · Austin, TX</dd>
+                    <dt>Service</dt><dd>UPS Ground · 3 days · <span class="num">$9.84</span></dd>
+                    <dt>Tracking</dt><dd class="mono">1Z 999 AA1 0123 4567 84</dd>
+                  </dl>
+                  <div class="row" style="margin-top:18px"><span class="btn btn-sm"><span data-i="download"></span>Download label</span><span class="btn btn-sm btn-ghost"><span data-i="copy"></span>Copy tracking</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="tour-more" data-reveal>Also in every plan: meetup and dropoff with signatures and proof photos, team roles, two-factor sign-in, and connections to Square, Shippo, QuickBooks, Xero and Zapier. <a href="features.html">See every feature</a></p>
+      </div>
+    </section>
+
+    <!-- A day with Centrx -->
+    <section class="section tint">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <h2 class="h2">A Saturday at Harbor &amp; Pine.</h2>
+          <p class="lead">Two people, one furniture shop, and every job of the day done from the same screen.</p>
+        </div>
+        <div class="day" data-inview>
+          <div class="day-item" style="--d:0"><time>9:12 AM</time><span class="day-ring"></span><p>Maya orders a walnut side table from the shop's website.</p><div class="day-ui"><span class="badge accent">New order #1042</span></div></div>
+          <div class="day-item" style="--d:1"><time>9:13 AM</time><span class="day-ring"></span><p>A payment link goes to her phone by text.</p><div class="day-ui"><div class="copy-field"><span class="mono">centrx.co/pay/7Q4K2</span></div></div></div>
+          <div class="day-item" style="--d:2"><time>9:20 AM</time><span class="day-ring"></span><p>She pays, and the table is marked sold on its own.</p><div class="day-ui"><span class="badge success">Paid $248.00</span></div></div>
+          <div class="day-item" style="--d:3"><time>2:30 PM</time><span class="day-ring"></span><p>Sam delivers a sofa across town and collects the balance at the door.</p><div class="day-ui"><span class="badge success">Signed · 3 photos</span></div></div>
+          <div class="day-item" style="--d:4"><time>5:05 PM</time><span class="day-ring"></span><p>Leo's order is packed and the label prints from the order page.</p><div class="day-ui"><span class="badge neutral">UPS Ground</span></div></div>
+          <div class="day-item" style="--d:5"><time>6:00 PM</time><span class="day-ring"></span><p>Sunday's hours go out to 1,284 customers who opted in.</p><div class="day-ui"><span class="badge accent">Email sent</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing teaser -->
+    <section class="section" id="pricing">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <h2 class="h2">Three plans. Messaging only if you need it.</h2>
+          <p class="lead">Pick the plan that fits your team. Email and SMS are separate packs, so you never pay for messages you don't send.</p>
+        </div>
+        <div class="plans" data-plans data-reveal></div>
+        <div class="plans-foot"><span>Every plan starts with 30 days free.</span><a href="pricing.html#compare">Compare plans</a><a href="pricing.html#addons">Email and SMS packs</a></div>
+      </div>
+    </section>
+
+    <!-- Security + CTA -->
+    <section class="section dark">
+      <div class="rings" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div class="container">
+        <div class="sec-split">
+          <div data-reveal>
+            <h2 class="h2">Security comes with every plan.</h2>
+            <p class="lead" style="margin-top:16px">A two-person shop gets the same protection as a team of fifty. None of it is an upgrade.</p>
+            <dl class="ledger">
+              <div><dt>Sign-in</dt><dd>Two-factor codes and session control for everyone on your team.</dd></div>
+              <div><dt>Payments</dt><dd>Stripe and PayPal handle card details, so card numbers never touch Centrx.</dd></div>
+              <div><dt>Access</dt><dd>Staff see what they need. Owners keep billing and exports.</dd></div>
+              <div><dt>History</dt><dd>An audit log records who changed what, and when.</dd></div>
+            </dl>
+          </div>
+          <div data-reveal style="--d:2">
+            <div class="roles" role="img" aria-label="Example permissions: staff can take payments but not issue refunds, edit prices or export customers">
+              <div class="roles-row head" aria-hidden="true"><span>Permission</span><span>Owner</span><span>Manager</span><span>Staff</span></div>
+              <div class="roles-row" aria-hidden="true"><span>Take payments</span><label class="switch"><input type="checkbox" checked tabindex="-1"></label><label class="switch"><input type="checkbox" checked tabindex="-1"></label><label class="switch"><input type="checkbox" checked tabindex="-1"></label></div>
+              <div class="roles-row" aria-hidden="true"><span>Issue refunds</span><label class="switch"><input type="checkbox" checked tabindex="-1"></label><label class="switch"><input type="checkbox" checked tabindex="-1"></label><label class="switch"><input type="checkbox" tabindex="-1"></label></div>
+              <div class="roles-row" aria-hidden="true"><span>Edit prices</span><label class="switch"><input type="checkbox" checked tabindex="-1"></label><label class="switch"><input type="checkbox" checked tabindex="-1"></label><label class="switch"><input type="checkbox" tabindex="-1"></label></div>
+              <div class="roles-row" aria-hidden="true"><span>Export customers</span><label class="switch"><input type="checkbox" checked tabindex="-1"></label><label class="switch"><input type="checkbox" tabindex="-1"></label><label class="switch"><input type="checkbox" tabindex="-1"></label></div>
+              <div class="roles-row" aria-hidden="true"><span>Manage billing</span><label class="switch"><input type="checkbox" checked tabindex="-1"></label><label class="switch"><input type="checkbox" tabindex="-1"></label><label class="switch"><input type="checkbox" tabindex="-1"></label></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cta-band" data-reveal>
+          <div>
+            <h2 class="h2">Bring your business into focus.</h2>
+            <p class="lead">Start free for 30 days, or look around a demo shop first.</p>
+          </div>
+          <div class="hero-cta">
+            <a class="btn btn-dark btn-xl" href="app.html#/signup">Start free trial <span class="nudge" data-i="arrowRight"></span></a>
+            <a class="btn btn-outline-dark btn-xl" href="app.html?demo#/">Try the live demo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" data-site-footer></footer>
+
+  <script src="assets/js/core/ns.js"></script>
+  <script src="assets/js/core/icons.js"></script>
+  <script src="assets/js/data/plans.js"></script>
+  <script src="assets/js/site.js"></script>
+</body>
+</html>

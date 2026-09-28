@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact · Centrx</title>
+  <meta name="description" content="Book a 20-minute Centrx demo or get in touch with sales and support.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Contact Centrx">
+  <meta property="og:description" content="Book a 20-minute demo or ask us anything.">
+  <meta name="theme-color" content="#FFFFFF">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect width='20' height='20' rx='5' fill='%230A5CFF'/%3E%3Ccircle cx='10' cy='10' r='3.6' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script>document.documentElement.classList.add('js')</script>
+</head>
+<body class="site" data-page="contact">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header" data-site-header></header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="rings" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div class="container contact-grid" style="position:relative;z-index:1">
+        <div data-reveal>
+          <h1 class="display" style="max-width:9ch">Let's talk about your shop.</h1>
+          <p class="lead" style="margin-top:20px;max-width:440px">Book a 20-minute call and we'll walk through Centrx with your own workflow in mind: how you sell, how you get paid and who's on your team.</p>
+          <dl class="dl" style="margin-top:40px;grid-template-columns:110px minmax(0,1fr);font-size:15px">
+            <dt>Sales</dt><dd><a href="mailto:sales@centrx.co">sales@centrx.co</a></dd>
+            <dt>Support</dt><dd><a href="mailto:support@centrx.co">support@centrx.co</a></dd>
+            <dt>Replies</dt><dd>Within one business day</dd>
+            <dt>Rather look first?</dt><dd><a href="app.html?demo#/">Open the live demo</a></dd>
+          </dl>
+        </div>
+
+        <div class="form-card" data-reveal style="--d:2">
+          <form data-contact novalidate>
+            <div class="grid-2">
+              <div class="field"><label class="label" for="c-name">Your name</label><input class="input" id="c-name" name="name" autocomplete="name"><span class="error-text" aria-live="polite"></span></div>
+              <div class="field"><label class="label" for="c-email">Work email</label><input class="input" id="c-email" name="email" type="email" autocomplete="email"><span class="error-text" aria-live="polite"></span></div>
+            </div>
+            <div class="grid-2 form-row">
+              <div class="field"><label class="label" for="c-company">Business name</label><input class="input" id="c-company" name="company" autocomplete="organization"><span class="error-text" aria-live="polite"></span></div>
+              <div class="field"><label class="label" for="c-size">Team size</label>
+                <select class="select" id="c-size" name="size"><option>Just me</option><option selected>2–10</option><option>11–50</option><option>51+</option></select></div>
+            </div>
+            <div class="field form-row"><label class="label" for="c-plan">Interested in</label>
+              <select class="select" id="c-plan" name="plan"><option>Not sure yet</option><option>Starter</option><option selected>Growth</option><option>Business</option></select></div>
+            <div class="field form-row"><label class="label" for="c-msg">Anything we should know? <span class="opt">Optional</span></label>
+              <textarea class="textarea" id="c-msg" name="message" rows="4" placeholder="What you sell, what you use today, what's getting in the way…"></textarea></div>
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Book a demo</button>
+            <p class="form-legal">We'll only use these details to reply to you. See our <a href="privacy.html">privacy policy</a>.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" data-site-footer></footer>
+
+  <script src="assets/js/core/ns.js"></script>
+  <script src="assets/js/core/icons.js"></script>
+  <script src="assets/js/site.js"></script>
+</body>
+</html>
