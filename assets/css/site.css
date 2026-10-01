@@ -285,6 +285,22 @@
 .plans-foot { display: flex; gap: 8px 16px; align-items: center; flex-wrap: wrap; margin-top: 24px; color: var(--muted); font-size: 14.5px; }
 @media (max-width: 960px) { .plans { grid-template-columns: minmax(0, 1fr); max-width: 520px; } .plan-tag { min-height: 0; } }
 
+/* Custom plan: wide card under the three self-serve plans */
+.plan-custom { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 40px; margin-top: 16px; padding: 28px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg); }
+.plan-custom .plan-tag { min-height: 0; }
+.plan-custom .plan-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 28px; }
+.plan-custom .plan-list .inherit { grid-column: 1 / -1; }
+.pc-side { display: flex; flex-direction: column; justify-content: center; padding-left: 40px; border-left: 1px solid var(--border); }
+.pc-price { font-size: 28px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.15; }
+.pc-side .btn { margin-top: 18px; }
+.pc-side .sub-btn { margin-top: 8px; }
+.pc-fine { margin-top: 12px; font-size: 13px; color: var(--faint); }
+@media (max-width: 960px) {
+  .plan-custom { grid-template-columns: minmax(0, 1fr); gap: 0; max-width: 520px; }
+  .plan-custom .plan-list { grid-template-columns: minmax(0, 1fr); }
+  .pc-side { padding: 22px 0 0; margin-top: 22px; border-left: 0; border-top: 1px solid var(--border); }
+}
+
 /* Billing toggle + crown */
 .billing-toggle { display: inline-flex; align-items: center; gap: 12px; padding-top: 18px; margin-top: 24px; }
 .billing-toggle .segmented { padding: 3px; border-radius: 8px; }
@@ -463,8 +479,10 @@
 .hero-stage .peek { right: calc(var(--gutter) + 6%); width: 104px; }
 .form-card { position: relative; }
 .form-card .peek { right: 40px; width: 96px; --peek-delay: 800ms; }
-.tour-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; }
-.tour-foot [data-person] { flex: none; width: 88px; margin: 32px 5% 0 0; }
+.tour-foot { display: flex; align-items: flex-end; gap: 40px; margin-top: 32px; }
+.tour-foot .tour-more { margin-top: 0; }
+/* The negative margin lets the courier stand taller than the paragraph without pushing it down. */
+.tour-foot [data-person] { flex: none; width: 64px; margin-top: -32px; }
 .cta-person { position: absolute; right: 7%; bottom: 100%; width: 76px; }
 .stage-person { position: absolute; z-index: 1; left: 7%; bottom: 0; width: 88px; }
 .cta-person .gl, .stage-person .gl { display: none; }
@@ -472,11 +490,52 @@
 @media (max-width: 860px) { .faq-person { display: none; } }
 @media (max-width: 720px) {
   .hero-stage .peek { width: 84px; }
-  .tour-foot { flex-direction: column; align-items: flex-end; gap: 16px; }
-  .tour-foot [data-person] { width: 76px; margin-top: 0; }
+  .tour-foot { gap: 16px; }
+  .tour-foot [data-person] { width: 56px; }
   .cta-person { width: 62px; }
 }
 @media (max-width: 560px) { .stage-person { display: none; } }
+
+/* ---------- 404 ---------- */
+.nf { position: relative; padding: 72px 0 104px; overflow: hidden; }
+.nf .hero-top { align-items: center; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); }
+.nf-links { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 22px; font-size: 14.5px; color: var(--muted); }
+.nf-card { max-width: 460px; margin-top: 36px; box-shadow: var(--shadow-xs); }
+.nf-card .panel-head h3 { display: flex; align-items: center; gap: 8px; }
+.nf-card .panel-head [data-i] { width: 16px; height: 16px; color: var(--muted); }
+.nf-card .dl { grid-template-columns: 96px minmax(0, 1fr); }
+.nf-card .dl dd.mono { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* The scene: a giant 4◯4 standing on the ground, the zero is the Centrx mark, two people puzzling over it. */
+.nf-stage { position: relative; height: 320px; display: flex; align-items: flex-end; justify-content: center; clip-path: inset(-400px -12% 0 -12%); }
+.nf-stage::after { content: ""; position: absolute; left: -4%; right: -4%; bottom: 0; height: 1.5px; border-radius: 1px; background: var(--border-strong); }
+.nf-num { position: relative; display: flex; align-items: flex-end; font-size: clamp(100px, 15vw, 210px); font-weight: 600; letter-spacing: -0.06em; line-height: .74; color: var(--ink); user-select: none; }
+.nf-num > span { display: block; }
+.nf-zero { position: relative; width: .74em; height: .74em; margin: 0 .05em 0 .02em; }
+.nf-zero svg { position: relative; z-index: 1; display: block; width: 100%; height: 100%; }
+.nf-rip { position: absolute; inset: 0; border: 2px solid var(--accent); border-radius: 50%; opacity: 0; animation: nf-rip 4.8s var(--ease) infinite; }
+.nf-rip:nth-child(2) { animation-delay: 1.6s; }
+.nf-rip:nth-child(3) { animation-delay: 3.2s; }
+@keyframes nf-rip { 0% { transform: scale(.9); opacity: .4; } 100% { transform: scale(2.7); opacity: 0; } }
+.nf-p { position: absolute; bottom: 0; z-index: 2; }
+.nf-p .gl { display: none; }
+.nf-p .pp { transform-origin: 50% 100%; animation: nf-sway 4.4s ease-in-out infinite; }
+.nf-left { left: 0; width: 86px; }
+.nf-right { right: 0; width: 92px; }
+.nf-right .pp { animation-delay: -2.2s; }
+.nf-flip { transform: scaleX(-1); }
+@keyframes nf-sway { 0%, 100% { transform: rotate(-1.4deg); } 50% { transform: rotate(1.4deg); } }
+/* Thought bubble over the person checking their phone; sized from the person so it scales with them. */
+.nf-q { position: absolute; left: 64%; top: -16%; display: grid; place-items: center; width: 34%; aspect-ratio: 1; border: 2px solid var(--ink); border-radius: 50% 50% 50% 6px; background: var(--bg); color: var(--accent); font-size: clamp(14px, 1.4vw, 18px); font-weight: 700; line-height: 1; animation: nf-q 3.2s ease-in-out infinite; }
+@keyframes nf-q { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@media (max-width: 1100px) { .nf-left { width: 72px; } .nf-right { width: 78px; } }
+@media (max-width: 900px) { .nf .hero-top { grid-template-columns: minmax(0, 1fr); } .nf-stage { order: -1; height: 280px; margin-bottom: 36px; } }
+@media (max-width: 560px) {
+  .nf { padding: 48px 0 72px; }
+  .nf-stage { height: 200px; margin-bottom: 28px; }
+  .nf-left { width: 64px; }
+  .nf-right { width: 70px; }
+}
 
 /* ---------- Footer ---------- */
 .site-footer { border-top: 1px solid var(--border); background: var(--bg); padding: 64px 0 40px; font-size: 14.5px; }
@@ -506,6 +565,7 @@
 @media (prefers-reduced-motion: reduce) {
   .js [data-reveal], .js .hero-stage .mock { opacity: 1; transform: none; transition: none; }
   .js .peek .pp { transform: none; transition: none; }
+  .nf-rip, .nf-p .pp, .nf-q { animation: none; }
   .js .rings i { opacity: 1; transition: none; }
   .chart .reveal-rect { transition: none; }
   .bars i, .bubble, .mock-toast, .price-amt, .from-swap, .paycard-state .badge, .tour-tab .desc { transition: none; }

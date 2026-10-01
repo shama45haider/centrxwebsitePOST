@@ -38,11 +38,11 @@
     growth: {
       id: 'growth', name: 'Growth', price: 9900, inherits: 'starter',
       tagline: 'For growing teams with repeat customers.',
-      highlights: ['10 employees · 2 locations', '10,000 customers', '1,000 orders / mo', 'API access & custom branding'],
+      highlights: ['10 employees · 2 locations', '10,000 customers', '1,000 orders / mo', 'Custom branding'],
       bullets: [
         '10 employees', '2 locations', 'Up to 10,000 customers', 'Up to 1,000 orders / month',
         'Up to 1,000 payment links / month',
-        'Advanced analytics', 'Advanced automations', 'Employee permissions', 'API access',
+        'Advanced analytics', 'Advanced automations', 'Employee permissions',
         'Custom branding', 'Priority support', 'Email sent through notify@centrx.co',
       ],
       analytics: 'Advanced',
@@ -69,7 +69,7 @@
       bullets: [
         'Unlimited employees', 'Up to 5 locations', 'Up to 50,000 customers', 'Up to 5,000 orders / month',
         'Up to 5,000 payment links / month',
-        'Advanced reporting', 'Advanced permissions', 'Full API access', 'Unlimited automations',
+        'Advanced reporting', 'Advanced permissions', 'Unlimited automations',
         'White-label dashboard', 'Priority support', 'Connect your domain and send email from it',
       ],
       analytics: 'Advanced + reporting',
@@ -88,6 +88,21 @@
       },
       support: 'Priority',
     },
+  };
+
+  // Custom is by application only: a business applies from Plan & billing, then a Centrx admin
+  // verifies it and sets its limits and price. Not in PLAN_ORDER, so it never appears as a
+  // self-serve upgrade. Review happens in the admin dashboard (planned, see docs/roadmap.md).
+  C.CUSTOM_PLAN = {
+    id: 'custom', name: 'Custom', inherits: 'business',
+    tagline: 'For businesses that have outgrown Business.',
+    bullets: [
+      'Limits sized to your business: employees, locations, customers, orders and payment links',
+      'Volume pricing on email and SMS',
+      'A dedicated contact for onboarding and support',
+      'Monthly or annual billing, priced to your needs',
+    ],
+    review: 'Every application is reviewed by our team, usually within two business days.',
   };
 
   // Messaging add-on packs. Transactional email (receipts, payment links, order
@@ -178,7 +193,6 @@
       ['Two-factor auth & sessions', () => true],
       ['Enforce MFA · SSO', F('sso')],
       ['Audit log retention', (p) => (p.limits.auditDays === 365 ? '1 year + export' : p.limits.auditDays + ' days')],
-      ['API access', (p) => (p.limits.apiKeys === 0 ? false : p.limits.apiKeys === U ? 'Full · unlimited keys' : `${p.limits.apiKeys} keys`)],
       ['Webhooks', F('webhooks')],
     ] },
     { group: 'Brand & support', rows: [

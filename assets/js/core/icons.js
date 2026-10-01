@@ -124,8 +124,9 @@
   C.icon = (name, size = 18, extra = '') =>
     `<svg width="${size}" height="${size}" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${P[name] || P.circle}</svg>`;
 
-  // Brand mark: a quiet square with a centered ring — "centre".
+  // Brand mark: the official Centrx mark, four blades forming an X (source: assets/brand/centrx-mark.svg).
+  const MARK = 'M14.71 14.66L37.48 27.55A11.98 11.98 0 0 1 43.56 37.98L43.56 43.08A11.59 11.59 0 0 1 26.66 53.38L10.54 45.08A9.37 9.37 0 0 1 5.46 36.75L5.46 20.05A6.19 6.19 0 0 1 14.71 14.66ZM11.58 69.84L34.2 59.6A7.37 7.37 0 0 1 44.61 66.31L44.61 77.25A12.34 12.34 0 0 1 37.66 88.35L15.16 99.28A6.46 6.46 0 0 1 5.88 93.47L5.88 78.68A9.7 9.7 0 0 1 11.58 69.84ZM60.07 12.14L83.56 0.7A6.85 6.85 0 0 1 93.41 6.87L93.41 24.23A10.38 10.38 0 0 1 87.55 33.58L63.42 45.23A7.61 7.61 0 0 1 52.51 38.38L52.51 24.23A13.45 13.45 0 0 1 60.07 12.14ZM75.16 51.73L89.43 59.69A9.95 9.95 0 0 1 94.54 68.39L94.54 86.23A6.15 6.15 0 0 1 85.44 91.62L60.86 78.18A11.99 11.99 0 0 1 54.62 67.65L54.62 63.79A13.81 13.81 0 0 1 75.16 51.73Z';
   C.brandMark = (size = 22) =>
-    `<svg class="brand-mark" width="${size}" height="${size}" viewBox="0 0 20 20" aria-hidden="true"><rect width="20" height="20" rx="5" fill="#0A5CFF"/><circle cx="10" cy="10" r="3.6" fill="none" stroke="#fff" stroke-width="2"/></svg>`;
+    `<svg class="brand-mark" width="${size}" height="${size}" viewBox="0 0 100 100" aria-hidden="true"><path fill="#0A5CFF" d="${MARK}"/></svg>`;
   C.wordmark = () => `<span class="brand">${C.brandMark()}<span class="brand-name">Centrx</span></span>`;
 })();

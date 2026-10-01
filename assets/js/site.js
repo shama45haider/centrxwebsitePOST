@@ -208,6 +208,29 @@
     draw();
   }
 
+  // Custom: by application from inside the app, never a self-serve checkout.
+  function renderCustom() {
+    const el = $('[data-custom-plan]'), c = C.CUSTOM_PLAN;
+    if (!el || !c) return;
+    el.innerHTML = `<article class="plan-custom" id="custom">
+      <div>
+        <div class="plan-top"><h3 class="plan-name">${esc(c.name)}</h3><span class="tag">By application</span></div>
+        <p class="plan-tag">${esc(c.tagline)}</p>
+        <ul class="plan-list">
+          <li class="inherit">Everything in ${esc(C.PLANS[c.inherits].name)}, plus:</li>
+          ${c.bullets.map((b) => `<li>${esc(b)}</li>`).join('')}
+        </ul>
+      </div>
+      <div class="pc-side">
+        <div class="pc-price">Priced to fit</div>
+        <p class="price-note">${esc(c.review)}</p>
+        <a class="btn btn-lg btn-block" href="${APP}#/custom-plan">Apply for Custom</a>
+        <a class="btn btn-lg btn-block btn-ghost sub-btn" href="contact.html">Talk to sales</a>
+        <p class="pc-fine">You'll confirm your business details, such as your EIN and state filing number.</p>
+      </div>
+    </article>`;
+  }
+
   function renderCompare() {
     const el = $('[data-compare]');
     if (!el) return;
@@ -237,6 +260,7 @@
 
   if (hasPlans) {
     renderPlans();
+    renderCustom();
     renderEstimator();
     renderCompare();
     setBilling(billing, false);
@@ -454,6 +478,15 @@
       });
     }), { rootMargin: '-45% 0px -50% 0px' });
     $$('.feature[id]').forEach((s) => spy.observe(s));
+  }
+
+  /* ---------- 404: show the address that wasn't found ---------- */
+  const nfPath = $('[data-nf-path]');
+  if (nfPath) {
+    let path = location.pathname + location.search;
+    try { path = decodeURI(path); } catch {}
+    nfPath.textContent = location.host + path;
+    nfPath.title = nfPath.textContent;
   }
 
   /* ---------- Contact form (simulated; nothing leaves the browser) ---------- */

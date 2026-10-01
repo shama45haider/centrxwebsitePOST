@@ -12,11 +12,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect width='20' height='20' rx='5' fill='%230A5CFF'/%3E%3Ccircle cx='10' cy='10' r='3.6' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="assets/css/tokens.css?v=2">
-  <link rel="stylesheet" href="assets/css/base.css?v=2">
-  <link rel="stylesheet" href="assets/css/components.css?v=2">
-  <link rel="stylesheet" href="assets/css/site.css?v=2">
+  <link rel="icon" href="assets/brand/favicon-32.png?v=4" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/brand/centrx-mark.svg?v=4" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png?v=4">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=4">
+  <link rel="stylesheet" href="assets/css/base.css?v=4">
+  <link rel="stylesheet" href="assets/css/components.css?v=4">
+  <link rel="stylesheet" href="assets/css/site.css?v=4">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body class="site" data-page="pricing">
@@ -53,6 +55,7 @@
     <section class="section tight">
       <div class="container">
         <div class="plans" data-plans data-reveal></div>
+        <div data-custom-plan data-reveal></div>
         <div class="includes" data-reveal>
           <div class="includes-head">Included on every plan</div>
           <ul class="rings-list">
@@ -173,6 +176,10 @@
             <div class="answer">Every plan has two-factor sign-in, session control, role-based permissions and an audit log. Stripe and PayPal handle card payments, so card numbers never touch Centrx. Read the <a href="privacy.html">privacy policy</a> for the details.</div>
           </details>
           <details>
+            <summary>How does the Custom plan work?<span data-i="plus"></span></summary>
+            <div class="answer">Apply from Settings → Plan &amp; billing in your Centrx account. Tell us what you need more of and confirm your business details, such as your EIN and state filing number. Our team verifies the business, usually within two business days, and then sets up limits and pricing that fit.</div>
+          </details>
+          <details>
             <summary>Can I cancel anytime?<span data-i="plus"></span></summary>
             <div class="answer">Yes. Monthly plans have no contract. Cancel from Settings → Plan &amp; billing whenever you like.</div>
           </details>
@@ -198,10 +205,10 @@
 
   <footer class="site-footer" data-site-footer></footer>
 
-  <script src="assets/js/core/ns.js?v=2"></script>
-  <script src="assets/js/core/icons.js?v=2"></script>
-  <script src="assets/js/data/plans.js?v=2"></script>
-  <script src="assets/js/people.js?v=2"></script>
-  <script src="assets/js/site.js?v=2"></script>
+  <script src="assets/js/core/ns.js?v=4"></script>
+  <script src="assets/js/core/icons.js?v=4"></script>
+  <script src="assets/js/data/plans.js?v=4"></script>
+  <script src="assets/js/people.js?v=4"></script>
+  <script src="assets/js/site.js?v=4"></script>
 </body>
 </html>

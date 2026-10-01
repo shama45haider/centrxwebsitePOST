@@ -9,11 +9,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect width='20' height='20' rx='5' fill='%230A5CFF'/%3E%3Ccircle cx='10' cy='10' r='3.6' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="assets/css/tokens.css?v=2">
-  <link rel="stylesheet" href="assets/css/base.css?v=2">
-  <link rel="stylesheet" href="assets/css/components.css?v=2">
-  <link rel="stylesheet" href="assets/css/site.css?v=2">
+  <link rel="icon" href="assets/brand/favicon-32.png?v=4" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/brand/centrx-mark.svg?v=4" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png?v=4">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=4">
+  <link rel="stylesheet" href="assets/css/base.css?v=4">
+  <link rel="stylesheet" href="assets/css/components.css?v=4">
+  <link rel="stylesheet" href="assets/css/site.css?v=4">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body class="site" data-page="privacy">
@@ -76,6 +78,7 @@
             <li>Sign-in details. We store passwords only as a one-way hash, never in readable form. If you turn on two-factor authentication, we store an encrypted secret for it.</li>
             <li>Billing details. Stripe collects your card and gives us only the card brand, last four digits and billing email.</li>
             <li>Your team's roles and permissions, and settings you choose in the app.</li>
+            <li>If you apply for a Custom plan: what you need and why, expected volumes, and details that show the business is registered, such as its legal name, business type, EIN, state of formation, state filing number, business license number and any documents you upload (for example formation papers or an IRS EIN letter). We never ask for a Social Security number.</li>
           </ul>
 
           <h3>Customer Data that businesses add</h3>
@@ -116,6 +119,7 @@
             <li>To keep Centrx secure, including detecting fraud, spam and abuse, and to enforce our Terms.</li>
             <li>To provide support when you ask for it.</li>
             <li>To bill for subscriptions and add-on packs.</li>
+            <li>To verify that a business applying for a Custom plan is real and registered, including by checking public business records.</li>
             <li>To understand how Centrx is used and improve it, using aggregated information wherever possible.</li>
             <li>To send account holders news about Centrx. You can unsubscribe from these at any time, and we never send them to a business's customers.</li>
             <li>To meet legal obligations, such as tax records and responding to lawful requests.</li>
@@ -163,7 +167,7 @@
             <li><b>Encrypted connections.</b> All traffic to our website, app and payment pages uses HTTPS (TLS).</li>
             <li><b>Separate data for each business.</b> Each business's data is isolated in our database with row-level security, so one business can never read another's records.</li>
             <li><b>Passwords and sign-in.</b> Passwords are stored with a strong one-way hash (Argon2id). Two-factor authentication is available to everyone, and Business accounts can require it for their whole team.</li>
-            <li><b>Keys and tokens.</b> API keys, webhook secrets and sign-in tokens are stored only as hashes. Credentials for connected apps are kept encrypted.</li>
+            <li><b>Keys and tokens.</b> Webhook secrets and sign-in tokens are stored only as hashes. Credentials for connected apps are kept encrypted.</li>
             <li><b>Payment data.</b> Card numbers are handled by Stripe and PayPal and never stored by Centrx.</li>
             <li><b>Files.</b> Photos, videos and signatures are kept in private storage and opened only through short-lived, signed links.</li>
             <li><b>Access and accountability.</b> Team permissions limit what each person can see, and the audit log records changes. Centrx staff access customer accounts only when needed for support, security or legal reasons.</li>
@@ -180,6 +184,7 @@
             <li><b>Suppression list entries</b> (unsubscribes and STOP replies) are kept for as long as needed to make sure opted-out people aren't contacted again, even after other data is deleted.</li>
             <li><b>Billing and tax records</b> are kept for <span class="ph">[7]</span> years, as tax and accounting law requires.</li>
             <li><b>Contact form messages</b> are kept for <span class="ph">[24]</span> months.</li>
+            <li><b>Custom plan applications</b>, including EINs and uploaded documents, are kept while the application is open and for <span class="ph">[12]</span> months after it's decided, or for as long as the business stays on a Custom plan. Only Centrx staff who review applications can see them.</li>
           </ul>
 
           <h2 id="rights">Your rights and choices</h2>
@@ -220,8 +225,8 @@
 
   <footer class="site-footer" data-site-footer></footer>
 
-  <script src="assets/js/core/ns.js?v=2"></script>
-  <script src="assets/js/core/icons.js?v=2"></script>
-  <script src="assets/js/site.js?v=2"></script>
+  <script src="assets/js/core/ns.js?v=4"></script>
+  <script src="assets/js/core/icons.js?v=4"></script>
+  <script src="assets/js/site.js?v=4"></script>
 </body>
 </html>
