@@ -3,24 +3,25 @@
 <head>
   <meta charset="utf-8">
   <!-- The panel used to live here: forward old #/pay, #/unsubscribe and ?demo links to it. -->
-  <script>if (/^#\//.test(location.hash) || /[?&]demo\b/.test(location.search)) location.replace('app.html' + location.search + location.hash);</script>
+  <script>if (/^#\//.test(location.hash) || /[?&]demo\b/.test(location.search)) location.replace('/app' + location.search + location.hash);</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Centrx: customers, orders and payments in one place</title>
   <meta name="description" content="Centrx brings customers, orders, payment links, inventory, shipping and messaging into one fast panel for local and retail businesses, with a built-in AI assistant. Start a 30-day free trial.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Centrx: the center of your business">
   <meta property="og:description" content="Customers, orders, payment links, inventory, shipping and messaging in one panel.">
+  <link rel="canonical" href="https://centrx.co/">
   <meta name="theme-color" content="#FFFFFF">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="icon" href="assets/brand/favicon-32.png?v=6" sizes="32x32" type="image/png">
-  <link rel="icon" href="assets/brand/centrx-mark.svg?v=6" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png?v=6">
-  <link rel="stylesheet" href="assets/css/tokens.css?v=6">
-  <link rel="stylesheet" href="assets/css/base.css?v=6">
-  <link rel="stylesheet" href="assets/css/components.css?v=6">
-  <link rel="stylesheet" href="assets/css/site.css?v=6">
+  <link rel="icon" href="/assets/brand/favicon-32.png?v=7" sizes="32x32" type="image/png">
+  <link rel="icon" href="/assets/brand/centrx-mark.svg?v=7" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png?v=7">
+  <link rel="stylesheet" href="/assets/css/tokens.css?v=7">
+  <link rel="stylesheet" href="/assets/css/base.css?v=7">
+  <link rel="stylesheet" href="/assets/css/components.css?v=7">
+  <link rel="stylesheet" href="/assets/css/site.css?v=7">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body class="site" data-page="home">
@@ -43,8 +44,8 @@
         <div class="hero-side" data-reveal style="--d:2">
           <p class="lead">Customers, orders, payment links, inventory, shipping and messaging in one fast panel, with an AI assistant built in to help along the way.</p>
           <div class="hero-cta">
-            <a class="btn btn-primary btn-xl" href="app.html#/signup">Start free trial <span class="nudge" data-i="arrowRight"></span></a>
-            <a class="btn btn-xl" href="app.html?demo#/">Try the live demo</a>
+            <a class="btn btn-primary btn-xl" href="/app#/signup">Start free trial <span class="nudge" data-i="arrowRight"></span></a>
+            <a class="btn btn-xl" href="/app?demo#/">Try the live demo</a>
           </div>
           <p class="micro">30 days free. No card required.</p>
         </div>
@@ -240,7 +241,7 @@
         </div>
 
         <div class="tour-foot">
-          <p class="tour-more" data-reveal>Also in every plan: meetup and dropoff with signatures and proof photos, team roles, two-factor sign-in, and connections to Square, Shippo, QuickBooks, Xero and Zapier. <a href="features.html">See every feature</a></p>
+          <p class="tour-more" data-reveal>Also in every plan: meetup and dropoff with signatures and proof photos, team roles, two-factor sign-in, and connections to Square, Shippo, QuickBooks, Xero and Zapier. <a href="/features">See every feature</a></p>
           <span data-person="courier" data-reveal style="--d:2" aria-hidden="true"></span>
         </div>
       </div>
@@ -254,7 +255,7 @@
           <p class="lead">Pick the plan that fits your team. Email and SMS are separate packs, so you never pay for messages you don't send.</p>
         </div>
         <div class="plans" data-plans data-reveal></div>
-        <div class="plans-foot"><span>Every plan starts with 30 days free.</span><a href="pricing.html#compare">Compare plans</a><a href="pricing.html#addons">Email and SMS packs</a><a href="pricing.html#custom">Need more? Custom plan</a></div>
+        <div class="plans-foot"><span>Every plan starts with 30 days free.</span><a href="/pricing#compare">Compare plans</a><a href="/pricing#addons">Email and SMS packs</a><a href="/pricing#custom">Need more? Custom plan</a></div>
       </div>
     </section>
 
@@ -292,8 +293,8 @@
             <p class="lead">Start free for 30 days, or look around a demo shop first.</p>
           </div>
           <div class="hero-cta">
-            <a class="btn btn-dark btn-xl" href="app.html#/signup">Start free trial <span class="nudge" data-i="arrowRight"></span></a>
-            <a class="btn btn-outline-dark btn-xl" href="app.html?demo#/">Try the live demo</a>
+            <a class="btn btn-dark btn-xl" href="/app#/signup">Start free trial <span class="nudge" data-i="arrowRight"></span></a>
+            <a class="btn btn-outline-dark btn-xl" href="/app?demo#/">Try the live demo</a>
           </div>
         </div>
       </div>
@@ -302,10 +303,10 @@
 
   <footer class="site-footer" data-site-footer></footer>
 
-  <script src="assets/js/core/ns.js?v=6"></script>
-  <script src="assets/js/core/icons.js?v=6"></script>
-  <script src="assets/js/data/plans.js?v=6"></script>
-  <script src="assets/js/people.js?v=6"></script>
-  <script src="assets/js/site.js?v=6"></script>
+  <script src="/assets/js/core/ns.js?v=7"></script>
+  <script src="/assets/js/core/icons.js?v=7"></script>
+  <script src="/assets/js/data/plans.js?v=7"></script>
+  <script src="/assets/js/people.js?v=7"></script>
+  <script src="/assets/js/site.js?v=7"></script>
 </body>
 </html>

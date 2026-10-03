@@ -15,7 +15,9 @@
 !/privacy.html
 !/terms.html
 !/help.html
-!/help-*.html
+!/help/
+/help/*
+!/help/*.html
 
 !/assets/
 /assets/*

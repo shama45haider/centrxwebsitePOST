@@ -12,14 +12,22 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="icon" href="assets/brand/favicon-32.png?v=6" sizes="32x32" type="image/png">
-  <link rel="icon" href="assets/brand/centrx-mark.svg?v=6" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png?v=6">
-  <link rel="stylesheet" href="assets/css/tokens.css?v=6">
-  <link rel="stylesheet" href="assets/css/base.css?v=6">
-  <link rel="stylesheet" href="assets/css/components.css?v=6">
-  <link rel="stylesheet" href="assets/css/site.css?v=6">
+  <link rel="icon" href="/assets/brand/favicon-32.png?v=7" sizes="32x32" type="image/png">
+  <link rel="icon" href="/assets/brand/centrx-mark.svg?v=7" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png?v=7">
+  <link rel="stylesheet" href="/assets/css/tokens.css?v=7">
+  <link rel="stylesheet" href="/assets/css/base.css?v=7">
+  <link rel="stylesheet" href="/assets/css/components.css?v=7">
+  <link rel="stylesheet" href="/assets/css/site.css?v=7">
   <script>document.documentElement.classList.add('js')</script>
+  <script>
+    // Old addresses: /pricing.html-style links and the first help guide URLs (/help-packs.html → /help/packs).
+    (function (p) {
+      var m = p.match(/^\/help-([a-z-]+)(?:\.html)?\/?$/);
+      if (m) return location.replace('/help/' + m[1] + location.hash);
+      if (/^\/home\/?$|^\/index(\.html)?$/.test(p)) location.replace('/' + location.hash);
+    })(location.pathname);
+  </script>
 </head>
 <body class="site" data-page="404">
   <header class="site-header" data-site-header></header>
@@ -31,10 +39,10 @@
           <h1 class="display" data-reveal>Nothing at this address.</h1>
           <p class="lead" data-reveal style="--d:1;margin-top:20px;max-width:460px">The page you're after has moved or never existed. Check the link for typos, or head somewhere useful from here.</p>
           <div class="hero-cta" data-reveal style="--d:2">
-            <a class="btn btn-primary btn-xl" href="index.html">Back to home <span class="nudge" data-i="arrowRight"></span></a>
-            <a class="btn btn-xl" href="pricing.html">See pricing</a>
+            <a class="btn btn-primary btn-xl" href="/">Back to home <span class="nudge" data-i="arrowRight"></span></a>
+            <a class="btn btn-xl" href="/pricing">See pricing</a>
           </div>
-          <p class="nf-links" data-reveal style="--d:3"><span>Or try</span><a href="features.html">Features</a><a href="pricing.html#custom">Custom plan</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy</a></p>
+          <p class="nf-links" data-reveal style="--d:3"><span>Or try</span><a href="/features">Features</a><a href="/pricing#custom">Custom plan</a><a href="/contact">Contact</a><a href="/privacy">Privacy</a></p>
         </div>
 
         <div class="nf-stage" aria-hidden="true">
@@ -55,9 +63,9 @@
 
   <footer class="site-footer" data-site-footer></footer>
 
-  <script src="assets/js/core/ns.js?v=6"></script>
-  <script src="assets/js/core/icons.js?v=6"></script>
-  <script src="assets/js/people.js?v=6"></script>
-  <script src="assets/js/site.js?v=6"></script>
+  <script src="/assets/js/core/ns.js?v=7"></script>
+  <script src="/assets/js/core/icons.js?v=7"></script>
+  <script src="/assets/js/people.js?v=7"></script>
+  <script src="/assets/js/site.js?v=7"></script>
 </body>
 </html>

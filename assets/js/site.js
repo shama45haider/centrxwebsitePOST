@@ -3,19 +3,19 @@
 (function () {
   const C = window.Centrx;
   const $ = C.$, $$ = C.$$, esc = C.esc;
-  const APP = 'app.html';
+  const APP = '/app';
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const I = (name) => `<span data-i="${name}"></span>`;
   const page = document.body.dataset.page || '';
 
   /* ---------- Chrome ---------- */
   const NAV = [
-    ['features.html', 'Features', 'features'],
-    ['pricing.html', 'Pricing', 'pricing'],
-    ['help.html', 'Help', 'help'],
-    ['contact.html', 'Contact', 'contact'],
+    ['/features', 'Features', 'features'],
+    ['/pricing', 'Pricing', 'pricing'],
+    ['/help', 'Help', 'help'],
+    ['/contact', 'Contact', 'contact'],
   ];
-  const brand = `<a class="site-brand" href="index.html" aria-label="Centrx home">${C.brandMark(22)}<span>Centrx</span></a>`;
+  const brand = `<a class="site-brand" href="/" aria-label="Centrx home">${C.brandMark(22)}<span>Centrx</span></a>`;
   const navLinks = NAV.map(([href, label, id]) => `<a href="${href}"${id === page ? ' aria-current="page"' : ''}>${label}</a>`).join('');
 
   const header = $('[data-site-header]');
@@ -58,11 +58,11 @@
       <div class="foot-grid">
         <div class="foot-brand">${brand}<p>Customers, orders, payments, inventory, shipping, messaging and an AI assistant for local and retail businesses.</p></div>
         <div class="foot-col"><h3>Product</h3>
-          <a href="features.html">Features</a><a href="pricing.html">Pricing</a><a href="${APP}?demo#/">Live demo</a><a href="${APP}#/login">Sign in</a></div>
+          <a href="/features">Features</a><a href="/pricing">Pricing</a><a href="${APP}?demo#/">Live demo</a><a href="${APP}#/login">Sign in</a></div>
         <div class="foot-col"><h3>Company</h3>
-          <a href="help.html">Help center</a><a href="contact.html">Contact</a><a href="mailto:sales@centrx.co">sales@centrx.co</a><a href="mailto:support@centrx.co">support@centrx.co</a></div>
+          <a href="/help">Help center</a><a href="/contact">Contact</a><a href="mailto:sales@centrx.co">sales@centrx.co</a><a href="mailto:support@centrx.co">support@centrx.co</a></div>
         <div class="foot-col"><h3>Legal</h3>
-          <a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div>
+          <a href="/privacy">Privacy</a><a href="/terms">Terms</a></div>
       </div>
       <div class="foot-base"><span>© ${new Date().getFullYear()} Centrx. All rights reserved.</span><span>Payments processed by Stripe and PayPal.</span></div>
     </div>`;
@@ -90,7 +90,7 @@
   function planCard(p) {
     const parent = p.inherits && C.PLANS[p.inherits];
     const second = p.id === 'business'
-      ? `<a class="btn btn-lg btn-block btn-ghost sub-btn" href="contact.html">Talk to sales</a>`
+      ? `<a class="btn btn-lg btn-block btn-ghost sub-btn" href="/contact">Talk to sales</a>`
       : `<a class="btn btn-lg btn-block btn-ghost sub-btn" href="${APP}?demo#/">Try the live demo</a>`;
     return `<article class="plan${p.popular ? ' popular' : ''}" data-plan="${p.id}">
       <div class="plan-top"><h3 class="plan-name">${esc(p.name)}</h3>${p.popular ? '<span class="pill-plan">Most popular</span>' : ''}</div>
@@ -259,7 +259,7 @@
         </ul>
         <div class="pc-cta">
           <a class="btn btn-primary" href="${APP}#/custom-plan">Apply for Custom <span class="nudge" data-i="arrowRight"></span></a>
-          <a class="btn" href="contact.html">Talk to sales</a>
+          <a class="btn" href="/contact">Talk to sales</a>
         </div>
       </div>
       <div class="pc-preview" aria-hidden="true">
@@ -344,7 +344,7 @@
         const hits = C.HELP.filter((a) => words.every((w) => `${a.title} ${a.summary} ${a.keywords}`.toLowerCase().includes(w)));
         hub.innerHTML = hits.length
           ? `<section class="help-cat wide"><h2 class="h4">${hits.length} ${hits.length === 1 ? 'guide' : 'guides'} found</h2><div class="help-list">${hits.map(guide).join('')}</div></section>`
-          : `<section class="help-cat wide"><h2 class="h4">No guides match "${esc(q)}"</h2><p class="help-none">Try another word, or <a href="contact.html">ask us directly</a>. We usually reply within one business day.</p></section>`;
+          : `<section class="help-cat wide"><h2 class="h4">No guides match "${esc(q)}"</h2><p class="help-none">Try another word, or <a href="/contact">ask us directly</a>. We usually reply within one business day.</p></section>`;
       };
       draw('');
       if (search) search.addEventListener('input', () => draw(search.value.trim()));
