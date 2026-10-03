@@ -25,7 +25,7 @@
         items: 500, categories: 5, customStatuses: 2,
         seats: 2, locations: 1, customers: 1000, orders: 250, links: 250, labels: U,
         paymentProviders: 2, shippingProviders: 1, customRoles: 0,
-        auditDays: 7, apiKeys: 0, automations: 3, timelineMonths: 12,
+        auditDays: 30, apiKeys: 0, automations: 3, timelineMonths: 12,
       },
       features: {
         meetup: true, customDeposit: false, requireProof: false, esignature: false, proofVideo: false, signatureExport: false,
@@ -97,40 +97,76 @@
     id: 'custom', name: 'Custom', inherits: 'business',
     tagline: 'For businesses that have outgrown Business.',
     bullets: [
-      'Limits sized to your business: employees, locations, customers, orders and payment links',
+      'Higher limits on locations, customers, orders and links',
       'Volume pricing on email and SMS',
-      'A dedicated contact for onboarding and support',
-      'Monthly or annual billing, priced to your needs',
+      'A dedicated onboarding and support contact',
+      'Monthly or annual billing, priced to fit',
     ],
     review: 'Every application is reviewed by our team, usually within two business days.',
   };
 
   // Messaging add-on packs. Transactional email (receipts, payment links, order
   // updates) is included on every plan and never uses a pack.
+  // Pricing rationale lives in docs/plans.md → "Pack economics". Overage is priced well above the
+  // biggest pack's rate.
   C.ADDONS = {
     email: {
       id: 'email', name: 'Email', label: 'Email pack', unit: 'emails', icon: 'mail',
       metric: 'promoEmails', meterLabel: 'Campaign emails this month',
       covers: 'Campaign and promotional email. Receipts and order updates are always included.',
-      overage: { cents: 250, per: 1000, label: '$2.50 per 1,000 extra emails' },
+      overage: { cents: 150, per: 1000, label: '$1.50 per 1,000 extra emails' },
+      includes: [
+        'Campaigns and promotional email',
+        'Open, click and bounce tracking',
+        'Unsubscribes handled automatically',
+        'Sent from notify@centrx.co, or your own domain on Business',
+        'Change or cancel anytime',
+      ],
       packs: [
-        { id: 'email_5k', qty: 5000, price: 1000 },
-        { id: 'email_15k', qty: 15000, price: 2000 },
-        { id: 'email_50k', qty: 50000, price: 4000 },
+        { id: 'email_10k', qty: 10000, price: 900, tagline: 'For a monthly newsletter and the occasional promotion.' },
+        { id: 'email_50k', qty: 50000, price: 2900, tagline: 'For weekly campaigns to a growing list.', popular: true },
+        { id: 'email_150k', qty: 150000, price: 6900, tagline: 'For frequent campaigns to a large list.' },
       ],
     },
     sms: {
       id: 'sms', name: 'SMS', label: 'SMS pack', unit: 'texts', icon: 'phone',
       metric: 'sms', meterLabel: 'Texts this month',
       covers: 'Every text: campaigns, replies, texted payment links and order updates. Each segment counts as one.',
-      overage: { cents: 4, per: 1, label: '$0.04 per extra text' },
+      overage: { cents: 5, per: 1, label: '$0.05 per extra text' },
+      includes: [
+        'A dedicated toll-free number, registered for you',
+        'Texts only to customers who opted in',
+        'STOP and HELP replies handled for you',
+        'No marketing texts late at night',
+        'Messages over 160 characters count as more than one text',
+        'Change or cancel anytime',
+      ],
       packs: [
-        { id: 'sms_500', qty: 500, price: 1500 },
-        { id: 'sms_1500', qty: 1500, price: 3000 },
-        { id: 'sms_5000', qty: 5000, price: 6000 },
+        { id: 'sms_500', qty: 500, price: 1900, tagline: 'For pickup alerts, reminders and the odd promotion.' },
+        { id: 'sms_2000', qty: 2000, price: 6500, tagline: 'For regular promotions to opted-in customers.', popular: true },
+        { id: 'sms_5000', qty: 5000, price: 14900, tagline: 'For busy shops texting customers every week.' },
       ],
     },
   };
+  // Texting numbers. Carriers require every business to text from its own registered number.
+  // One toll-free number comes with any SMS pack; local and existing numbers are upsells
+  // (docs/plans.md → "Texting numbers"). Review times are carrier estimates.
+  C.SMS_NUMBERS = {
+    tollfree: { id: 'tollfree', name: 'Toll-free number', short: 'Toll-free', price: 0, setup: 0, review: 'usually 3–7 business days',
+      blurb: 'A dedicated 1-833 number, verified for business texting.' },
+    local: { id: 'local', name: 'Local number', short: 'Local', price: 1000, setup: 2900, review: 'usually 1–2 weeks',
+      blurb: 'A number in your area code that customers recognize.' },
+    existing: { id: 'existing', name: 'Your current business number', short: 'Your number', price: 1500, setup: 2900, review: 'usually 2–3 weeks',
+      blurb: 'Text from the number your customers already have saved.' },
+  };
+  C.SMS_NUMBER_ORDER = ['tollfree', 'local', 'existing'];
+  C.EXTRA_NUMBER = 1000; // each number after the first, e.g. one per location
+  // First number is priced by its type; every extra number costs at least C.EXTRA_NUMBER.
+  C.numberPrice = (type, index) => (index === 0 ? C.SMS_NUMBERS[type].price : Math.max(C.EXTRA_NUMBER, C.SMS_NUMBERS[type].price));
+  C.numbersMonthly = (nums) => (nums || []).reduce((s, n, i) => s + C.numberPrice(n.type, i), 0);
+
+  // Pack ids retired in the October 2026 repricing → the pack that replaced them.
+  const LEGACY_PACK = { email_5k: 'email_10k', email_15k: 'email_50k', sms_1500: 'sms_2000' };
   C.ADDON_METRIC = { promoEmails: 'email', sms: 'sms' }; // usage metric → add-on channel
   C.addonPack = (id) => {
     for (const ch in C.ADDONS) { const p = C.ADDONS[ch].packs.find((x) => x.id === id); if (p) return { ...p, channel: ch }; }
@@ -138,7 +174,10 @@
   };
   C.normAddons = (a) => {
     a = a || {};
-    const ok = (ch) => ((C.addonPack(a[ch]) || {}).channel === ch ? a[ch] : null);
+    const ok = (ch) => {
+      const id = Object.prototype.hasOwnProperty.call(LEGACY_PACK, a[ch]) ? LEGACY_PACK[a[ch]] : a[ch];
+      return (C.addonPack(id) || {}).channel === ch ? id : null;
+    };
     return { email: ok('email'), sms: ok('sms') };
   };
   C.addonsMonthly = (a) => Object.keys(C.ADDONS).reduce((s, ch) => s + ((C.addonPack((a || {})[ch]) || {}).price || 0), 0);
@@ -211,6 +250,8 @@
   C.plan = plan;
   C.addon = (ch) => C.addonPack(C.normAddons(tenant().addons)[ch]); // current pack or null
   C.hasPack = (k) => !!C.addon(C.ADDON_METRIC[k] || k); // accepts 'email' | 'sms' | 'promoEmails'
+  C.smsNumbers = () => tenant().smsNumbers || [];
+  C.hasSmsNumber = () => C.smsNumbers().some((n) => n.status === 'active'); // texts need an active, carrier-approved number
   // promoEmails / sms come from the tenant's packs (0 when none); everything else from the plan.
   C.limit = (k) => (C.ADDON_METRIC[k] ? ((C.addon(C.ADDON_METRIC[k]) || {}).qty || 0) : plan().limits[k]);
   C.can = (feature) => !!plan().features[feature];

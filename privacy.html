@@ -9,13 +9,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="icon" href="assets/brand/favicon-32.png?v=4" sizes="32x32" type="image/png">
-  <link rel="icon" href="assets/brand/centrx-mark.svg?v=4" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png?v=4">
-  <link rel="stylesheet" href="assets/css/tokens.css?v=4">
-  <link rel="stylesheet" href="assets/css/base.css?v=4">
-  <link rel="stylesheet" href="assets/css/components.css?v=4">
-  <link rel="stylesheet" href="assets/css/site.css?v=4">
+  <link rel="icon" href="assets/brand/favicon-32.png?v=5" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/brand/centrx-mark.svg?v=5" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png?v=5">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=5">
+  <link rel="stylesheet" href="assets/css/base.css?v=5">
+  <link rel="stylesheet" href="assets/css/components.css?v=5">
+  <link rel="stylesheet" href="assets/css/site.css?v=5">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body class="site" data-page="privacy">
@@ -39,6 +39,7 @@
           <a href="#use">How we use it</a>
           <a href="#share">Who we share it with</a>
           <a href="#messaging">Email and text messages</a>
+          <a href="#ai">The Centrx Assistant</a>
           <a href="#security">How we protect it</a>
           <a href="#retention">How long we keep it</a>
           <a href="#rights">Your rights and choices</a>
@@ -124,7 +125,7 @@
             <li>To send account holders news about Centrx. You can unsubscribe from these at any time, and we never send them to a business's customers.</li>
             <li>To meet legal obligations, such as tax records and responding to lawful requests.</li>
           </ul>
-          <p>We don't use Customer Data to market our own products, we don't sell it, and we don't use it to train artificial intelligence models. If we add optional AI features, such as suggesting item details from photos, they'll run only when someone on the business's team chooses to use them, will send only what the feature needs, and will be described here before they launch.</p>
+          <p>We don't use Customer Data to market our own products, we don't sell it, and we don't use it to train artificial intelligence models. How the Centrx Assistant handles data is explained in <a href="#ai">The Centrx Assistant</a>.</p>
           <p>If you're in the European Economic Area or the UK, we rely on these legal bases: performing our contract with you, our legitimate interests in running and securing the service, your consent where we ask for it, and our legal obligations.</p>
 
           <h2 id="share">Who we share information with</h2>
@@ -142,7 +143,8 @@
               <tbody>
                 <tr><td>Hosting and storage</td><td>Run our servers, databases, file storage and backups</td><td>All information stored in Centrx</td></tr>
                 <tr><td>Payment processors (Stripe, PayPal)</td><td>Process card and PayPal payments and our subscription billing</td><td>Payer name, email, amount, card or PayPal details entered with them</td></tr>
-                <tr><td>Email and SMS delivery</td><td>Deliver emails and text messages and report delivery, bounces and opt-outs</td><td>Recipient email or phone number, message content</td></tr>
+                <tr><td>Email and SMS delivery</td><td>Deliver emails and text messages, report delivery, bounces and opt-outs, and register businesses' texting numbers with mobile carriers</td><td>Recipient email or phone number, message content, and the business details needed to register a texting number</td></tr>
+                <tr><td>AI providers <span class="ph">[e.g. Google, Anthropic]</span></td><td>Power the Centrx Assistant</td><td>The question asked, the business data needed to answer it, and customer messages the assistant replies to</td></tr>
                 <tr><td>Connected apps, chosen by the business</td><td>Shipping labels, accounting, automations and webhooks</td><td>Only the data the connection needs, such as a shipping address for a label</td></tr>
                 <tr><td>Support and operations tools <span class="ph">[confirm]</span></td><td>Help desk, error monitoring</td><td>Contact details, support messages, technical logs</td></tr>
               </tbody>
@@ -159,7 +161,18 @@
             <li>Marketing texts aren't sent late at night in the recipient's time zone.</li>
           </ul>
           <p>Message frequency varies by business. Message and data rates may apply. <b>We do not share mobile phone numbers or text message opt-in information with third parties or affiliates for their marketing or promotional purposes.</b> Opt-in data and consent are never shared with anyone except the providers who deliver the messages.</p>
+          <p>US carriers require each business to text from its own registered number. To set one up, we share the business's legal name, EIN, address, website, contact details, a description of how its customers opt in and sample messages with our messaging provider, the mobile carriers and their registration service. These are details about the business, not its customers.</p>
           <p>Starter and Growth accounts send email from notify@centrx.co. Business accounts can send from their own domain. In both cases the business is shown as the sender.</p>
+
+          <h2 id="ai">The Centrx Assistant (AI)</h2>
+          <p>The Centrx Assistant uses AI models from <span class="ph">[provider(s)]</span> to answer questions about using Centrx, answer questions about a business's own data, draft messages and reply to customer texts on a business's behalf.</p>
+          <ul>
+            <li><b>What it sends.</b> To answer, the assistant sends the AI provider the question plus only the data needed to answer it, for example an order's status or the text a customer sent. It can only see what the employee using it is allowed to see.</li>
+            <li><b>No training.</b> Our agreements with AI providers don't allow them to use this data to train their models. They keep it only as long as needed to respond <span class="ph">[confirm each provider's retention, e.g. up to 30 days for abuse monitoring]</span>.</li>
+            <li><b>Text replies.</b> Businesses choose whether the assistant may reply to customer texts on its own or only draft replies for a person to send. Replies written by the assistant can be labeled as automated, and customers can always reach a person by asking.</li>
+            <li><b>Photos.</b> When someone uses the assistant to suggest item details from inventory photos, only those item photos are sent, never customer data. Photos marked as private, such as receipts or IDs, are never sent.</li>
+            <li><b>Control.</b> Each business can turn the assistant off, or limit which employees may use it.</li>
+          </ul>
 
           <h2 id="security">How we protect information</h2>
           <p>Security is part of every plan, not an upgrade. Here is how Centrx protects the information it holds:</p>
@@ -180,7 +193,7 @@
           <ul>
             <li><b>Account information</b> is kept while your account is open and deleted within <span class="ph">[30]</span> days after the account is closed, except where we must keep it longer.</li>
             <li><b>Customer Data</b> is kept for as long as the business keeps it in Centrx. When a business closes its account, we delete its Customer Data within <span class="ph">[30]</span> days, and copies in backups expire within <span class="ph">[a further 30]</span> days. Businesses can export their data before closing.</li>
-            <li><b>Audit log entries</b> are kept for 7, 90 or 365 days depending on the plan.</li>
+            <li><b>Audit log entries</b> are kept for 30, 90 or 365 days depending on the plan.</li>
             <li><b>Suppression list entries</b> (unsubscribes and STOP replies) are kept for as long as needed to make sure opted-out people aren't contacted again, even after other data is deleted.</li>
             <li><b>Billing and tax records</b> are kept for <span class="ph">[7]</span> years, as tax and accounting law requires.</li>
             <li><b>Contact form messages</b> are kept for <span class="ph">[24]</span> months.</li>
@@ -225,8 +238,8 @@
 
   <footer class="site-footer" data-site-footer></footer>
 
-  <script src="assets/js/core/ns.js?v=4"></script>
-  <script src="assets/js/core/icons.js?v=4"></script>
-  <script src="assets/js/site.js?v=4"></script>
+  <script src="assets/js/core/ns.js?v=5"></script>
+  <script src="assets/js/core/icons.js?v=5"></script>
+  <script src="assets/js/site.js?v=5"></script>
 </body>
 </html>

@@ -89,6 +89,8 @@
     initials: (name) =>
       String(name || '?').split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join(''),
     plural: (n, one, many) => `${C.fmt.num(n)} ${n === 1 ? one : many || one + 's'}`,
+    // US numbers in E.164 (+15035550199) → (503) 555-0199; anything else is shown as given.
+    phone: (v) => { const d = String(v || '').replace(/\D/g, '').replace(/^1(?=\d{10}$)/, ''); return d.length === 10 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : String(v || ''); },
   };
 
   // Stable soft color per string (used for avatars / tenant logos)

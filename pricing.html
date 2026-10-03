@@ -12,13 +12,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="icon" href="assets/brand/favicon-32.png?v=4" sizes="32x32" type="image/png">
-  <link rel="icon" href="assets/brand/centrx-mark.svg?v=4" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png?v=4">
-  <link rel="stylesheet" href="assets/css/tokens.css?v=4">
-  <link rel="stylesheet" href="assets/css/base.css?v=4">
-  <link rel="stylesheet" href="assets/css/components.css?v=4">
-  <link rel="stylesheet" href="assets/css/site.css?v=4">
+  <link rel="icon" href="assets/brand/favicon-32.png?v=5" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/brand/centrx-mark.svg?v=5" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png?v=5">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=5">
+  <link rel="stylesheet" href="assets/css/base.css?v=5">
+  <link rel="stylesheet" href="assets/css/components.css?v=5">
+  <link rel="stylesheet" href="assets/css/site.css?v=5">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body class="site" data-page="pricing">
@@ -31,7 +31,7 @@
       <div class="container hero-top">
         <h1 class="display" data-reveal>Pricing that grows with you.</h1>
         <div class="hero-side" data-reveal style="--d:2">
-          <p class="lead">Every plan includes customers, orders, payment links, inventory and Stripe + PayPal. Try any plan free for 30 days, no card required.</p>
+          <p class="lead">Choose the plan that fits your team and volume. Every plan includes a 30-day free trial, with no credit card required.</p>
           <div class="billing-toggle">
             <div class="segmented" role="group" aria-label="Billing period" data-billing>
               <button type="button" data-value="monthly" class="on" aria-pressed="true">Monthly</button>
@@ -73,54 +73,21 @@
 
     <section class="section tint" id="addons">
       <div class="container">
-        <div class="section-head" data-reveal>
-          <h2 class="h2">Email and SMS, priced by what you send.</h2>
-          <p class="lead">Messaging isn't bundled into the plans, so a shop that rarely runs campaigns doesn't pay for one that sends thousands. Add a pack to any plan and change it whenever you like.</p>
+        <div class="pack-head" data-reveal>
+          <div class="section-head">
+            <h2 class="h2">Email and SMS add-ons</h2>
+            <p class="lead">Add a monthly pack to any plan and change it anytime. Receipts and order emails are always free; packs cover campaign email and every text you send.</p>
+          </div>
+          <div class="segmented pack-toggle" role="group" aria-label="Add-on type" data-pack-toggle>
+            <button type="button" data-pack-ch="email" class="on" aria-pressed="true">Email</button>
+            <button type="button" data-pack-ch="sms" aria-pressed="false">SMS</button>
+          </div>
         </div>
-
-        <div class="panel msg-panel" data-estimator data-reveal>
-          <div class="panel-head">
-            <div><h3>Messaging packs</h3><div class="xs muted">Monthly. Works with every plan.</div></div>
-            <div class="segmented" role="group" aria-label="Channel" data-channel>
-              <button type="button" data-ch="email" class="on" aria-pressed="true">Email</button>
-              <button type="button" data-ch="sms" aria-pressed="false">SMS</button>
-            </div>
-          </div>
-          <div class="msg-grid">
-            <div class="msg-est">
-              <label class="label" for="est-range" data-est-label>Campaign emails you send a month</label>
-              <div class="est-num num" data-est-num aria-live="polite">8,000</div>
-              <input class="est-range" type="range" id="est-range" min="0" max="60000" step="500" value="8000" data-est-range>
-              <div class="est-scale xs faint"><span>0</span><span data-est-max>60,000</span></div>
-              <div class="est-out">
-                <div class="meter-row"><span class="medium" data-est-pack>15,000-email pack</span><span class="num" data-est-use></span></div>
-                <div class="meter"><i data-est-meter style="width:0%"></i></div>
-                <div class="est-total"><span class="muted small">Estimated</span><b class="num" data-est-total>$20</b><span class="muted small">/mo</span></div>
-                <p class="est-note" data-est-note></p>
-              </div>
-            </div>
-            <div>
-              <table class="table pack-table">
-                <thead><tr><th>Pack</th><th class="right">Per message</th><th class="right">Price</th></tr></thead>
-                <tbody data-pack-rows></tbody>
-              </table>
-              <p class="xs muted" style="padding:14px 22px">Beyond your pack: <span data-est-over></span>. Packs renew monthly; unused messages don't roll over.</p>
-            </div>
-          </div>
-          <div class="panel-foot msg-foot"><span data-i="info"></span><span data-est-foot></span></div>
-        </div>
-
-        <div class="sender" data-reveal>
-          <div>
-            <h3 class="h3">Who your emails come from</h3>
-            <p class="body-muted" style="margin-top:10px">Starter and Growth send from <code>notify@centrx.co</code> under your business name. On Business, connect your own domain and send as <code>notifications@yourbusiness.com</code>. Centrx looks after delivery and email authentication for you.</p>
-          </div>
-          <div class="email-card pop" aria-label="Example email header">
-            <div class="row-f"><span>From</span><span class="from"><span class="from-swap" data-from>John's Pizza &lt;notify@centrx.co&gt;</span></span></div>
-            <div class="row-f"><span>Plan</span><span class="medium" data-from-plan>Starter &amp; Growth</span></div>
-            <div class="row-f"><span>Subject</span><span class="medium">Your order is ready</span></div>
-            <div class="email-body">Hi Sam, your large margherita is ready for pickup. See you soon!</div>
-          </div>
+        <div data-packs data-reveal>
+          <div class="plans pack-plans" data-pack-cards></div>
+          <div class="includes" data-pack-includes></div>
+          <div class="numbers" data-pack-numbers hidden></div>
+          <p class="pack-more" data-pack-more></p>
         </div>
       </div>
     </section>
@@ -172,6 +139,14 @@
             <div class="answer">Yes. Pay yearly and get two months free: <span data-annual-list></span> a year.</div>
           </details>
           <details>
+            <summary>Do I get my own number for texting?<span data-i="plus"></span></summary>
+            <div class="answer">Yes. US carriers require every business to text from its own registered number, so every SMS pack includes a dedicated toll-free number, and we handle the carrier registration for you. You can upgrade to a local number in your area code, or text from the business number your customers already know. See the options under Email and SMS add-ons.</div>
+          </details>
+          <details>
+            <summary>Does Centrx include an AI assistant?<span data-i="plus"></span></summary>
+            <div class="answer">Yes. The Centrx Assistant is built into the panel. Ask it how to do something, get answers from your own sales and customer data, or let it reply to customer texts about hours, orders and pickups. It works within each employee's permissions, and texts it sends count toward your SMS pack.</div>
+          </details>
+          <details>
             <summary>How is my data kept safe?<span data-i="plus"></span></summary>
             <div class="answer">Every plan has two-factor sign-in, session control, role-based permissions and an audit log. Stripe and PayPal handle card payments, so card numbers never touch Centrx. Read the <a href="privacy.html">privacy policy</a> for the details.</div>
           </details>
@@ -205,10 +180,10 @@
 
   <footer class="site-footer" data-site-footer></footer>
 
-  <script src="assets/js/core/ns.js?v=4"></script>
-  <script src="assets/js/core/icons.js?v=4"></script>
-  <script src="assets/js/data/plans.js?v=4"></script>
-  <script src="assets/js/people.js?v=4"></script>
-  <script src="assets/js/site.js?v=4"></script>
+  <script src="assets/js/core/ns.js?v=5"></script>
+  <script src="assets/js/core/icons.js?v=5"></script>
+  <script src="assets/js/data/plans.js?v=5"></script>
+  <script src="assets/js/people.js?v=5"></script>
+  <script src="assets/js/site.js?v=5"></script>
 </body>
 </html>

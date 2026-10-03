@@ -55,7 +55,7 @@
   if (footer) {
     footer.innerHTML = `<div class="container">
       <div class="foot-grid">
-        <div class="foot-brand">${brand}<p>Customers, orders, payments, inventory, shipping and messaging for local and retail businesses.</p></div>
+        <div class="foot-brand">${brand}<p>Customers, orders, payments, inventory, shipping, messaging and an AI assistant for local and retail businesses.</p></div>
         <div class="foot-col"><h3>Product</h3>
           <a href="features.html">Features</a><a href="pricing.html">Pricing</a><a href="${APP}?demo#/">Live demo</a><a href="${APP}#/login">Sign in</a></div>
         <div class="foot-col"><h3>Company</h3>
@@ -143,90 +143,80 @@
     setBilling(billing, false);
   }
 
-  // Messaging packs: pick a monthly volume, get the cheapest pack (overage included) highlighted.
-  function renderEstimator() {
-    const el = $('[data-estimator]');
-    if (!el) return;
-    const RANGE = {
-      email: { max: 60000, step: 500, start: 8000, label: 'Campaign emails you send a month' },
-      sms: { max: 6000, step: 50, start: 800, label: 'Texts you send a month' },
-    };
-    const FOOT = {
-      email: 'Receipts, payment links and order updates are always included and never count toward a pack.',
-      sms: 'Every text counts, including replies and texted payment links. Long texts count once per segment.',
-    };
-    const cash = (c) => (c % 100 ? C.fmt.money(c) : money0(c));
-    const rate = (ch, pk) => (ch === 'email' ? `${C.fmt.money((pk.price / pk.qty) * 1000)} per 1,000` : `${+(pk.price / pk.qty).toFixed(1)}¢ each`);
-    const vals = { email: RANGE.email.start, sms: RANGE.sms.start };
-    const range = $('[data-est-range]', el);
-    let ch = 'email';
-    const bestFor = (v) => C.ADDONS[ch].packs
-      .map((pk) => { const over = Math.max(0, v - pk.qty); return { pk, over, cost: pk.price + (over ? C.overageCents(ch, over) : 0) }; })
-      .reduce((a, b) => (b.cost < a.cost ? b : a));
-    const draw = () => {
-      const a = C.ADDONS[ch], v = vals[ch], b = bestFor(v), unit = a.unit.replace(/s$/, '');
-      $$('[data-ch]', el).forEach((btn) => { const on = btn.dataset.ch === ch; btn.classList.toggle('on', on); btn.setAttribute('aria-pressed', on); });
-      $('[data-est-label]', el).textContent = RANGE[ch].label;
-      $('[data-est-num]', el).innerHTML = `${C.fmt.num(v)}<small>${a.unit}</small>`;
-      $('[data-est-max]', el).textContent = C.fmt.num(RANGE[ch].max);
-      range.max = RANGE[ch].max; range.step = RANGE[ch].step; range.value = v;
-      range.setAttribute('aria-valuetext', `${C.fmt.num(v)} ${a.unit}`);
-      const meter = $('[data-est-meter]', el);
-      if (!v) {
-        $('[data-est-pack]', el).textContent = 'No pack needed';
-        $('[data-est-use]', el).textContent = '';
-        meter.parentElement.classList.remove('warn');
-        meter.style.width = '0%';
-        $('[data-est-total]', el).textContent = '$0';
-        $('[data-est-note]', el).textContent = 'You only need a pack to send campaigns.';
-      } else {
-        $('[data-est-pack]', el).textContent = `${C.fmt.num(b.pk.qty)}-${unit} pack`;
-        $('[data-est-use]', el).textContent = `${C.fmt.num(v)} / ${C.fmt.num(b.pk.qty)}`;
-        meter.parentElement.classList.toggle('warn', v > b.pk.qty);
-        meter.style.width = Math.min(100, (v / b.pk.qty) * 100) + '%';
-        $('[data-est-total]', el).textContent = cash(b.cost);
-        $('[data-est-note]', el).textContent = b.over
-          ? `Includes ${cash(C.overageCents(ch, b.over))} for ${C.fmt.num(b.over)} ${a.unit} beyond the pack.`
-          : `${C.fmt.num(b.pk.qty - v)} ${a.unit} to spare each month.`;
+  // Email and SMS packs: three cards per channel, shaped like the plan cards, one channel at a time.
+  function renderPacks() {
+    const el = $('[data-packs]'), toggle = $('[data-pack-toggle]');
+    if (!el || !C.ADDONS) return;
+    const rate = (ch, pk) => (ch === 'email'
+      ? `${C.fmt.money((pk.price / pk.qty) * 1000)} per 1,000 emails`
+      : `${+(pk.price / pk.qty).toFixed(2)}¢ per text`);
+    const draw = (ch) => {
+      const a = C.ADDONS[ch];
+      $$('[data-pack-ch]', toggle).forEach((b) => { const on = b.dataset.packCh === ch; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+      $('[data-pack-cards]', el).innerHTML = a.packs.map((pk, k) => `<article class="plan pack-card${pk.popular ? ' popular' : ''}" style="--k:${k}">
+        <div class="plan-top"><h3 class="plan-name">${C.fmt.num(pk.qty)} ${esc(a.unit)}</h3>${pk.popular ? '<span class="pill-plan">Most popular</span>' : ''}</div>
+        <p class="plan-tag">${esc(pk.tagline)}</p>
+        <div class="price"><span class="price-amt num">${money0(pk.price)}</span><span class="price-per">/month</span></div>
+        <p class="price-note">${rate(ch, pk)}</p>
+        <a class="btn btn-lg btn-block${pk.popular ? ' btn-primary' : ''}" href="${APP}#/settings/billing?addon=${ch}">Add to your plan</a>
+      </article>`).join('');
+      $('[data-pack-includes]', el).innerHTML = `<div class="includes-head">Every ${ch === 'sms' ? 'SMS' : 'email'} pack includes</div>
+        <ul class="rings-list">${a.includes.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`;
+      $('[data-pack-more]', el).innerHTML = `Go over your pack and you pay ${esc(a.overage.label)}. Sending far more? <a href="#custom">Custom plans</a> include volume pricing.`;
+      // SMS only: the texting-number options (one toll-free number is included with every pack).
+      const nb = $('[data-pack-numbers]', el);
+      if (nb) {
+        nb.hidden = ch !== 'sms';
+        if (ch === 'sms' && C.SMS_NUMBERS) {
+          nb.innerHTML = `<div class="numbers-head"><h3 class="h4">Your texting number</h3>
+            <p>US carriers require every business to text from its own registered number. We register it with the carriers for you.</p></div>
+            <div class="numbers-grid">${C.SMS_NUMBER_ORDER.map((k) => { const n = C.SMS_NUMBERS[k]; return `<div class="num-opt">
+              <div class="num-name">${esc(n.name)}</div>
+              <div class="num-price">${n.price ? `${money0(n.price)}<span>/month</span>` : 'Included'}</div>
+              <p>${esc(n.blurb)}</p>
+              <small>${n.setup ? `${money0(n.setup)} one-time setup` : 'No setup fee'} · ready ${esc(n.review.replace('usually ', 'in about '))}</small>
+            </div>`; }).join('')}</div>
+            <p class="numbers-foot">Setup fees are waived on annual billing. Extra numbers, for example one per location, are ${money0(C.EXTRA_NUMBER)}/month each.</p>`;
+        }
       }
-      $('[data-pack-rows]', el).innerHTML = a.packs.map((pk) => {
-        const on = v > 0 && pk === b.pk;
-        return `<tr class="${on ? 'best' : ''}">
-          <td><span class="cell-main">${C.fmt.num(pk.qty)} ${a.unit}</span>${on ? '<span class="badge accent plain">Best fit</span>' : ''}</td>
-          <td class="right muted">${rate(ch, pk)}</td>
-          <td class="right"><span class="cell-main num">${money0(pk.price)}</span><span class="muted">/mo</span></td>
-        </tr>`;
-      }).join('');
-      $('[data-est-over]', el).textContent = a.overage.label;
-      $('[data-est-foot]', el).textContent = FOOT[ch];
     };
-    range.addEventListener('input', () => { vals[ch] = +range.value; draw(); });
-    $('[data-channel]', el).addEventListener('click', (e) => {
-      const b = e.target.closest('[data-ch]');
-      if (b && b.dataset.ch !== ch) { ch = b.dataset.ch; draw(); }
-    });
-    draw();
+    toggle.addEventListener('click', (e) => { const b = e.target.closest('[data-pack-ch]'); if (b && !b.classList.contains('on')) draw(b.dataset.packCh); });
+    draw('email');
   }
 
   // Custom: by application from inside the app, never a self-serve checkout.
   function renderCustom() {
     const el = $('[data-custom-plan]'), c = C.CUSTOM_PLAN;
     if (!el || !c) return;
+    // The logo's four blades, drawn separately so they can spread apart on hover.
+    const blades = (C.BRAND_PATH || '').split('Z').filter(Boolean).map((d, k) => `<path class="pc-blade b${k}" d="${d}Z"/>`).join('');
+    // A preview of the real application flow (assets/js/pages/custom-plan.js), mid-review.
+    const STEPS = [
+      ['done', 'Tell us what you need', '9 locations · 12,000 orders a month'],
+      ['done', 'Confirm your business', 'LLC · EIN ••-•••4567 · Oregon filing'],
+      ['now', 'Our team reviews it', 'Usually within two business days'],
+      ['next', 'Your limits and price go live', 'Set to the volume you told us'],
+    ];
     el.innerHTML = `<article class="plan-custom" id="custom">
-      <div>
-        <div class="plan-top"><h3 class="plan-name">${esc(c.name)}</h3><span class="tag">By application</span></div>
-        <p class="plan-tag">${esc(c.tagline)}</p>
-        <ul class="plan-list">
+      <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="pcBlade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A5CFF"/><stop offset="1" stop-color="#38BDF8"/></linearGradient></defs>${blades}</svg>
+      <div class="pc-main">
+        <div class="pc-top">${C.brandMark(22)}<h3 class="plan-name">${esc(c.name)}</h3><span class="pc-tag">By application</span></div>
+        <p class="pc-title">Sized to <span>your business.</span></p>
+        <p class="pc-lead">${esc(c.tagline)} We'll size limits and pricing to your volume.</p>
+        <ul class="pc-list">
           <li class="inherit">Everything in ${esc(C.PLANS[c.inherits].name)}, plus:</li>
           ${c.bullets.map((b) => `<li>${esc(b)}</li>`).join('')}
         </ul>
+        <div class="pc-cta">
+          <a class="btn btn-primary" href="${APP}#/custom-plan">Apply for Custom <span class="nudge" data-i="arrowRight"></span></a>
+          <a class="btn" href="contact.html">Talk to sales</a>
+        </div>
       </div>
-      <div class="pc-side">
-        <div class="pc-price">Priced to fit</div>
-        <p class="price-note">${esc(c.review)}</p>
-        <a class="btn btn-lg btn-block" href="${APP}#/custom-plan">Apply for Custom</a>
-        <a class="btn btn-lg btn-block btn-ghost sub-btn" href="contact.html">Talk to sales</a>
-        <p class="pc-fine">You'll confirm your business details, such as your EIN and state filing number.</p>
+      <div class="pc-preview" aria-hidden="true">
+        <div class="panel pc-app">
+          <div class="panel-head"><div><h3>Custom plan application</h3><div class="xs muted mono">CX-7Q4K2</div></div><span class="badge warn">Under review</span></div>
+          <ol class="pc-steps">${STEPS.map(([s, t, d], k) => `<li class="${s}" style="--k:${k}"><span class="pc-dot">${s === 'done' ? C.icon('check', 12) : ''}</span><div><b>${t}</b><small>${d}</small></div></li>`).join('')}</ol>
+        </div>
       </div>
     </article>`;
   }
@@ -261,7 +251,7 @@
   if (hasPlans) {
     renderPlans();
     renderCustom();
-    renderEstimator();
+    renderPacks();
     renderCompare();
     setBilling(billing, false);
     $$('[data-overage]').forEach((el) => { el.textContent = C.ADDONS[el.dataset.overage].overage.label; });
@@ -442,28 +432,14 @@
     })();
   });
 
+  /* ---------- AI Assistant mocks: play the question → typing → answer once they're on screen ---------- */
+  $$('[data-ai-chat]').forEach((el) => (RM ? el.classList.add('play') : once([el], () => el.classList.add('play'), { threshold: 0.4 })));
+
   /* ---------- Phone bubbles ---------- */
   $$('[data-phone]').forEach((phone) => {
     const bubbles = $$('.bubble', phone);
     once([phone], () => bubbles.forEach((b, i) => setTimeout(() => b.classList.add('in'), RM ? 0 : 350 + i * 700)));
   });
-
-  /* ---------- Sender identity swap ---------- */
-  const from = $('[data-from]');
-  if (from) {
-    const STATES = [
-      { addr: "John's Pizza &lt;notify@centrx.co&gt;", plan: 'Starter & Growth' },
-      { addr: "John's Pizza &lt;notifications@johnspizza.com&gt;", plan: 'Business · your own domain' },
-    ];
-    const label = $('[data-from-plan]');
-    let k = 0;
-    const apply = () => { from.innerHTML = STATES[k].addr; if (label) label.textContent = STATES[k].plan; };
-    apply();
-    if (!RM) loop(from, () => {
-      from.classList.add('out');
-      setTimeout(() => { k = (k + 1) % STATES.length; apply(); from.classList.remove('out'); }, 260);
-    }, 3000);
-  }
 
   /* ---------- Features sub-nav scroll-spy ---------- */
   const subnav = $('[data-subnav]');
@@ -478,15 +454,6 @@
       });
     }), { rootMargin: '-45% 0px -50% 0px' });
     $$('.feature[id]').forEach((s) => spy.observe(s));
-  }
-
-  /* ---------- 404: show the address that wasn't found ---------- */
-  const nfPath = $('[data-nf-path]');
-  if (nfPath) {
-    let path = location.pathname + location.search;
-    try { path = decodeURI(path); } catch {}
-    nfPath.textContent = location.host + path;
-    nfPath.title = nfPath.textContent;
   }
 
   /* ---------- Contact form (simulated; nothing leaves the browser) ---------- */
