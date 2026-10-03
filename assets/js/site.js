@@ -12,6 +12,7 @@
   const NAV = [
     ['features.html', 'Features', 'features'],
     ['pricing.html', 'Pricing', 'pricing'],
+    ['help.html', 'Help', 'help'],
     ['contact.html', 'Contact', 'contact'],
   ];
   const brand = `<a class="site-brand" href="index.html" aria-label="Centrx home">${C.brandMark(22)}<span>Centrx</span></a>`;
@@ -59,7 +60,7 @@
         <div class="foot-col"><h3>Product</h3>
           <a href="features.html">Features</a><a href="pricing.html">Pricing</a><a href="${APP}?demo#/">Live demo</a><a href="${APP}#/login">Sign in</a></div>
         <div class="foot-col"><h3>Company</h3>
-          <a href="contact.html">Contact</a><a href="mailto:sales@centrx.co">sales@centrx.co</a><a href="mailto:support@centrx.co">support@centrx.co</a></div>
+          <a href="help.html">Help center</a><a href="contact.html">Contact</a><a href="mailto:sales@centrx.co">sales@centrx.co</a><a href="mailto:support@centrx.co">support@centrx.co</a></div>
         <div class="foot-col"><h3>Legal</h3>
           <a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div>
       </div>
@@ -325,6 +326,59 @@
     $$('[data-annual-list]').forEach((el) => {
       const parts = C.PLAN_ORDER.map((id) => `${C.PLANS[id].name} ${money0(annualTotal(C.PLANS[id]))}`);
       el.textContent = parts.slice(0, -1).join(', ') + ' or ' + parts[parts.length - 1];
+    });
+  }
+
+  /* ---------- Help center (needs data/help.js) ---------- */
+  if (C.HELP) {
+    const guide = (a) => `<a class="help-link" href="${a.href}"><b>${esc(a.title)}</b><span>${esc(a.summary)}</span></a>`;
+
+    // Hub: guides grouped by category, filtered live by the search box.
+    const hub = $('[data-help-hub]'), search = $('[data-help-search]');
+    if (hub) {
+      const all = C.HELP_CATEGORIES.map((c) => `<section class="help-cat"><h2 class="h4">${esc(c.name)}</h2>
+        <div class="help-list">${C.HELP.filter((a) => a.cat === c.id).map(guide).join('')}</div></section>`).join('');
+      const draw = (q) => {
+        const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+        if (!words.length) { hub.innerHTML = all; return; }
+        const hits = C.HELP.filter((a) => words.every((w) => `${a.title} ${a.summary} ${a.keywords}`.toLowerCase().includes(w)));
+        hub.innerHTML = hits.length
+          ? `<section class="help-cat wide"><h2 class="h4">${hits.length} ${hits.length === 1 ? 'guide' : 'guides'} found</h2><div class="help-list">${hits.map(guide).join('')}</div></section>`
+          : `<section class="help-cat wide"><h2 class="h4">No guides match "${esc(q)}"</h2><p class="help-none">Try another word, or <a href="contact.html">ask us directly</a>. We usually reply within one business day.</p></section>`;
+      };
+      draw('');
+      if (search) search.addEventListener('input', () => draw(search.value.trim()));
+    }
+
+    // Guide pages: the other guides in the same category, then the rest.
+    $$('[data-help-related]').forEach((el) => {
+      const me = C.HELP.find((a) => a.id === el.dataset.helpRelated);
+      const rest = C.HELP.filter((a) => a !== me).sort((a, b) => (b.cat === me?.cat) - (a.cat === me?.cat)).slice(0, 3);
+      el.innerHTML = rest.map(guide).join('');
+    });
+  }
+
+  // Prices and limits quoted in guides come from data/plans.js, so they never drift from the pricing page.
+  if (hasPlans) {
+    const N = C.SMS_NUMBERS || {}, A = C.ADDONS || {};
+    const FACTS = {
+      'num-local': N.local && `${money0(N.local.price)}/month`,
+      'num-local-setup': N.local && money0(N.local.setup),
+      'num-local-review': N.local && N.local.review,
+      'num-existing': N.existing && `${money0(N.existing.price)}/month`,
+      'num-existing-setup': N.existing && money0(N.existing.setup),
+      'num-existing-review': N.existing && N.existing.review,
+      'num-tollfree-review': N.tollfree && N.tollfree.review,
+      'num-extra': C.EXTRA_NUMBER && `${money0(C.EXTRA_NUMBER)}/month`,
+      'email-overage': A.email && A.email.overage.label,
+      'sms-overage': A.sms && A.sms.overage.label,
+      'annual-list': ((l) => `${l.slice(0, -1).join(', ')} or ${l[l.length - 1]}`)(C.PLAN_ORDER.map((id) => `${C.PLANS[id].name} ${money0(annualTotal(C.PLANS[id]))}`)),
+    };
+    $$('[data-fact]').forEach((el) => { if (FACTS[el.dataset.fact]) el.textContent = FACTS[el.dataset.fact]; });
+    // Pack tables: one row per pack, straight from the pricing data.
+    $$('[data-pack-table]').forEach((el) => {
+      const a = A[el.dataset.packTable];
+      if (a) el.innerHTML = a.packs.map((pk) => `<tr><td>${C.fmt.num(pk.qty)} ${esc(a.unit)}</td><td>${money0(pk.price)}/month</td></tr>`).join('');
     });
   }
 

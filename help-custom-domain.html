@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Send email from your own domain · Centrx</title>
+  <meta name="description" content="How to connect your own domain on the Centrx Business plan: the DNS records to add, tips for common domain providers, and how to fix verification problems.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Send email from your own domain">
+  <meta property="og:description" content="How to connect your own domain on the Centrx Business plan: the DNS records to add, tips for common domain providers, and how to fix verification problems.">
+  <meta name="theme-color" content="#FFFFFF">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/brand/favicon-32.png?v=6" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/brand/centrx-mark.svg?v=6" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png?v=6">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=6">
+  <link rel="stylesheet" href="assets/css/base.css?v=6">
+  <link rel="stylesheet" href="assets/css/components.css?v=6">
+  <link rel="stylesheet" href="assets/css/site.css?v=6">
+  <script>document.documentElement.classList.add('js')</script>
+</head>
+<body class="site" data-page="help">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header" data-site-header></header>
+
+  <main id="main">
+    <section class="page-hero help-hero">
+      <div class="container">
+        <nav class="help-crumbs" aria-label="Breadcrumb"><a href="help.html">Help center</a><span aria-hidden="true">/</span><span>Email and texting</span></nav>
+        <h1 class="display" style="margin-top:14px">Send email from your own domain</h1>
+        <p class="lead">On Business, customers get email from your own address, like notifications@yourbusiness.com, instead of notify@centrx.co.</p>
+      </div>
+    </section>
+
+    <section class="section tight">
+      <div class="container legal-wrap">
+        <nav class="legal-toc" aria-label="On this page"><a href="#who">Who can use this</a><a href="#ready">What to have ready</a><a href="#steps">Connect your domain</a><a href="#records">What the records do</a><a href="#providers">Tips for common providers</a><a href="#trouble">If verification fails</a></nav>
+        <article class="legal">
+          <div class="callout warn"><span data-i="alert"></span><span><b>Draft.</b> Steps highlighted <span class="ph">like this</span> name panel screens that still need checking against the live panel.</span></div>
+          <h2 id="who">Who can use this</h2>
+          <p>Sending from your own domain is part of the Business plan. On Starter and Growth, email comes from <code>notify@centrx.co</code> with your business name as the sender, and it works without any setup.</p>
+
+          <h2 id="ready">What to have ready</h2>
+          <ul>
+            <li>A domain you own, like <code>yourbusiness.com</code>.</li>
+            <li>A sign-in for the place that manages its DNS. That's usually where you bought the domain, such as GoDaddy, Namecheap, Squarespace or Cloudflare.</li>
+          </ul>
+          <p>If someone else set up your website, ask them to add the records for you. It takes them a few minutes.</p>
+
+          <h2 id="steps">Connect your domain</h2>
+          <ol>
+            <li>In Centrx, open <span class="ph">Settings → Email → Sending domain</span>.</li>
+            <li>Enter your domain and the address to send from, for example <code>notifications@yourbusiness.com</code>.</li>
+            <li>Centrx shows a few DNS records. Copy each one into your domain's DNS settings exactly as shown.</li>
+            <li>Back in Centrx, select <span class="ph">Verify</span>.</li>
+          </ol>
+          <p>DNS changes often show up within minutes, but can take up to 48 hours. If verification doesn't pass straight away, try again later. <span class="ph">Confirm: email keeps sending from notify@centrx.co until the domain is verified.</span></p>
+
+          <h2 id="records">What the records do</h2>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Record</th><th>Type</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>SPF</td><td>TXT</td><td>Lists who is allowed to send email for your domain.</td></tr>
+              <tr><td>DKIM</td><td>CNAME or TXT</td><td>Signs each email so inboxes can tell it really came from you.</td></tr>
+              <tr><td>DMARC</td><td>TXT</td><td>Tells inboxes what to do with email that fails those checks.</td></tr>
+            </tbody>
+          </table></div>
+          <p>Together they keep your email out of spam folders and stop others from sending email that pretends to be you.</p>
+
+          <h2 id="providers">Tips for common providers</h2>
+          <ul>
+            <li><b>Already have an SPF record?</b> A domain can only have one. Don't add a second. Add Centrx to the one you have instead, or ask us and we'll tell you exactly what it should say.</li>
+            <li><b>GoDaddy and Namecheap</b> add your domain to the end of the name automatically. If Centrx shows <code>mail._domainkey.yourbusiness.com</code>, enter only <code>mail._domainkey</code>.</li>
+            <li><b>Cloudflare:</b> set CNAME records to <b>DNS only</b> (the grey cloud), not proxied.</li>
+          </ul>
+
+          <h2 id="trouble">If verification fails</h2>
+          <ul>
+            <li>Wait an hour and try again. Most failures are DNS that hasn't updated yet.</li>
+            <li>Check for typos and extra spaces, and make sure the value wasn't put in quotes twice.</li>
+            <li>Check there's only one SPF record.</li>
+            <li>Make sure you edited the DNS where the domain's records actually live. If you moved DNS to another provider, edit it there.</li>
+          </ul>
+
+          <div class="help-related">
+            <h2 class="h4">Related guides</h2>
+            <div class="help-list" data-help-related="custom-domain"></div>
+          </div>
+          <p class="help-more">Still stuck? <a href="contact.html">Contact us</a> or email <a href="mailto:support@centrx.co">support@centrx.co</a>. We usually reply within one business day.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" data-site-footer></footer>
+
+  <script src="assets/js/core/ns.js?v=6"></script>
+  <script src="assets/js/core/icons.js?v=6"></script>
+  <script src="assets/js/data/plans.js?v=6"></script>
+  <script src="assets/js/data/help.js?v=6"></script>
+  <script src="assets/js/site.js?v=6"></script>
+</body>
+</html>
