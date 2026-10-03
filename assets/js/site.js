@@ -83,6 +83,9 @@
   const signupUrl = (id, b) => `${APP}#/signup?plan=${id}&billing=${b}`;
   const fmtBullet = (s) => esc(s).replace(/([\w.+-]+@[\w-]+\.[\w.]+)/g, '<code>$1</code>');
 
+  // In a swipe row on phones, each card lists this many features until "Show all" is tapped.
+  const SHORT_LIST = 5;
+
   function planCard(p) {
     const parent = p.inherits && C.PLANS[p.inherits];
     const second = p.id === 'business'
@@ -97,8 +100,9 @@
       ${second}
       <ul class="plan-list">
         ${parent ? `<li class="inherit">Everything in ${esc(parent.name)}, plus:</li>` : ''}
-        ${p.bullets.map((b) => `<li>${fmtBullet(b)}</li>`).join('')}
+        ${p.bullets.map((b, i) => `<li${i >= SHORT_LIST ? ' class="more"' : ''}>${fmtBullet(b)}</li>`).join('')}
       </ul>
+      ${p.bullets.length > SHORT_LIST ? `<button type="button" class="plan-more" data-plan-more aria-expanded="false">Show all ${p.bullets.length} features</button>` : ''}
     </article>`;
   }
 
@@ -166,6 +170,15 @@
     $$('[data-plans]').forEach((el) => {
       el.innerHTML = C.PLAN_ORDER.map((id) => planCard(C.PLANS[id])).join('');
       if (el.classList.contains('swipe')) {
+        // One tap opens every card's list, so the row stays even as you swipe.
+        el.addEventListener('click', (e) => {
+          if (!e.target.closest('[data-plan-more]')) return;
+          const open = el.classList.toggle('expanded');
+          $$('[data-plan-more]', el).forEach((b) => {
+            b.setAttribute('aria-expanded', open);
+            b.textContent = open ? 'Show fewer features' : `Show all ${$$('.plan-list li:not(.inherit)', b.closest('.plan')).length} features`;
+          });
+        });
         swipeRow(el, C.PLAN_ORDER.map((id) => C.PLANS[id].name), Math.max(0, C.PLAN_ORDER.findIndex((id) => C.PLANS[id].popular)));
       }
     });
