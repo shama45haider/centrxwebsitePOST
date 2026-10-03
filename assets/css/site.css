@@ -310,6 +310,17 @@
 .plan-list code, .body-muted code, .answer code { font-family: var(--mono); font-size: 12.5px; background: var(--surface-2); border-radius: 4px; padding: 1px 5px; overflow-wrap: anywhere; }
 .plans-foot { display: flex; gap: 8px 16px; align-items: center; flex-wrap: wrap; margin-top: 24px; color: var(--muted); font-size: 14.5px; }
 @media (max-width: 960px) { .plans { grid-template-columns: minmax(0, 1fr); max-width: 520px; } .plan-tag { min-height: 0; } }
+/* Swipeable card rows (pricing): one card at a time with the next one peeking in */
+.swipe-switch { display: none; }
+@media (max-width: 960px) {
+  .swipe-switch { display: flex; justify-content: center; margin-bottom: 16px; }
+  .swipe-switch .segmented { position: relative; padding: 3px; border-radius: 8px; }
+  .swipe-switch .segmented button { height: 34px; padding: 0 16px; font-size: 14px; border-radius: 6px; transition: background-color 200ms var(--ease), color 200ms var(--ease), box-shadow 200ms var(--ease); }
+  .plans.swipe { position: relative; display: flex; max-width: none; gap: 12px; margin: 0 calc(var(--gutter) * -1); padding: 4px var(--gutter) 12px;
+    overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .plans.swipe::-webkit-scrollbar { display: none; }
+  .plans.swipe > .plan { flex: 0 0 min(86%, 420px); scroll-snap-align: center; }
+}
 
 /* Custom plan: a light card with a soft blue-to-sky wash, so it stands apart from the three self-serve
    plans without shouting. The logo's blades sit large behind it; a live preview shows how an application moves. */
@@ -364,6 +375,7 @@
   .plan-custom { grid-template-columns: minmax(0, 1fr); gap: 24px; max-width: 520px; padding: 26px; }
   .pc-mark { width: 320px; height: 320px; top: 0; right: -100px; transform: none; }
 }
+@media (max-width: 720px) { .pc-preview { display: none; } }
 @media (max-width: 560px) {
   .plan-custom { padding: 22px; border-radius: 14px; }
   .pc-list { grid-template-columns: minmax(0, 1fr); }
@@ -386,7 +398,9 @@
 .includes { padding: 28px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg); margin-top: 16px; }
 .includes-head { font-weight: 600; font-size: 15px; }
 .includes .rings-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 32px; margin-top: 16px; }
-@media (max-width: 860px) { .includes .rings-list { grid-template-columns: minmax(0, 1fr); } }
+@media (min-width: 961px) { .includes .rings-list { display: flex; flex-wrap: wrap; gap: 12px 32px; } }
+@media (max-width: 860px) { .includes .rings-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 20px; } }
+@media (max-width: 560px) { .includes { padding: 20px; } .includes .rings-list { grid-template-columns: minmax(0, 1fr); gap: 8px; margin-top: 12px; } .includes .rings-list li { padding-left: 18px; font-size: 14px; } .includes .rings-list li::before { width: 7px; height: 7px; } }
 
 /* ---------- Email & SMS packs: same card shape as the plans, one channel at a time ---------- */
 .pack-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 32px; }
@@ -424,16 +438,27 @@
 .compare thead th small { display: block; font-weight: 500; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
 .compare th:first-child, .compare td:first-child { width: 34%; color: var(--ink-2); }
 .compare td { color: var(--ink); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-.compare tr.group td { background: var(--surface); font-size: 13px; font-weight: 600; color: var(--ink); padding-top: 10px; padding-bottom: 10px; }
-.compare tbody tr:last-child td { border-bottom: 0; }
+.compare { scroll-margin-top: calc(var(--header-h) + 16px); }
+.compare tr.group td { padding: 0; background: var(--surface); }
+.compare tr.group button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px 18px; border: 0; background: transparent; text-align: left; font: inherit; font-size: 14px; font-weight: 600; color: var(--ink); cursor: pointer; }
+.compare tr.group button small { font-size: 12.5px; font-weight: 500; color: var(--muted); }
+.compare tr.group button [data-i] { margin-left: auto; color: var(--muted); display: inline-flex; transition: transform 200ms var(--ease), color 200ms var(--ease); }
+.compare tr.group button:hover { background: var(--surface-2); }
+.compare .cgroup.open tr.group button [data-i] { transform: rotate(45deg); color: var(--accent); }
+.compare .cgroup tr.row { display: none; }
+.compare .cgroup.open tr.row { display: table-row; animation: rise 220ms var(--ease) both; }
+.compare-all { display: block; width: 100%; padding: 14px 18px; border: 0; border-radius: 0 0 14px 14px; background: transparent; font: inherit; font-size: 14px; font-weight: 600; color: var(--accent); cursor: pointer; }
+.compare-all:hover { background: var(--surface); }
 .compare .yes { color: var(--accent); display: inline-flex; }
 .compare .no { color: var(--border-strong); display: inline-flex; }
 .compare .yes [data-i], .compare .no [data-i] { width: 18px; height: 18px; }
 @media (max-width: 720px) {
   .compare-switch { display: flex; }
+  .compare table { table-layout: auto; }
   .compare th:first-child, .compare td:first-child { width: 58%; }
   .compare [data-col]:not(.show) { display: none; }
   .compare th, .compare td { padding: 12px 14px; }
+  .compare tr.group button, .compare-all { padding-left: 14px; padding-right: 14px; }
 }
 
 /* FAQ: heading left, answers right */
@@ -447,6 +472,7 @@
 .faq details[open] summary [data-i] { transform: rotate(45deg); color: var(--accent); }
 .faq .answer { padding: 0 2px 22px; color: var(--muted); font-size: 15.5px; max-width: 680px; }
 .faq details[open] .answer { animation: rise 220ms var(--ease); }
+@media (min-width: 1100px) { .faq { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; align-items: start; } .faq summary { font-size: 15.5px; } .faq .answer { font-size: 14.5px; } }
 @media (max-width: 860px) { .faq-wrap { grid-template-columns: minmax(0, 1fr); gap: 24px; } .faq-wrap .section-head { position: static; } }
 
 /* ---------- Dark band ---------- */
@@ -630,6 +656,7 @@
   .bars i, .bubble, .mock-toast, .price-amt, .paycard-state .badge, .tour-tab .desc { transition: none; }
   .bars i { transform: scaleY(var(--h, .5)); }
   .caret { display: none; }
-  .crown, .crown .spark, .tour-pane:not([hidden]), .faq details[open] .answer, .nav-sheet, .form-done { animation: none; }
+  .crown, .crown .spark, .tour-pane:not([hidden]), .faq details[open] .answer, .nav-sheet, .form-done, .compare .cgroup.open tr.row { animation: none; }
+  .compare tr.group button [data-i], .swipe-switch .segmented button { transition: none; }
   .crown .spark { opacity: 1; }
 }

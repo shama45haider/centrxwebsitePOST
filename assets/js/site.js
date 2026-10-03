@@ -130,9 +130,44 @@
     });
   }
 
+  // On narrow screens a .swipe row of cards scrolls sideways; a segmented switch above it
+  // jumps to a card and follows along as you swipe. Wide screens hide the switch.
+  function swipeRow(row, labels, start) {
+    let sw = row.previousElementSibling;
+    if (!sw || !sw.hasAttribute('data-swipe-switch')) {
+      sw = document.createElement('div');
+      sw.className = 'swipe-switch';
+      sw.setAttribute('data-swipe-switch', '');
+      row.before(sw);
+      sw.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-to]');
+        if (b) go(+b.dataset.to, !RM);
+      });
+      row.addEventListener('scroll', () => {
+        const mid = row.scrollLeft + row.clientWidth / 2;
+        const cards = [...row.children];
+        let k = 0;
+        cards.forEach((c, i) => { if (Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid) < Math.abs(cards[k].offsetLeft + cards[k].offsetWidth / 2 - mid)) k = i; });
+        mark(k);
+      }, { passive: true });
+    }
+    sw.innerHTML = `<div class="segmented" role="group" aria-label="Choose a card">${labels.map((l, i) => `<button type="button" data-to="${i}">${esc(l)}</button>`).join('')}</div>`;
+    function mark(k) { $$('[data-to]', sw).forEach((b) => { const on = +b.dataset.to === k; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); }); }
+    function go(k, smooth) {
+      const c = row.children[k];
+      if (!c) return;
+      row.scrollTo({ left: c.offsetLeft - (row.clientWidth - c.offsetWidth) / 2, behavior: smooth ? 'smooth' : 'auto' });
+      mark(k);
+    }
+    go(start, false);
+  }
+
   function renderPlans() {
     $$('[data-plans]').forEach((el) => {
       el.innerHTML = C.PLAN_ORDER.map((id) => planCard(C.PLANS[id])).join('');
+      if (el.classList.contains('swipe')) {
+        swipeRow(el, C.PLAN_ORDER.map((id) => C.PLANS[id].name), Math.max(0, C.PLAN_ORDER.findIndex((id) => C.PLANS[id].popular)));
+      }
     });
     $$('[data-billing]').forEach((el) => {
       el.addEventListener('click', (e) => {
@@ -160,6 +195,7 @@
         <p class="price-note">${rate(ch, pk)}</p>
         <a class="btn btn-lg btn-block${pk.popular ? ' btn-primary' : ''}" href="${APP}#/settings/billing?addon=${ch}">Add to your plan</a>
       </article>`).join('');
+      swipeRow($('[data-pack-cards]', el), a.packs.map((pk) => C.fmt.num(pk.qty)), Math.max(0, a.packs.findIndex((pk) => pk.popular)));
       $('[data-pack-includes]', el).innerHTML = `<div class="includes-head">Every ${ch === 'sms' ? 'SMS' : 'email'} pack includes</div>
         <ul class="rings-list">${a.includes.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`;
       $('[data-pack-more]', el).innerHTML = `Go over your pack and you pay ${esc(a.overage.label)}. Sending far more? <a href="#custom">Custom plans</a> include volume pricing.`;
@@ -232,10 +268,28 @@
       if (typeof v === 'number') return C.fmt.num(v);
       return fmtBullet(String(v));
     };
+    // Each group is its own tbody that opens and closes like the FAQ. Only the first starts open.
     el.innerHTML = `<table>
       <thead><tr><th scope="col"><span class="sr-only">Feature</span></th>${plans.map((p) => `<th scope="col" data-col="${p.id}">${esc(p.name)}<small data-th-price="${p.id}"></small></th>`).join('')}</tr></thead>
-      <tbody>${C.PLAN_MATRIX.map((g) => `<tr class="group"><td colspan="${plans.length + 1}">${esc(g.group)}</td></tr>${g.rows.map(([label, fn]) => `<tr><td>${esc(label)}</td>${plans.map((p) => `<td data-col="${p.id}">${cell(fn(p))}</td>`).join('')}</tr>`).join('')}`).join('')}</tbody>
-    </table>`;
+      ${C.PLAN_MATRIX.map((g, k) => `<tbody class="cgroup${k === 0 ? ' open' : ''}">
+        <tr class="group"><td colspan="${plans.length + 1}"><button type="button" aria-expanded="${k === 0}">${esc(g.group)}<small>${g.rows.length} features</small>${I('plus')}</button></td></tr>
+        ${g.rows.map(([label, fn]) => `<tr class="row"><td>${esc(label)}</td>${plans.map((p) => `<td data-col="${p.id}">${cell(fn(p))}</td>`).join('')}</tr>`).join('')}
+      </tbody>`).join('')}
+    </table>
+    <button type="button" class="compare-all" data-compare-all>Show all features</button>`;
+    const groups = $$('.cgroup', el), all = $('[data-compare-all]', el);
+    const setGroup = (g, open) => { g.classList.toggle('open', open); $('button', g).setAttribute('aria-expanded', open); };
+    const syncAll = () => { all.textContent = groups.every((g) => g.classList.contains('open')) ? 'Show fewer features' : 'Show all features'; };
+    el.addEventListener('click', (e) => {
+      const b = e.target.closest('.group button');
+      if (b) { const g = b.closest('.cgroup'); setGroup(g, !g.classList.contains('open')); syncAll(); }
+    });
+    all.addEventListener('click', () => {
+      const openAll = !groups.every((g) => g.classList.contains('open'));
+      groups.forEach((g, k) => setGroup(g, openAll || k === 0));
+      syncAll();
+      if (!openAll) el.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'start' });
+    });
     const sw = $('[data-compare-switch]');
     if (sw) {
       sw.innerHTML = `<div class="segmented" role="group" aria-label="Plan to compare">${plans.map((p) => `<button type="button" data-col-pick="${p.id}">${esc(p.name)}</button>`).join('')}</div>`;
