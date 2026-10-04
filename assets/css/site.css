@@ -513,6 +513,8 @@
 .integr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .integr .panel { display: flex; align-items: center; gap: 12px; padding: 14px; }
 .integr .panel small { display: block; color: var(--muted); font-size: 12px; }
+.integr .panel { min-height: 64px; }
+.integr-logo { flex: none; width: 22px; height: 22px; fill: currentColor; }
 .integr .panel + .panel { margin-top: 0; }
 @media (max-width: 520px) { .integr { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
