@@ -5,7 +5,7 @@
   const C = window.Centrx;
   const U = Infinity;
 
-  C.PLAN_ORDER = ['starter', 'growth', 'business'];
+  C.PLAN_ORDER = ['starter', 'growth', 'business', 'enterprise'];
   C.ANNUAL_MONTHS = 10; // yearly price = 10 × monthly (2 months free)
 
   C.PLANS = {
@@ -32,6 +32,7 @@
         segments: false, csv: false, customDomain: false, removeBranding: false,
         whiteLabel: false, webhooks: false, sso: false, enforceMfa: false,
         timelineExport: false, auditExport: false, granularPerms: false,
+        onlineStore: false, phoneLine: false,
       },
       support: 'Email',
     },
@@ -58,6 +59,7 @@
         segments: true, csv: true, customDomain: false, removeBranding: true,
         whiteLabel: false, webhooks: false, sso: false, enforceMfa: false,
         timelineExport: false, auditExport: false, granularPerms: false,
+        onlineStore: false, phoneLine: false,
       },
       support: 'Priority',
       popular: true,
@@ -70,7 +72,8 @@
         'Unlimited employees', 'Up to 5 locations', 'Up to 50,000 customers', 'Up to 5,000 orders / month',
         'Up to 5,000 payment links / month',
         'Advanced reporting', 'Advanced permissions', 'Unlimited automations',
-        'White-label dashboard', 'Priority support', 'Connect your domain and send email from it',
+        'White-label dashboard', 'Online Store with a drag-and-drop editor', 'Priority support',
+        'Connect your domain and send email from it',
       ],
       analytics: 'Advanced + reporting',
       limits: {
@@ -85,8 +88,37 @@
         segments: true, csv: true, customDomain: true, removeBranding: true,
         whiteLabel: true, webhooks: true, sso: true, enforceMfa: true,
         timelineExport: true, auditExport: true, granularPerms: true,
+        onlineStore: true, phoneLine: false,
       },
       support: 'Priority',
+    },
+    enterprise: {
+      id: 'enterprise', name: 'Enterprise', price: 32999, inherits: 'business',
+      tagline: 'For high-volume businesses that need more.',
+      highlights: ['Unlimited employees · 15 locations', '250,000 customers', '25,000 orders / mo', 'Business phone line'],
+      bullets: [
+        'Up to 15 locations', 'Up to 250,000 customers', 'Up to 25,000 orders / month',
+        'Up to 25,000 payment links / month',
+        'Business phone line for calls and texts', 'Cenbot AI with higher usage limits',
+        'Online Store on your own domain', '2-year audit log', 'Priority phone support',
+      ],
+      analytics: 'Advanced + reporting',
+      limits: {
+        orderPhotos: 100, orderVideos: 10, videoSeconds: 300,
+        items: U, categories: U, customStatuses: U,
+        seats: U, locations: 15, customers: 250000, orders: 25000, links: 25000, labels: U,
+        paymentProviders: U, shippingProviders: U, customRoles: U,
+        auditDays: 730, apiKeys: U, automations: U, timelineMonths: U,
+      },
+      features: {
+        meetup: true, customDeposit: true, requireProof: true, esignature: true, proofVideo: true, signatureExport: true,
+        segments: true, csv: true, customDomain: true, removeBranding: true,
+        whiteLabel: true, webhooks: true, sso: true, enforceMfa: true,
+        timelineExport: true, auditExport: true, granularPerms: true,
+        onlineStore: true, phoneLine: true,
+      },
+      cenbot: 'Higher usage limits',
+      support: 'Priority + phone',
     },
   };
 
@@ -94,8 +126,8 @@
   // verifies it and sets its limits and price. Not in PLAN_ORDER, so it never appears as a
   // self-serve upgrade. Review happens in the admin dashboard (planned, see docs/roadmap.md).
   C.CUSTOM_PLAN = {
-    id: 'custom', name: 'Custom', inherits: 'business',
-    tagline: 'For businesses that have outgrown Business.',
+    id: 'custom', name: 'Custom', inherits: 'enterprise',
+    tagline: 'For businesses that have outgrown Enterprise.',
     bullets: [
       'Higher limits on locations, customers, orders and links',
       'Volume pricing on email and SMS',
@@ -119,7 +151,7 @@
         'Campaigns and promotional email',
         'Open, click and bounce tracking',
         'Unsubscribes handled automatically',
-        'Sent from notify@centrx.co, or your own domain on Business',
+        'Sent from notify@centrx.co, or your own domain on Business and Enterprise',
         'Change or cancel anytime',
       ],
       packs: [
@@ -197,6 +229,7 @@
       ['Customer & order management', () => true],
       ['Customer timeline', (p) => (p.limits.timelineMonths === U ? (p.features.timelineExport ? 'Full history + export' : 'Full history') : '12 months')],
       ['Analytics', (p) => p.analytics],
+      ['Cenbot AI assistant', (p) => p.cenbot || 'Included'],
       ['Automations', (p) => (p.limits.automations === U ? 'Unlimited' : `${p.limits.automations} active`)],
     ] },
     { group: 'Payments & shipping', rows: [
@@ -226,12 +259,18 @@
       ['Shared inbox (email + SMS)', () => true],
       ['Campaign audiences', (p) => (p.features.segments ? 'Segments & tags' : 'All subscribers')],
       ['Campaign email & SMS', () => 'Add-on packs'],
+      ['Business phone line (calls + texts)', F('phoneLine')],
+    ] },
+    { group: 'Online Store', rows: [
+      ['Online Store with your inventory', F('onlineStore')],
+      ['Drag-and-drop store editor', F('onlineStore')],
+      ['Store on your own domain', F('onlineStore')],
     ] },
     { group: 'Team & security', rows: [
       ['Employee permissions', (p) => (p.limits.customRoles === 0 ? 'Owner + Staff' : p.features.granularPerms ? 'Advanced · per action' : `Up to ${p.limits.customRoles} custom roles`)],
       ['Two-factor auth & sessions', () => true],
       ['Enforce MFA · SSO', F('sso')],
-      ['Audit log retention', (p) => (p.limits.auditDays === 365 ? '1 year + export' : p.limits.auditDays + ' days')],
+      ['Audit log retention', (p) => (p.limits.auditDays >= 365 ? `${p.limits.auditDays / 365 === 1 ? '1 year' : `${p.limits.auditDays / 365} years`} + export` : p.limits.auditDays + ' days')],
       ['Webhooks', F('webhooks')],
     ] },
     { group: 'Brand & support', rows: [

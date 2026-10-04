@@ -74,7 +74,8 @@
   let billing = 'monthly';
   try { if (localStorage.getItem(KEY) === 'annual') billing = 'annual'; } catch {}
 
-  const money0 = (c) => C.fmt.money0(c);
+  // Whole-dollar prices drop the cents ($49); prices like $329.99 keep them.
+  const money0 = (c) => (c % 100 ? C.fmt.money(c) : C.fmt.money0(c));
   const annualTotal = (p) => p.price * C.ANNUAL_MONTHS;
   const priceFor = (p, b) => (b === 'annual' ? annualTotal(p) : p.price);
   const perFor = (b) => (b === 'annual' ? '/year' : '/month');
@@ -89,7 +90,7 @@
 
   function planCard(p) {
     const parent = p.inherits && C.PLANS[p.inherits];
-    const second = p.id === 'business'
+    const second = (p.id === 'business' || p.id === 'enterprise')
       ? `<a class="btn btn-lg btn-block btn-ghost sub-btn" href="/contact">Talk to sales</a>`
       : `<a class="btn btn-lg btn-block btn-ghost sub-btn" href="${APP}?demo#/">Try the live demo</a>`;
     return `<article class="plan${p.popular ? ' popular' : ''}" data-plan="${p.id}">
