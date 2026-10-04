@@ -17,7 +17,8 @@
         '2 employees', '1 location', 'Up to 1,000 customers', 'Up to 250 orders / month',
         'Up to 250 payment links / month', 'Unlimited shipping labels',
         'Customer management', 'Order management', 'Stripe + PayPal',
-        'Basic analytics', 'Basic automations', 'Email support', 'Email sent through notify@centrx.co',
+        'CSV import and export', 'Basic analytics', 'Basic automations', 'Email support',
+        'Email sent through notify@centrx.co',
       ],
       analytics: 'Basic',
       limits: {
@@ -29,7 +30,7 @@
       },
       features: {
         meetup: true, customDeposit: false, requireProof: false, esignature: false, proofVideo: false, signatureExport: false,
-        segments: false, csv: false, customDomain: false, removeBranding: false,
+        segments: false, csv: true, customDomain: false, removeBranding: false,
         whiteLabel: false, webhooks: false, sso: false, enforceMfa: false,
         timelineExport: false, auditExport: false, granularPerms: false,
         onlineStore: false, phoneLine: false,
@@ -37,14 +38,16 @@
       support: 'Email',
     },
     growth: {
-      id: 'growth', name: 'Growth', price: 9900, inherits: 'starter',
+      // id stays 'growth' so saved accounts and signup links keep matching.
+      id: 'growth', name: 'Pro', price: 9900, inherits: 'starter',
       tagline: 'For growing teams with repeat customers.',
       highlights: ['10 employees · 2 locations', '10,000 customers', '1,000 orders / mo', 'Custom branding'],
       bullets: [
         '10 employees', '2 locations', 'Up to 10,000 customers', 'Up to 1,000 orders / month',
         'Up to 1,000 payment links / month',
         'Advanced analytics', 'Advanced automations', 'Employee permissions',
-        'Custom branding', 'Priority support', 'Email sent through notify@centrx.co',
+        'Campaign segments and tags', 'Custom branding', 'Webhooks and API keys',
+        'Require two-factor sign-in for your team', 'Priority support', 'Email sent through notify@centrx.co',
       ],
       analytics: 'Advanced',
       limits: {
@@ -57,7 +60,7 @@
       features: {
         meetup: true, customDeposit: true, requireProof: true, esignature: true, proofVideo: true, signatureExport: false,
         segments: true, csv: true, customDomain: false, removeBranding: true,
-        whiteLabel: false, webhooks: false, sso: false, enforceMfa: false,
+        whiteLabel: false, webhooks: true, sso: false, enforceMfa: true,
         timelineExport: false, auditExport: false, granularPerms: false,
         onlineStore: false, phoneLine: false,
       },
@@ -72,7 +75,7 @@
         'Unlimited employees', 'Up to 5 locations', 'Up to 50,000 customers', 'Up to 5,000 orders / month',
         'Up to 5,000 payment links / month',
         'Advanced reporting', 'Advanced permissions', 'Unlimited automations',
-        'White-label dashboard', 'Online Store with a drag-and-drop editor', 'Priority support',
+        'Online Store with a drag-and-drop editor', 'Priority support',
         'Connect your domain and send email from it',
       ],
       analytics: 'Advanced + reporting',
@@ -86,7 +89,7 @@
       features: {
         meetup: true, customDeposit: true, requireProof: true, esignature: true, proofVideo: true, signatureExport: true,
         segments: true, csv: true, customDomain: true, removeBranding: true,
-        whiteLabel: true, webhooks: true, sso: true, enforceMfa: true,
+        whiteLabel: false, webhooks: true, sso: false, enforceMfa: true,
         timelineExport: true, auditExport: true, granularPerms: true,
         onlineStore: true, phoneLine: false,
       },
@@ -100,7 +103,7 @@
         'Up to 15 locations', 'Up to 250,000 customers', 'Up to 25,000 orders / month',
         'Up to 25,000 payment links / month',
         'Business phone line for calls and texts', 'Cenbot AI with higher usage limits',
-        'Online Store on your own domain', '2-year audit log', 'Priority phone support',
+        'Single sign-on (SSO)', 'White-label dashboard', '2-year audit log', 'Priority phone support',
       ],
       analytics: 'Advanced + reporting',
       limits: {
@@ -269,12 +272,14 @@
     { group: 'Team & security', rows: [
       ['Employee permissions', (p) => (p.limits.customRoles === 0 ? 'Owner + Staff' : p.features.granularPerms ? 'Advanced · per action' : `Up to ${p.limits.customRoles} custom roles`)],
       ['Two-factor auth & sessions', () => true],
-      ['Enforce MFA · SSO', F('sso')],
+      ['Require two-factor for your team', F('enforceMfa')],
+      ['Single sign-on (SSO)', F('sso')],
       ['Audit log retention', (p) => (p.limits.auditDays >= 365 ? `${p.limits.auditDays / 365 === 1 ? '1 year' : `${p.limits.auditDays / 365} years`} + export` : p.limits.auditDays + ' days')],
       ['Webhooks', F('webhooks')],
+      ['API keys', L('apiKeys')],
     ] },
     { group: 'Brand & support', rows: [
-      ['Segments & CSV import/export', F('segments')],
+      ['CSV import & export', F('csv')],
       ['Custom branding (no "Powered by Centrx")', F('removeBranding')],
       ['White-label dashboard', F('whiteLabel')],
       ['Support', (p) => p.support],
@@ -282,7 +287,7 @@
   ];
 
   const tenant = () => (C.tenant && C.tenant()) || {};
-  // Canonical id first; saved sessions may hold retired ids (Hobby → Starter, Pro → Growth). Unknown → Growth (trial default).
+  // Canonical id first; saved sessions may hold retired ids (hobby → starter, pro → growth, the Pro plan's id). Unknown → Pro (trial default).
   const LEGACY = { hobby: 'starter', pro: 'growth' };
   C.planId = (id) => (C.PLAN_ORDER.includes(id) ? id : Object.prototype.hasOwnProperty.call(LEGACY, id) ? LEGACY[id] : 'growth');
   const plan = () => C.PLANS[C.planId(tenant().plan)];
@@ -294,7 +299,7 @@
   // promoEmails / sms come from the tenant's packs (0 when none); everything else from the plan.
   C.limit = (k) => (C.ADDON_METRIC[k] ? ((C.addon(C.ADDON_METRIC[k]) || {}).qty || 0) : plan().limits[k]);
   C.can = (feature) => !!plan().features[feature];
-  // Lowest plan that unlocks a feature/limit — "Available on Growth". Email/SMS are add-ons, never a plan upgrade.
+  // Lowest plan that unlocks a feature/limit — "Available on Pro". Email/SMS are add-ons, never a plan upgrade.
   C.planFor = (feature) => (C.ADDON_METRIC[feature] || C.ADDONS[feature] ? null
     : C.PLAN_ORDER.map((id) => C.PLANS[id]).find((p) => p.features[feature] || (p.limits[feature] && p.limits[feature] > 0)));
   C.planName = (feature) => (C.planFor(feature) || C.PLANS.business).name;
