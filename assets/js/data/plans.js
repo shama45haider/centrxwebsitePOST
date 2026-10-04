@@ -10,7 +10,8 @@
 
   C.PLANS = {
     starter: {
-      id: 'starter', name: 'Starter', price: 4900, // cents / month
+      // id stays 'starter' so saved accounts and signup links keep matching.
+      id: 'starter', name: 'Hobby', price: 4900, // cents / month
       tagline: 'For small shops getting organized.',
       highlights: ['2 employees · 1 location', '1,000 customers', '250 orders / mo', 'Stripe + PayPal'],
       bullets: [
@@ -102,7 +103,7 @@
       bullets: [
         'Up to 15 locations', 'Up to 250,000 customers', 'Up to 25,000 orders / month',
         'Up to 25,000 payment links / month',
-        'Business phone line for calls and texts', 'Cenbot AI with higher usage limits',
+        'Business phone line included', 'Cenbot AI with higher usage limits',
         'Single sign-on (SSO)', 'White-label dashboard', '2-year audit log', 'Priority phone support',
       ],
       analytics: 'Advanced + reporting',
@@ -196,6 +197,9 @@
   };
   C.SMS_NUMBER_ORDER = ['tollfree', 'local', 'existing'];
   C.EXTRA_NUMBER = 1000; // each number after the first, e.g. one per location
+  // Business phone line: a number customers can call and text, answered in Centrx.
+  // Included on Enterprise (features.phoneLine); a monthly add-on on every other plan.
+  C.PHONE_LINE = { price: 2500, name: 'Business phone line' };
   // First number is priced by its type; every extra number costs at least C.EXTRA_NUMBER.
   C.numberPrice = (type, index) => (index === 0 ? C.SMS_NUMBERS[type].price : Math.max(C.EXTRA_NUMBER, C.SMS_NUMBERS[type].price));
   C.numbersMonthly = (nums) => (nums || []).reduce((s, n, i) => s + C.numberPrice(n.type, i), 0);
@@ -262,7 +266,7 @@
       ['Shared inbox (email + SMS)', () => true],
       ['Campaign audiences', (p) => (p.features.segments ? 'Segments & tags' : 'All subscribers')],
       ['Campaign email & SMS', () => 'Add-on packs'],
-      ['Business phone line (calls + texts)', F('phoneLine')],
+      ['Business phone line (calls + texts)', (p) => (p.features.phoneLine ? 'Included' : `${C.fmt.money0(C.PHONE_LINE.price)}/mo add-on`)],
     ] },
     { group: 'Online Store', rows: [
       ['Online Store with your inventory', F('onlineStore')],
@@ -287,7 +291,7 @@
   ];
 
   const tenant = () => (C.tenant && C.tenant()) || {};
-  // Canonical id first; saved sessions may hold retired ids (hobby → starter, pro → growth, the Pro plan's id). Unknown → Pro (trial default).
+  // Canonical id first; saved sessions may hold retired ids (hobby → starter and pro → growth, the ids behind the Hobby and Pro plans). Unknown → Pro (trial default).
   const LEGACY = { hobby: 'starter', pro: 'growth' };
   C.planId = (id) => (C.PLAN_ORDER.includes(id) ? id : Object.prototype.hasOwnProperty.call(LEGACY, id) ? LEGACY[id] : 'growth');
   const plan = () => C.PLANS[C.planId(tenant().plan)];
