@@ -13,10 +13,10 @@
       // id stays 'starter' so saved accounts and signup links keep matching.
       id: 'starter', name: 'Hobby', price: 4900, // cents / month
       tagline: 'For small shops getting organized.',
-      highlights: ['2 employees · 1 location', '1,000 customers', '250 orders / mo', 'Stripe + PayPal'],
+      highlights: ['2 employees · 1 location', '25 GB cloud storage', 'Unlimited customers and orders', 'Stripe + PayPal'],
       bullets: [
-        '2 employees', '1 location', 'Up to 1,000 customers', 'Up to 250 orders / month',
-        'Up to 250 payment links / month', 'Unlimited shipping labels',
+        '2 employees', '1 location', '25 GB cloud storage', 'Unlimited customers, orders and payment links',
+        'Unlimited shipping labels',
         'Customer management', 'Order management', 'Stripe + PayPal',
         'CSV import and export', 'Basic analytics', 'Basic automations', 'Email support',
         'Email sent through notify@centrx.co',
@@ -25,7 +25,7 @@
       limits: {
         orderPhotos: 10, orderVideos: 0, videoSeconds: 0,
         items: 500, categories: 5, customStatuses: 2,
-        seats: 2, locations: 1, customers: 1000, orders: 250, links: 250, labels: U,
+        seats: 2, locations: 1, customers: U, orders: U, links: U, labels: U, storageGB: 25,
         paymentProviders: 2, shippingProviders: 1, customRoles: 0,
         auditDays: 30, apiKeys: 0, automations: 3, timelineMonths: 12,
       },
@@ -42,10 +42,9 @@
       // id stays 'growth' so saved accounts and signup links keep matching.
       id: 'growth', name: 'Pro', price: 9900, inherits: 'starter',
       tagline: 'For growing teams with repeat customers.',
-      highlights: ['10 employees · 2 locations', '10,000 customers', '1,000 orders / mo', 'Custom branding'],
+      highlights: ['10 employees · 2 locations', '100 GB cloud storage', 'Unlimited customers and orders', 'Custom branding'],
       bullets: [
-        '10 employees', '2 locations', 'Up to 10,000 customers', 'Up to 1,000 orders / month',
-        'Up to 1,000 payment links / month',
+        '10 employees', '2 locations', '100 GB cloud storage',
         'Advanced analytics', 'Advanced automations', 'Employee permissions',
         'Campaign segments and tags', 'Custom branding', 'Webhooks and API keys',
         'Require two-factor sign-in for your team', 'Priority support', 'Email sent through notify@centrx.co',
@@ -54,7 +53,7 @@
       limits: {
         orderPhotos: 25, orderVideos: 2, videoSeconds: 60,
         items: 10000, categories: U, customStatuses: U,
-        seats: 10, locations: 2, customers: 10000, orders: 1000, links: 1000, labels: U,
+        seats: 10, locations: 2, customers: U, orders: U, links: U, labels: U, storageGB: 100,
         paymentProviders: 2, shippingProviders: 3, customRoles: 5,
         auditDays: 90, apiKeys: 2, automations: 25, timelineMonths: U,
       },
@@ -71,10 +70,9 @@
     business: {
       id: 'business', name: 'Business', price: 19900, inherits: 'growth',
       tagline: 'For established businesses running several locations.',
-      highlights: ['Unlimited employees · 5 locations', '50,000 customers', '5,000 orders / mo', 'Send from your own domain'],
+      highlights: ['Unlimited employees · 5 locations', '500 GB cloud storage', 'Unlimited customers and orders', 'Send from your own domain'],
       bullets: [
-        'Unlimited employees', 'Up to 5 locations', 'Up to 50,000 customers', 'Up to 5,000 orders / month',
-        'Up to 5,000 payment links / month',
+        'Unlimited employees', 'Up to 5 locations', '500 GB cloud storage',
         'Advanced reporting', 'Advanced permissions', 'Unlimited automations',
         'Online Store with a drag-and-drop editor', 'Priority support',
         'Connect your domain and send email from it',
@@ -83,7 +81,7 @@
       limits: {
         orderPhotos: 50, orderVideos: 5, videoSeconds: 120,
         items: U, categories: U, customStatuses: U,
-        seats: U, locations: 5, customers: 50000, orders: 5000, links: 5000, labels: U,
+        seats: U, locations: 5, customers: U, orders: U, links: U, labels: U, storageGB: 500,
         paymentProviders: U, shippingProviders: U, customRoles: U,
         auditDays: 365, apiKeys: U, automations: U, timelineMonths: U,
       },
@@ -99,10 +97,9 @@
     enterprise: {
       id: 'enterprise', name: 'Enterprise', price: 32999, inherits: 'business',
       tagline: 'For high-volume businesses that need more.',
-      highlights: ['Unlimited employees · 15 locations', '250,000 customers', '25,000 orders / mo', 'Business phone line'],
+      highlights: ['Unlimited employees · 15 locations', '2 TB cloud storage', 'Unlimited customers and orders', 'Business phone line'],
       bullets: [
-        'Up to 15 locations', 'Up to 250,000 customers', 'Up to 25,000 orders / month',
-        'Up to 25,000 payment links / month',
+        'Up to 15 locations', '2 TB cloud storage',
         'Business phone line included', 'Cenbot AI with higher usage limits',
         'Single sign-on (SSO)', 'White-label dashboard', '2-year audit log', 'Priority phone support',
       ],
@@ -110,7 +107,7 @@
       limits: {
         orderPhotos: 100, orderVideos: 10, videoSeconds: 300,
         items: U, categories: U, customStatuses: U,
-        seats: U, locations: 15, customers: 250000, orders: 25000, links: 25000, labels: U,
+        seats: U, locations: 15, customers: U, orders: U, links: U, labels: U, storageGB: 2000,
         paymentProviders: U, shippingProviders: U, customRoles: U,
         auditDays: 730, apiKeys: U, automations: U, timelineMonths: U,
       },
@@ -133,7 +130,7 @@
     id: 'custom', name: 'Custom', inherits: 'enterprise',
     tagline: 'For businesses that have outgrown Enterprise.',
     bullets: [
-      'Higher limits on locations, customers, orders and links',
+      'More locations and more cloud storage than Enterprise',
       'Volume pricing on email and SMS',
       'A dedicated onboarding and support contact',
       'Monthly or annual billing, priced to fit',
@@ -200,6 +197,11 @@
   // Business phone line: a number customers can call and text, answered in Centrx.
   // Included on Enterprise (features.phoneLine); a monthly add-on on every other plan.
   C.PHONE_LINE = { price: 2500, name: 'Business phone line' };
+  // Cloud storage: each plan includes an allowance for photos, IDs, videos, receipts and recordings.
+  // Customers, orders and payment links are unlimited on every plan, so storage is the usage limit.
+  // Extra storage is sold in blocks, billed monthly, and can be added or removed anytime.
+  C.STORAGE_ADDON = { gb: 100, price: 500, name: 'Extra cloud storage' };
+  C.fmtStorage = (gb) => (gb >= 1000 ? `${+(gb / 1000).toFixed(1)} TB` : `${gb} GB`);
   // First number is priced by its type; every extra number costs at least C.EXTRA_NUMBER.
   C.numberPrice = (type, index) => (index === 0 ? C.SMS_NUMBERS[type].price : Math.max(C.EXTRA_NUMBER, C.SMS_NUMBERS[type].price));
   C.numbersMonthly = (nums) => (nums || []).reduce((s, n, i) => s + C.numberPrice(n.type, i), 0);
@@ -231,13 +233,19 @@
       ['Employees', L('seats')],
       ['Locations', L('locations')],
       ['Customers', L('customers')],
-      ['Orders per month', L('orders')],
-      ['Payment links per month', L('links')],
+      ['Orders', L('orders')],
+      ['Payment links', L('links')],
       ['Customer & order management', () => true],
       ['Customer timeline', (p) => (p.limits.timelineMonths === U ? (p.features.timelineExport ? 'Full history + export' : 'Full history') : '12 months')],
       ['Analytics', (p) => p.analytics],
       ['Cenbot AI assistant', (p) => p.cenbot || 'Included'],
       ['Automations', (p) => (p.limits.automations === U ? 'Unlimited' : `${p.limits.automations} active`)],
+    ] },
+    { group: 'Cloud storage', rows: [
+      ['Storage included', (p) => C.fmtStorage(p.limits.storageGB)],
+      ['Photos, videos, IDs, receipts & recordings', () => 'Counted in your storage'],
+      ['Extra storage', () => `${C.fmtStorage(C.STORAGE_ADDON.gb)} for ${C.fmt.money0(C.STORAGE_ADDON.price)}/mo`],
+      ['Private by default and backed up', () => true],
     ] },
     { group: 'Payments & shipping', rows: [
       ['Payment providers', (p) => (p.limits.paymentProviders === U ? 'Stripe, PayPal + Square' : 'Stripe + PayPal')],
@@ -248,7 +256,7 @@
       ['Inventory items', L('items')],
       ['Custom categories & fields', (p) => (p.limits.categories === U ? 'Unlimited' : `${p.limits.categories} categories`)],
       ['Custom statuses', (p) => (p.limits.customStatuses === U ? 'Unlimited' : `${p.limits.customStatuses} + defaults`)],
-      ['Photos per item', () => 'Unlimited'],
+      ['Photos per item', () => 'Within your storage'],
     ] },
     { group: 'Meetup / Dropoff', rows: [
       ['Pay in full, % upfront or dropoff fee', F('meetup')],

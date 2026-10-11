@@ -372,6 +372,7 @@
       'num-tollfree-review': N.tollfree && N.tollfree.review,
       'num-extra': C.EXTRA_NUMBER && `${money0(C.EXTRA_NUMBER)}/month`,
       'phone-line': C.PHONE_LINE && `${money0(C.PHONE_LINE.price)}/month`,
+      'storage-addon': C.STORAGE_ADDON && `${C.fmtStorage(C.STORAGE_ADDON.gb)} for ${money0(C.STORAGE_ADDON.price)}/month`,
       'email-overage': A.email && A.email.overage.label,
       'sms-overage': A.sms && A.sms.overage.label,
       'annual-list': ((l) => `${l.slice(0, -1).join(', ')} or ${l[l.length - 1]}`)(C.PLAN_ORDER.map((id) => `${C.PLANS[id].name} ${money0(annualTotal(C.PLANS[id]))}`)),
