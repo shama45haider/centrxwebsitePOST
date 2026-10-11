@@ -13,11 +13,11 @@
       // id stays 'starter' so saved accounts and signup links keep matching.
       id: 'starter', name: 'Hobby', price: 4900, // cents / month
       tagline: 'For small shops getting organized.',
-      highlights: ['2 employees · 1 location', '25 GB cloud storage', 'Unlimited customers and orders', 'Stripe + PayPal'],
+      highlights: ['2 employees · 1 location', '25 GB cloud storage', 'Unlimited customers and orders', 'Stripe, PayPal + Square'],
       bullets: [
         '2 employees', '1 location', '25 GB cloud storage', 'Unlimited customers, orders and payment links',
         'Unlimited shipping labels',
-        'Customer management', 'Order management', 'Stripe + PayPal',
+        'Customer management', 'Order management', 'Stripe, PayPal and Square',
         'CSV import and export', 'Basic analytics', 'Basic automations', 'Email support',
         'Email sent through notify@centrx.co',
       ],
@@ -26,7 +26,7 @@
         orderPhotos: 10, orderVideos: 0, videoSeconds: 0,
         items: 500, categories: 5, customStatuses: 2,
         seats: 2, locations: 1, customers: U, orders: U, links: U, labels: U, storageGB: 25,
-        paymentProviders: 2, shippingProviders: 1, customRoles: 0,
+        paymentProviders: 3, shippingProviders: 1, customRoles: 0,
         auditDays: 30, apiKeys: 0, automations: 3, timelineMonths: 12,
       },
       features: {
@@ -42,24 +42,24 @@
       // id stays 'growth' so saved accounts and signup links keep matching.
       id: 'growth', name: 'Pro', price: 9900, inherits: 'starter',
       tagline: 'For growing teams with repeat customers.',
-      highlights: ['10 employees · 2 locations', '100 GB cloud storage', 'Unlimited customers and orders', 'Custom branding'],
+      highlights: ['10 employees · 2 locations', '100 GB cloud storage', 'Unlimited customers and orders', 'Send from your own domain'],
       bullets: [
         '10 employees', '2 locations', '100 GB cloud storage',
         'Advanced analytics', 'Advanced automations', 'Employee permissions',
         'Campaign segments and tags', 'Custom branding', 'Webhooks and API keys',
-        'Require two-factor sign-in for your team', 'Priority support', 'Email sent through notify@centrx.co',
+        'Require two-factor sign-in for your team', 'Priority support', 'Connect your domain and send email from it',
       ],
       analytics: 'Advanced',
       limits: {
         orderPhotos: 25, orderVideos: 2, videoSeconds: 60,
         items: 10000, categories: U, customStatuses: U,
         seats: 10, locations: 2, customers: U, orders: U, links: U, labels: U, storageGB: 100,
-        paymentProviders: 2, shippingProviders: 3, customRoles: 5,
+        paymentProviders: 3, shippingProviders: 3, customRoles: 5,
         auditDays: 90, apiKeys: 2, automations: 25, timelineMonths: U,
       },
       features: {
         meetup: true, customDeposit: true, requireProof: true, esignature: true, proofVideo: true, signatureExport: false,
-        segments: true, csv: true, customDomain: false, removeBranding: true,
+        segments: true, csv: true, customDomain: true, removeBranding: true,
         whiteLabel: false, webhooks: true, sso: false, enforceMfa: true,
         timelineExport: false, auditExport: false, granularPerms: false,
         onlineStore: false, phoneLine: false,
@@ -70,12 +70,12 @@
     business: {
       id: 'business', name: 'Business', price: 19900, inherits: 'growth',
       tagline: 'For established businesses running several locations.',
-      highlights: ['Unlimited employees · 5 locations', '500 GB cloud storage', 'Unlimited customers and orders', 'Send from your own domain'],
+      highlights: ['Unlimited employees · 5 locations', '500 GB cloud storage', 'Unlimited customers and orders', 'Online Store with a drag-and-drop editor'],
       bullets: [
         'Unlimited employees', 'Up to 5 locations', '500 GB cloud storage',
         'Advanced reporting', 'Advanced permissions', 'Unlimited automations',
-        'Online Store with a drag-and-drop editor', 'Priority support',
-        'Connect your domain and send email from it',
+        'Online Store with a drag-and-drop editor', '1-year audit log with export',
+        'Timeline and signature record export', 'Priority support',
       ],
       analytics: 'Advanced + reporting',
       limits: {
@@ -95,7 +95,7 @@
       support: 'Priority',
     },
     enterprise: {
-      id: 'enterprise', name: 'Enterprise', price: 32999, inherits: 'business',
+      id: 'enterprise', name: 'Enterprise', price: 34900, inherits: 'business',
       tagline: 'For high-volume businesses that need more.',
       highlights: ['Unlimited employees · 15 locations', '2 TB cloud storage', 'Unlimited customers and orders', 'Business phone line'],
       bullets: [
@@ -152,7 +152,7 @@
         'Campaigns and promotional email',
         'Open, click and bounce tracking',
         'Unsubscribes handled automatically',
-        'Sent from notify@centrx.co, or your own domain on Business and Enterprise',
+        'Sent from notify@centrx.co, or your own domain on Pro and up',
         'Change or cancel anytime',
       ],
       packs: [
@@ -248,7 +248,7 @@
       ['Private by default and backed up', () => true],
     ] },
     { group: 'Payments & shipping', rows: [
-      ['Payment providers', (p) => (p.limits.paymentProviders === U ? 'Stripe, PayPal + Square' : 'Stripe + PayPal')],
+      ['Payment providers', () => 'Stripe, PayPal + Square'],
       ['Shipping labels', () => 'Unlimited'],
       ['Shipping providers', L('shippingProviders')],
     ] },

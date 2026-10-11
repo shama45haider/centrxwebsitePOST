@@ -64,7 +64,7 @@
         <div class="foot-col"><h3>Legal</h3>
           <a href="/privacy">Privacy</a><a href="/terms">Terms</a></div>
       </div>
-      <div class="foot-base"><span>© ${new Date().getFullYear()} Centrx. All rights reserved.</span><span>Payments processed by Stripe and PayPal.</span></div>
+      <div class="foot-base"><span>© ${new Date().getFullYear()} Centrx. All rights reserved.</span><span>Payments processed by Stripe, PayPal and Square.</span></div>
     </div>`;
   }
 
@@ -74,7 +74,7 @@
   let billing = 'monthly';
   try { if (localStorage.getItem(KEY) === 'annual') billing = 'annual'; } catch {}
 
-  // Whole-dollar prices drop the cents ($49); prices like $329.99 keep them.
+  // Whole-dollar prices drop the cents ($49); prices like $12.50 keep them.
   const money0 = (c) => (c % 100 ? C.fmt.money(c) : C.fmt.money0(c));
   const annualTotal = (p) => p.price * C.ANNUAL_MONTHS;
   const priceFor = (p, b) => (b === 'annual' ? annualTotal(p) : p.price);
