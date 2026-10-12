@@ -11,13 +11,13 @@
   C.PLANS = {
     starter: {
       // id stays 'starter' so saved accounts and signup links keep matching.
-      id: 'starter', name: 'Hobby', price: 4900, // cents / month
+      id: 'starter', name: 'Hobby', price: 3900, // cents / month
       tagline: 'For small shops getting organized.',
       highlights: ['2 employees · 1 location', '25 GB cloud storage', 'Unlimited customers and orders', 'Stripe, PayPal + Square'],
       bullets: [
         '2 employees', '1 location', '25 GB cloud storage', 'Unlimited customers, orders and payment links',
         'Unlimited shipping labels',
-        'Customer management', 'Order management', 'Stripe, PayPal and Square',
+        'Customer management', 'Order management', 'Cenbot AI, 500 replies / month', 'Stripe, PayPal and Square',
         'CSV import and export', 'Basic analytics', 'Basic automations', 'Email support',
         'Email sent through notify@centrx.co',
       ],
@@ -27,14 +27,14 @@
         items: 500, categories: 5, customStatuses: 2,
         seats: 2, locations: 1, customers: U, orders: U, links: U, labels: U, storageGB: 25,
         paymentProviders: 3, shippingProviders: 1, customRoles: 0,
-        auditDays: 30, apiKeys: 0, automations: 3, timelineMonths: 12,
+        auditDays: 30, apiKeys: 0, automations: 3, timelineMonths: 12, cenbotReplies: 500, phoneMinutes: 500,
       },
       features: {
         meetup: true, customDeposit: false, requireProof: false, esignature: false, proofVideo: false, signatureExport: false,
         segments: false, csv: true, customDomain: false, removeBranding: false,
         whiteLabel: false, webhooks: false, sso: false, enforceMfa: false,
         timelineExport: false, auditExport: false, granularPerms: false,
-        onlineStore: false, phoneLine: false,
+        onlineStore: false, storeCustomDomain: false, extraLocations: false, phoneLine: false,
       },
       support: 'Email',
     },
@@ -42,11 +42,11 @@
       // id stays 'growth' so saved accounts and signup links keep matching.
       id: 'growth', name: 'Pro', price: 9900, inherits: 'starter',
       tagline: 'For growing teams with repeat customers.',
-      highlights: ['10 employees · 2 locations', '100 GB cloud storage', 'Unlimited customers and orders', 'Send from your own domain'],
+      highlights: ['10 employees · 2 locations', '100 GB cloud storage', 'Online Store included', 'Send from your own domain'],
       bullets: [
         '10 employees', '2 locations', '100 GB cloud storage',
         'Advanced analytics', 'Advanced automations', 'Employee permissions',
-        'Campaign segments and tags', 'Custom branding', 'Webhooks and API keys',
+        'Online Store with a drag-and-drop editor', 'Cenbot AI, 2,500 replies / month', 'Campaign segments and tags', 'Custom branding', 'Webhooks and API keys',
         'Require two-factor sign-in for your team', 'Priority support', 'Connect your domain and send email from it',
       ],
       analytics: 'Advanced',
@@ -55,14 +55,14 @@
         items: 10000, categories: U, customStatuses: U,
         seats: 10, locations: 2, customers: U, orders: U, links: U, labels: U, storageGB: 100,
         paymentProviders: 3, shippingProviders: 3, customRoles: 5,
-        auditDays: 90, apiKeys: 2, automations: 25, timelineMonths: U,
+        auditDays: 90, apiKeys: 2, automations: 25, timelineMonths: U, cenbotReplies: 2500, phoneMinutes: 500,
       },
       features: {
         meetup: true, customDeposit: true, requireProof: true, esignature: true, proofVideo: true, signatureExport: false,
         segments: true, csv: true, customDomain: true, removeBranding: true,
         whiteLabel: false, webhooks: true, sso: false, enforceMfa: true,
         timelineExport: false, auditExport: false, granularPerms: false,
-        onlineStore: false, phoneLine: false,
+        onlineStore: true, storeCustomDomain: false, extraLocations: false, phoneLine: false,
       },
       support: 'Priority',
       popular: true,
@@ -70,11 +70,11 @@
     business: {
       id: 'business', name: 'Business', price: 19900, inherits: 'growth',
       tagline: 'For established businesses running several locations.',
-      highlights: ['Unlimited employees · 5 locations', '500 GB cloud storage', 'Unlimited customers and orders', 'Online Store with a drag-and-drop editor'],
+      highlights: ['Unlimited employees · 5 locations', '500 GB cloud storage', 'Unlimited customers and orders', 'Your Online Store on your own domain'],
       bullets: [
         'Unlimited employees', 'Up to 5 locations', '500 GB cloud storage',
-        'Advanced reporting', 'Advanced permissions', 'Unlimited automations',
-        'Online Store with a drag-and-drop editor', '1-year audit log with export',
+        'Cenbot AI, 10,000 replies / month', 'Advanced reporting', 'Advanced permissions', 'Unlimited automations',
+        'Your Online Store on your own domain', 'Extra locations at $20/month each', '1-year audit log with export',
         'Timeline and signature record export', 'Priority support',
       ],
       analytics: 'Advanced + reporting',
@@ -83,14 +83,14 @@
         items: U, categories: U, customStatuses: U,
         seats: U, locations: 5, customers: U, orders: U, links: U, labels: U, storageGB: 500,
         paymentProviders: U, shippingProviders: U, customRoles: U,
-        auditDays: 365, apiKeys: U, automations: U, timelineMonths: U,
+        auditDays: 365, apiKeys: U, automations: U, timelineMonths: U, cenbotReplies: 10000, phoneMinutes: 500,
       },
       features: {
         meetup: true, customDeposit: true, requireProof: true, esignature: true, proofVideo: true, signatureExport: true,
         segments: true, csv: true, customDomain: true, removeBranding: true,
         whiteLabel: false, webhooks: true, sso: false, enforceMfa: true,
         timelineExport: true, auditExport: true, granularPerms: true,
-        onlineStore: true, phoneLine: false,
+        onlineStore: true, storeCustomDomain: true, extraLocations: true, phoneLine: false,
       },
       support: 'Priority',
     },
@@ -100,7 +100,7 @@
       highlights: ['Unlimited employees · 15 locations', '2 TB cloud storage', 'Unlimited customers and orders', 'Business phone line'],
       bullets: [
         'Up to 15 locations', '2 TB cloud storage',
-        'Business phone line included', 'Cenbot AI with higher usage limits',
+        'Business phone line included (2,000 minutes)', 'Cenbot AI, 50,000 replies / month',
         'Single sign-on (SSO)', 'White-label dashboard', '2-year audit log', 'Priority phone support',
       ],
       analytics: 'Advanced + reporting',
@@ -109,16 +109,15 @@
         items: U, categories: U, customStatuses: U,
         seats: U, locations: 15, customers: U, orders: U, links: U, labels: U, storageGB: 2000,
         paymentProviders: U, shippingProviders: U, customRoles: U,
-        auditDays: 730, apiKeys: U, automations: U, timelineMonths: U,
+        auditDays: 730, apiKeys: U, automations: U, timelineMonths: U, cenbotReplies: 50000, phoneMinutes: 2000,
       },
       features: {
         meetup: true, customDeposit: true, requireProof: true, esignature: true, proofVideo: true, signatureExport: true,
         segments: true, csv: true, customDomain: true, removeBranding: true,
         whiteLabel: true, webhooks: true, sso: true, enforceMfa: true,
         timelineExport: true, auditExport: true, granularPerms: true,
-        onlineStore: true, phoneLine: true,
+        onlineStore: true, storeCustomDomain: true, extraLocations: true, phoneLine: true,
       },
-      cenbot: 'Higher usage limits',
       support: 'Priority + phone',
     },
   };
@@ -194,9 +193,12 @@
   };
   C.SMS_NUMBER_ORDER = ['tollfree', 'local', 'existing'];
   C.EXTRA_NUMBER = 1000; // each number after the first, e.g. one per location
+  // Extra locations beyond a plan's included count: Business and Enterprise only (below that, upgrade).
+  C.EXTRA_LOCATION = { price: 2000, name: 'Extra location' };
   // Business phone line: a number customers can call and text, answered in Centrx.
   // Included on Enterprise (features.phoneLine); a monthly add-on on every other plan.
-  C.PHONE_LINE = { price: 2500, name: 'Business phone line' };
+  // Minutes cover calls in and out; past the allowance each extra minute costs overage cents. Enterprise gets more minutes.
+  C.PHONE_LINE = { price: 2500, name: 'Business phone line', overageCents: 4 };
   // Cloud storage: each plan includes an allowance for photos, IDs, videos, receipts and recordings.
   // Customers, orders and payment links are unlimited on every plan, so storage is the usage limit.
   // Extra storage is sold in blocks, billed monthly, and can be added or removed anytime.
@@ -232,13 +234,14 @@
     { group: 'Core', rows: [
       ['Employees', L('seats')],
       ['Locations', L('locations')],
+      ['Extra locations', (p) => (p.features.extraLocations ? `${C.fmt.money0(C.EXTRA_LOCATION.price)}/mo each` : false)],
       ['Customers', L('customers')],
       ['Orders', L('orders')],
       ['Payment links', L('links')],
       ['Customer & order management', () => true],
       ['Customer timeline', (p) => (p.limits.timelineMonths === U ? (p.features.timelineExport ? 'Full history + export' : 'Full history') : '12 months')],
       ['Analytics', (p) => p.analytics],
-      ['Cenbot AI assistant', (p) => p.cenbot || 'Included'],
+      ['Cenbot AI assistant', (p) => `${C.fmt.num(p.limits.cenbotReplies)} replies / month`],
       ['Automations', (p) => (p.limits.automations === U ? 'Unlimited' : `${p.limits.automations} active`)],
     ] },
     { group: 'Cloud storage', rows: [
@@ -274,12 +277,12 @@
       ['Shared inbox (email + SMS)', () => true],
       ['Campaign audiences', (p) => (p.features.segments ? 'Segments & tags' : 'All subscribers')],
       ['Campaign email & SMS', () => 'Add-on packs'],
-      ['Business phone line (calls + texts)', (p) => (p.features.phoneLine ? 'Included' : `${C.fmt.money0(C.PHONE_LINE.price)}/mo add-on`)],
+      ['Business phone line (calls + texts)', (p) => (p.features.phoneLine ? `Included · ${C.fmt.num(p.limits.phoneMinutes)} min` : `${C.fmt.money0(C.PHONE_LINE.price)}/mo · ${C.fmt.num(p.limits.phoneMinutes)} min`)],
     ] },
     { group: 'Online Store', rows: [
       ['Online Store with your inventory', F('onlineStore')],
       ['Drag-and-drop store editor', F('onlineStore')],
-      ['Store on your own domain', F('onlineStore')],
+      ['Store address', (p) => (p.features.storeCustomDomain ? 'Your own domain' : p.features.onlineStore ? 'A Centrx address' : false)],
     ] },
     { group: 'Team & security', rows: [
       ['Employee permissions', (p) => (p.limits.customRoles === 0 ? 'Owner + Staff' : p.features.granularPerms ? 'Advanced · per action' : `Up to ${p.limits.customRoles} custom roles`)],

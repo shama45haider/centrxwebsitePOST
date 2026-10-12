@@ -227,7 +227,7 @@
               <p>${esc(n.blurb)}</p>
               <small>${n.setup ? `${money0(n.setup)} one-time setup` : 'No setup fee'} · ready ${esc(n.review.replace('usually ', 'in about '))}</small>
             </div>`; }).join('')}</div>
-            <p class="numbers-foot">Setup fees are waived on annual billing. Extra numbers, for example one per location, are ${money0(C.EXTRA_NUMBER)}/month each.${C.PHONE_LINE ? ` Want customers to call you too? A business phone line for calls and texts is ${money0(C.PHONE_LINE.price)}/month, included on Enterprise.` : ''}</p>`;
+            <p class="numbers-foot">Setup fees are waived on annual billing. Extra numbers, for example one per location, are ${money0(C.EXTRA_NUMBER)}/month each.${C.PHONE_LINE ? ` Want customers to call you too? A business phone line for calls and texts is ${money0(C.PHONE_LINE.price)}/month with ${C.fmt.num(C.PLANS.business.limits.phoneMinutes)} minutes included. Enterprise includes it with ${C.fmt.num(C.PLANS.enterprise.limits.phoneMinutes)} minutes.` : ''}</p>`;
         }
       }
     };
@@ -372,6 +372,9 @@
       'num-tollfree-review': N.tollfree && N.tollfree.review,
       'num-extra': C.EXTRA_NUMBER && `${money0(C.EXTRA_NUMBER)}/month`,
       'phone-line': C.PHONE_LINE && `${money0(C.PHONE_LINE.price)}/month`,
+      'phone-minutes': C.PLANS.business && C.fmt.num(C.PLANS.business.limits.phoneMinutes),
+      'phone-overage': C.PHONE_LINE && `${C.PHONE_LINE.overageCents}¢ a minute`,
+      'extra-location': C.EXTRA_LOCATION && `${money0(C.EXTRA_LOCATION.price)}/month`,
       'storage-addon': C.STORAGE_ADDON && `${C.fmtStorage(C.STORAGE_ADDON.gb)} for ${money0(C.STORAGE_ADDON.price)}/month`,
       'email-overage': A.email && A.email.overage.label,
       'sms-overage': A.sms && A.sms.overage.label,
