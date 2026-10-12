@@ -9,6 +9,13 @@
   <meta property="og:title" content="Send email from your own domain">
   <meta property="og:description" content="How to add Business Email and connect your own domain to Centrx: the DNS records to add, tips for common domain providers, and how to fix verification problems.">
   <link rel="canonical" href="https://centrx.co/help/custom-domain">
+  <meta property="og:url" content="https://centrx.co/help/custom-domain">
+  <meta property="og:site_name" content="Centrx">
+  <meta property="og:image" content="https://centrx.co/assets/brand/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Centrx: customers, orders and payments in one place.">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#FFFFFF">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -129,51 +136,11 @@
 
     <section class="section tight">
       <div class="container legal-wrap">
-        <nav class="legal-toc" aria-label="On this page"><a href="#who">Who can use this</a><a href="#ready">What to have ready</a><a href="#steps">Connect your domain</a><a href="#records">What the records do</a><a href="#providers">Steps for your provider</a><a href="#tips">Good to know</a><a href="#trouble">If verification fails</a></nav>
+        <nav class="legal-toc" aria-label="On this page"><a href="#providers">Steps for your provider</a><a href="#who">Who can use this</a><a href="#ready">What to have ready</a><a href="#steps">Connect your domain</a><a href="#records">What the records do</a><a href="#tips">Good to know</a><a href="#trouble">If verification fails</a></nav>
         <article class="legal">
           <div class="callout warn"><span data-i="alert"></span><span><b>Draft.</b> Steps highlighted <span class="ph">like this</span> name panel screens that still need checking against the live panel.</span></div>
-          <h2 id="who">Who can use this</h2>
-          <p>Sending from your own domain is Business Email, an add-on for any plan at <span data-fact="business-email">$9/month</span> per domain. Business and Enterprise will be able to connect with one click (coming soon). On every plan, you can follow the steps below. Without it, email comes from <code>notify@centrx.co</code> with your business name as the sender, and it works without any setup.</p>
-
-          <h2 id="ready">What to have ready</h2>
-          <ul>
-            <li>A domain you own, like <code>yourbusiness.com</code>.</li>
-            <li>A sign-in for the place that manages its DNS. That's usually where you bought the domain, such as GoDaddy, Namecheap, Squarespace or Cloudflare.</li>
-          </ul>
-          <p>If someone else set up your website, ask them to add the records for you. It takes them a few minutes.</p>
-
-          <h2 id="steps">Connect your domain</h2>
-          <ol>
-            <li>In Centrx, open <span class="ph">Settings → Business Email</span>.</li>
-            <li>Enter your domain and the address to send from, for example <code>notifications@yourbusiness.com</code>.</li>
-            <li>Centrx shows four DNS records. Copy each one into your domain's DNS settings exactly as shown. <a href="#providers">See the steps for your provider</a>.</li>
-            <li>Back in Centrx, select <span class="ph">Verify</span>.</li>
-          </ol>
-          <p>The records look like this. Centrx shows the exact values for your domain, with a copy button next to each one.</p>
-          <div class="table-wrap"><table class="rec-table">
-            <thead><tr><th>Type</th><th>Host</th><th>Value</th></tr></thead>
-            <tbody>
-              <tr><td>TXT</td><td><code>@</code></td><td><code>v=spf1 include:mail.centrx.co ~all</code></td></tr>
-              <tr><td>CNAME</td><td><code>cx1._domainkey</code></td><td><code>cx1.yourbusiness-com.dkim.centrx.co</code></td></tr>
-              <tr><td>CNAME</td><td><code>cx2._domainkey</code></td><td><code>cx2.yourbusiness-com.dkim.centrx.co</code></td></tr>
-              <tr><td>TXT</td><td><code>_dmarc</code></td><td><code>v=DMARC1; p=none; rua=mailto:dmarc@yourbusiness.com</code></td></tr>
-            </tbody>
-          </table></div>
-          <p>DNS changes often show up within minutes, but can take up to 48 hours. If verification doesn't pass straight away, try again later. <span class="ph">Confirm: email keeps sending from notify@centrx.co until the domain is verified.</span></p>
-
-          <h2 id="records">What the records do</h2>
-          <div class="table-wrap"><table>
-            <thead><tr><th>Record</th><th>Type</th><th>What it does</th></tr></thead>
-            <tbody>
-              <tr><td>SPF</td><td>TXT</td><td>Lists who is allowed to send email for your domain.</td></tr>
-              <tr><td>DKIM</td><td>CNAME or TXT</td><td>Signs each email so inboxes can tell it really came from you.</td></tr>
-              <tr><td>DMARC</td><td>TXT</td><td>Tells inboxes what to do with email that fails those checks.</td></tr>
-            </tbody>
-          </table></div>
-          <p>Together they keep your email out of spam folders and stop others from sending email that pretends to be you.</p>
-
           <h2 id="providers">Step-by-step for your provider</h2>
-          <p>Pick where your domain is managed. Each guide shows where to find the DNS records and what to type in each box.</p>
+          <p>Pick where your domain is managed to see where its DNS records live and what to type in each box. The records themselves come from Centrx: <a href="#steps">here’s how to get them</a>.</p>
           <div class="chips prov-tabs" role="tablist" aria-label="Domain provider"><button type="button" class="chip" role="tab" id="tab-godaddy" aria-controls="godaddy" data-prov="godaddy">GoDaddy</button><button type="button" class="chip" role="tab" id="tab-namecheap" aria-controls="namecheap" data-prov="namecheap">Namecheap</button><button type="button" class="chip" role="tab" id="tab-squarespace" aria-controls="squarespace" data-prov="squarespace">Squarespace</button><button type="button" class="chip" role="tab" id="tab-cloudflare" aria-controls="cloudflare" data-prov="cloudflare">Cloudflare</button><button type="button" class="chip" role="tab" id="tab-porkbun" aria-controls="porkbun" data-prov="porkbun">Porkbun</button><button type="button" class="chip" role="tab" id="tab-wix" aria-controls="wix" data-prov="wix">Wix</button><button type="button" class="chip" role="tab" id="tab-other" aria-controls="other" data-prov="other">Other providers</button></div>
           <section class="prov-panel" id="godaddy" role="tabpanel" aria-labelledby="tab-godaddy">
             <h3>GoDaddy</h3>
@@ -255,6 +222,46 @@
             <p><code>@</code> means your main domain. Some providers want you to type <code>@</code>, and others want the box left empty. If the provider shows your domain next to the box, type only the part before it.</p>
             <p><b>Not sure who manages your DNS?</b> Look up your domain's nameservers with any free DNS lookup site. Nameservers ending in <code>domaincontrol.com</code> are GoDaddy, <code>registrar-servers.com</code> is Namecheap, <code>ns.cloudflare.com</code> is Cloudflare, <code>porkbun.com</code> is Porkbun and <code>wixdns.net</code> is Wix. Add the records at that company.</p>
           </section>
+
+          <h2 id="who">Who can use this</h2>
+          <p>Sending from your own domain is Business Email, an add-on for any plan at <span data-fact="business-email">$9/month</span> per domain. Business and Enterprise will be able to connect with one click (coming soon). On every plan, you can follow the steps below. Without it, email comes from <code>notify@centrx.co</code> with your business name as the sender, and it works without any setup.</p>
+
+          <h2 id="ready">What to have ready</h2>
+          <ul>
+            <li>A domain you own, like <code>yourbusiness.com</code>.</li>
+            <li>A sign-in for the place that manages its DNS. That's usually where you bought the domain, such as GoDaddy, Namecheap, Squarespace or Cloudflare.</li>
+          </ul>
+          <p>If someone else set up your website, ask them to add the records for you. It takes them a few minutes.</p>
+
+          <h2 id="steps">Connect your domain</h2>
+          <ol>
+            <li>In Centrx, open <span class="ph">Settings → Business Email</span>.</li>
+            <li>Enter your domain and the address to send from, for example <code>notifications@yourbusiness.com</code>.</li>
+            <li>Centrx shows four DNS records. Copy each one into your domain's DNS settings exactly as shown. <a href="#providers">See the steps for your provider</a>.</li>
+            <li>Back in Centrx, select <span class="ph">Verify</span>.</li>
+          </ol>
+          <p>The records look like this. Centrx shows the exact values for your domain, with a copy button next to each one.</p>
+          <div class="table-wrap"><table class="rec-table">
+            <thead><tr><th>Type</th><th>Host</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>TXT</td><td><code>@</code></td><td><code>v=spf1 include:mail.centrx.co ~all</code></td></tr>
+              <tr><td>CNAME</td><td><code>cx1._domainkey</code></td><td><code>cx1.yourbusiness-com.dkim.centrx.co</code></td></tr>
+              <tr><td>CNAME</td><td><code>cx2._domainkey</code></td><td><code>cx2.yourbusiness-com.dkim.centrx.co</code></td></tr>
+              <tr><td>TXT</td><td><code>_dmarc</code></td><td><code>v=DMARC1; p=none; rua=mailto:dmarc@yourbusiness.com</code></td></tr>
+            </tbody>
+          </table></div>
+          <p>DNS changes often show up within minutes, but can take up to 48 hours. If verification doesn't pass straight away, try again later. <span class="ph">Confirm: email keeps sending from notify@centrx.co until the domain is verified.</span></p>
+
+          <h2 id="records">What the records do</h2>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Record</th><th>Type</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>SPF</td><td>TXT</td><td>Lists who is allowed to send email for your domain.</td></tr>
+              <tr><td>DKIM</td><td>CNAME or TXT</td><td>Signs each email so inboxes can tell it really came from you.</td></tr>
+              <tr><td>DMARC</td><td>TXT</td><td>Tells inboxes what to do with email that fails those checks.</td></tr>
+            </tbody>
+          </table></div>
+          <p>Together they keep your email out of spam folders and stop others from sending email that pretends to be you.</p>
 
           <h2 id="tips">Good to know</h2>
           <ul>
