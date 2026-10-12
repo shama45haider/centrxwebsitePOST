@@ -21,6 +21,98 @@
   <link rel="stylesheet" href="/assets/css/components.css?v=13">
   <link rel="stylesheet" href="/assets/css/site.css?v=13">
   <script>document.documentElement.classList.add('js')</script>
+  <style id="prov-style">
+    /* Provider guides with animated walkthroughs (this page only) */
+    .legal .prov-tabs { margin-top: 18px; }
+    .legal .prov-tabs .chip { height: 34px; padding: 0 14px; font-size: 14px; cursor: pointer; }
+    .js .legal .prov-panel { padding-top: 4px; }
+    .legal .prov-panel h3 { font-size: 17px; margin-top: 28px; }
+    .js .legal .prov-panel h3 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .js .legal .prov-panel[hidden] { display: none; }
+    .legal .rec-table td { white-space: nowrap; }
+    .legal .rec-table td:last-child { white-space: normal; }
+
+    .dns-demo { margin: 22px 0 6px; }
+    .dns-demo figcaption { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; font-size: 13px; color: var(--muted); }
+    .demo-pause { flex: none; height: 28px; padding: 0 12px; border: 1px solid var(--border); border-radius: 999px; background: var(--bg); font: inherit; font-size: 13px; font-weight: 500; color: var(--ink-2); cursor: pointer; }
+    .demo-pause:hover { border-color: var(--border-strong); color: var(--ink); }
+    .shot { position: relative; min-height: 372px; padding: 0 0 14px; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); font-size: 13px; color: var(--ink-2); box-shadow: 0 1px 2px rgba(16,24,40,.05); user-select: none; }
+    .shot-path { padding: 11px 16px; border-bottom: 1px solid var(--border); background: var(--bg); font-size: 12.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .shot-tools { display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding: 12px 16px 0; }
+    .shot-sec { margin-right: auto; font-weight: 600; color: var(--ink); }
+    .shot-list { margin: 12px 16px 0; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); overflow: hidden; }
+    .shot-row { display: grid; grid-template-columns: 64px minmax(0, 0.8fr) minmax(0, 1.6fr); gap: 12px; padding: 9px 12px; border-top: 1px solid var(--border); }
+    .shot-row:first-child { border-top: 0; }
+    .shot-row > span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .shot-row > span + span { font-family: var(--mono); font-size: 12px; }
+    .shot-row.head { background: var(--surface); font-size: 12px; font-weight: 500; color: var(--muted); }
+    .shot-row.head > span { font-family: inherit; font-size: 12px; }
+    .shot-row.new { background: var(--accent-tint); color: var(--ink); transition: background-color 1.2s; }
+    .mock-btn { display: inline-flex; align-items: center; height: 30px; padding: 0 12px; border: 1px solid var(--border-strong); border-radius: 6px; background: var(--bg); font-weight: 500; color: var(--ink); white-space: nowrap; transition: transform .12s, box-shadow .12s; }
+    .mock-btn.primary { border-color: var(--accent); background: var(--accent); color: #fff; }
+    .mock-btn.press { transform: scale(.95); box-shadow: 0 0 0 4px var(--accent-ring); }
+    .shot-form { display: grid; gap: 10px; padding: 14px 16px; background: var(--bg); }
+    .shot-form.overlay { position: absolute; z-index: 2; top: 54px; left: 16px; right: 16px; border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 12px 32px rgba(16,24,40,.14); transition: opacity .25s, transform .25s; }
+    .shot-form.inline { margin: 12px 16px 0; border: 1px solid var(--border); border-radius: 8px; grid-template-columns: 110px minmax(0, 1fr); align-items: start; }
+    .shot-form.inline .f:has(.tip) { grid-column: 1 / -1; }
+    .shot-form.inline .shot-actions { grid-column: 1 / -1; }
+    .f { position: relative; display: grid; grid-template-columns: 96px minmax(0, 1fr); align-items: center; gap: 4px 12px; }
+    .shot-form.inline .f { grid-template-columns: minmax(0, 1fr); }
+    .fl { font-size: 12.5px; font-weight: 500; color: var(--muted); }
+    .fv { display: block; min-height: 32px; padding: 7px 10px; border: 1px solid var(--border-strong); border-radius: 6px; background: var(--bg); font-family: var(--mono); font-size: 12px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: border-color .15s, box-shadow .15s; }
+    .f.sel .fv { font-family: inherit; font-size: 13px; padding-right: 26px; background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23667085' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 9px center; }
+    .fv:empty::before { content: attr(data-ph); color: var(--faint); font-family: var(--font, inherit); font-style: italic; }
+    .f.focus .fv { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-ring); }
+    .f.hl .fv { border-color: var(--accent); }
+    .tip { position: absolute; right: 7px; top: 50%; transform: translateY(-50%); display: inline-block; max-width: 60%; padding: 3px 8px; border-radius: 6px; background: var(--ink); color: #fff; font-size: 12px; font-weight: 500; line-height: 1.4; transition: opacity .2s; }
+    .shot-form.inline .tip { top: auto; bottom: 6px; transform: none; }
+    .toggle { display: inline-flex; align-items: center; gap: 8px; height: 32px; font-weight: 500; color: #C2410C; }
+    .toggle i { position: relative; width: 34px; height: 20px; border-radius: 10px; background: #F38020; transition: background-color .2s; }
+    .toggle i::after { content: ""; position: absolute; top: 2px; left: 16px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: left .2s; }
+    .toggle .t-off { display: none; }
+    .toggle.off { color: var(--muted); }
+    .toggle.off i { background: #98A2B3; }
+    .toggle.off i::after { left: 2px; }
+    .toggle.off .t-on { display: none; }
+    .toggle.off .t-off { display: inline; }
+    .shot-actions { display: flex; justify-content: flex-end; gap: 8px; padding-top: 4px; }
+    .shot-toast { position: absolute; left: 50%; bottom: 14px; z-index: 3; padding: 7px 14px; border-radius: 8px; background: var(--ink); color: #fff; font-size: 12.5px; font-weight: 500; opacity: 0; transform: translate(-50%, 8px); transition: opacity .25s, transform .25s; pointer-events: none; }
+    .cursor { display: none; position: absolute; z-index: 5; top: 0; left: 0; width: 18px; height: 22px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 22'%3E%3Cpath d='M1 1v17l4.6-4.3 3 6.8 3-1.3-3-6.6H15z' fill='%23101828' stroke='%23fff' stroke-width='1.4' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat; transition: transform .6s cubic-bezier(.4,0,.2,1); pointer-events: none; }
+
+    .shot-brand { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 40px; padding: 0 16px; background: var(--brand-bar); border-bottom: 1px solid rgba(16,24,40,.08); }
+    .shot-word { font-size: 16px; font-weight: 700; letter-spacing: -0.02em; color: var(--brand-word); }
+    .shot-url { padding: 3px 10px; border-radius: 999px; background: rgba(255,255,255,.16); font-size: 11.5px; color: var(--brand-word); opacity: .85; }
+    .shot[style*="--brand-bar:#FFFFFF"] .shot-url { background: var(--surface-2); }
+    .shot .mock-btn.primary { border-color: var(--brand-btn, var(--accent)); background: var(--brand-btn, var(--accent)); }
+    .shot .f.focus .fv, .shot .f.hl .fv { border-color: var(--brand-btn, var(--accent)); }
+    .shot .f.focus .fv { box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-btn, var(--accent)) 22%, transparent); }
+    .shot .mock-btn.press { box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand-btn, var(--accent)) 25%, transparent); }
+    .shot-form.overlay { top: 94px; }
+
+    /* Animated states (set by the script; without it the figure shows the finished form) */
+    .dns-demo.anim .cursor { display: block; }
+    .dns-demo.anim .shot-row.new:not(.in) { display: none; }
+    .dns-demo.anim .shot-row.new.in { animation: rowIn .5s ease; }
+    .dns-demo.anim .f .tip { opacity: 0; }
+    .dns-demo.anim .f.shown .tip { opacity: 1; }
+    .dns-demo.anim .f.hl:not(.shown):not(.focus) .fv { border-color: var(--border-strong); }
+    .shot.stage-list .shot-form.overlay, .shot.stage-done .shot-form.overlay { opacity: 0; transform: translateY(6px); pointer-events: none; }
+    .shot-toast.in { opacity: 1; transform: translate(-50%, 0); }
+    @keyframes rowIn { from { background: #D1E0FF; } }
+
+    @media (max-width: 560px) {
+      .shot { min-height: 428px; }
+      .shot-row { grid-template-columns: 52px minmax(0, 1fr); }
+      .shot-row > span:last-child { display: none; }
+      .f { grid-template-columns: minmax(0, 1fr); }
+      .tip, .shot-form.inline .tip { position: static; transform: none; justify-self: start; max-width: none; }
+      .shot-form.inline { grid-template-columns: minmax(0, 1fr); }
+      .shot-form.overlay { top: 88px; left: 10px; right: 10px; }
+      .shot { min-height: 468px; }
+      .shot-url { display: none; }
+    }
+    html:not(.js) .legal .prov-tabs { display: none; }
+  </style>
 </head>
 <body class="site" data-page="help">
   <a class="skip" href="#main">Skip to content</a>
@@ -37,7 +129,7 @@
 
     <section class="section tight">
       <div class="container legal-wrap">
-        <nav class="legal-toc" aria-label="On this page"><a href="#who">Who can use this</a><a href="#ready">What to have ready</a><a href="#steps">Connect your domain</a><a href="#records">What the records do</a><a href="#providers">Tips for common providers</a><a href="#trouble">If verification fails</a></nav>
+        <nav class="legal-toc" aria-label="On this page"><a href="#who">Who can use this</a><a href="#ready">What to have ready</a><a href="#steps">Connect your domain</a><a href="#records">What the records do</a><a href="#providers">Steps for your provider</a><a href="#tips">Good to know</a><a href="#trouble">If verification fails</a></nav>
         <article class="legal">
           <div class="callout warn"><span data-i="alert"></span><span><b>Draft.</b> Steps highlighted <span class="ph">like this</span> name panel screens that still need checking against the live panel.</span></div>
           <h2 id="who">Who can use this</h2>
@@ -52,11 +144,21 @@
 
           <h2 id="steps">Connect your domain</h2>
           <ol>
-            <li>In Centrx, open <span class="ph">Settings → Email → Sending domain</span>.</li>
+            <li>In Centrx, open <span class="ph">Settings → Business Email</span>.</li>
             <li>Enter your domain and the address to send from, for example <code>notifications@yourbusiness.com</code>.</li>
-            <li>Centrx shows a few DNS records. Copy each one into your domain's DNS settings exactly as shown.</li>
+            <li>Centrx shows four DNS records. Copy each one into your domain's DNS settings exactly as shown. <a href="#providers">See the steps for your provider</a>.</li>
             <li>Back in Centrx, select <span class="ph">Verify</span>.</li>
           </ol>
+          <p>The records look like this. Centrx shows the exact values for your domain, with a copy button next to each one.</p>
+          <div class="table-wrap"><table class="rec-table">
+            <thead><tr><th>Type</th><th>Host</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>TXT</td><td><code>@</code></td><td><code>v=spf1 include:mail.centrx.co ~all</code></td></tr>
+              <tr><td>CNAME</td><td><code>cx1._domainkey</code></td><td><code>cx1.yourbusiness-com.dkim.centrx.co</code></td></tr>
+              <tr><td>CNAME</td><td><code>cx2._domainkey</code></td><td><code>cx2.yourbusiness-com.dkim.centrx.co</code></td></tr>
+              <tr><td>TXT</td><td><code>_dmarc</code></td><td><code>v=DMARC1; p=none; rua=mailto:dmarc@yourbusiness.com</code></td></tr>
+            </tbody>
+          </table></div>
           <p>DNS changes often show up within minutes, but can take up to 48 hours. If verification doesn't pass straight away, try again later. <span class="ph">Confirm: email keeps sending from notify@centrx.co until the domain is verified.</span></p>
 
           <h2 id="records">What the records do</h2>
@@ -70,11 +172,95 @@
           </table></div>
           <p>Together they keep your email out of spam folders and stop others from sending email that pretends to be you.</p>
 
-          <h2 id="providers">Tips for common providers</h2>
+          <h2 id="providers">Step-by-step for your provider</h2>
+          <p>Pick where your domain is managed. Each guide shows where to find the DNS records and what to type in each box.</p>
+          <div class="chips prov-tabs" role="tablist" aria-label="Domain provider"><button type="button" class="chip" role="tab" id="tab-godaddy" aria-controls="godaddy" data-prov="godaddy">GoDaddy</button><button type="button" class="chip" role="tab" id="tab-namecheap" aria-controls="namecheap" data-prov="namecheap">Namecheap</button><button type="button" class="chip" role="tab" id="tab-squarespace" aria-controls="squarespace" data-prov="squarespace">Squarespace</button><button type="button" class="chip" role="tab" id="tab-cloudflare" aria-controls="cloudflare" data-prov="cloudflare">Cloudflare</button><button type="button" class="chip" role="tab" id="tab-porkbun" aria-controls="porkbun" data-prov="porkbun">Porkbun</button><button type="button" class="chip" role="tab" id="tab-wix" aria-controls="wix" data-prov="wix">Wix</button><button type="button" class="chip" role="tab" id="tab-other" aria-controls="other" data-prov="other">Other providers</button></div>
+          <section class="prov-panel" id="godaddy" role="tabpanel" aria-labelledby="tab-godaddy">
+            <h3>GoDaddy</h3>
+          <ol>
+            <li>Sign in to GoDaddy, open your domain list and select your domain.</li>
+            <li>Open the <b>DNS</b> tab and select <b>Add New Record</b>.</li>
+            <li>Choose the <b>Type</b> Centrx shows. In <b>Name</b>, enter the host from Centrx, like <code>cx1._domainkey</code>, or <code>@</code> for the SPF record. Paste the <b>Value</b> and leave TTL as it is.</li>
+            <li>Select <b>Save</b>, then add the next record. <b>Add More Records</b> lets you add several before saving.</li>
+          </ol>
+            <figure class="dns-demo" data-demo><div class="shot" aria-hidden="true" style="--brand-bar:#111111;--brand-word:#FFFFFF;--brand-btn:#111111"><div class="shot-brand"><span class="shot-word">GoDaddy</span><span class="shot-url">godaddy.com</span></div><div class="shot-path">Domain Settings › DNS</div><div class="shot-tools"><span class="mock-btn" data-add>Add New Record</span></div><div class="shot-list"><div class="shot-row head"><span>Type</span><span>Name</span><span>Value</span></div><div class="shot-row new" data-new><span>CNAME</span><span>cx1._domainkey</span><span>cx1.yourbusiness-com.dkim.centrx.co</span></div><div class="shot-row"><span>A</span><span>@</span><span>203.0.113.10</span></div><div class="shot-row"><span>CNAME</span><span>www</span><span>yourbusiness.com</span></div><div class="shot-row"><span>MX</span><span>@</span><span>mx.yourmailhost.com</span></div></div><div class="shot-form overlay" data-form><div class="f sel"><span class="fl">Type</span><span class="fv" data-v="CNAME">CNAME</span></div><div class="f hl"><span class="fl">Name</span><span class="fv" data-v="cx1._domainkey">cx1._domainkey</span><span class="tip">Only this part. GoDaddy adds your domain.</span></div><div class="f"><span class="fl">Value</span><span class="fv" data-v="cx1.yourbusiness-com.dkim.centrx.co">cx1.yourbusiness-com.dkim.centrx.co</span></div><div class="f sel"><span class="fl">TTL</span><span class="fv" data-v="1 Hour">1 Hour</span></div><div class="shot-actions"><span class=mock-btn>Cancel</span><span class="mock-btn primary" data-save>Save</span></div></div><div class="shot-toast" data-rec-toast>Record saved</div><span class="cursor" data-cursor></span></div><figcaption><span>A simplified animation of adding a record in GoDaddy. The real screen may look a little different.</span><button type="button" class="demo-pause" data-pause hidden>Pause</button></figcaption></figure>
+            <p>GoDaddy adds your domain to the end of the name, so enter <code>cx1._domainkey</code>, not <code>cx1._domainkey.yourbusiness.com</code>. On GoDaddy's older screen, it's <b>Edit DNS</b> in the menu next to your domain, then <b>Add</b>. If GoDaddy says your domain uses other nameservers, add the records with that company instead.</p>
+          </section>
+          <section class="prov-panel" id="namecheap" role="tabpanel" aria-labelledby="tab-namecheap">
+            <h3>Namecheap</h3>
+          <ol>
+            <li>Sign in, open <b>Domain List</b> and select <b>Manage</b> next to your domain.</li>
+            <li>Open the <b>Advanced DNS</b> tab. Under Host Records, select <b>Add New Record</b>.</li>
+            <li>Choose <b>TXT Record</b> or <b>CNAME Record</b>, enter the <b>Host</b> and paste the <b>Value</b>. Leave TTL on Automatic.</li>
+            <li>Select <b>Save all changes</b>, then add the next record.</li>
+          </ol>
+            <figure class="dns-demo" data-demo><div class="shot" aria-hidden="true" style="--brand-bar:#DE3723;--brand-word:#FFFFFF;--brand-btn:#DE3723"><div class="shot-brand"><span class="shot-word">Namecheap</span><span class="shot-url">namecheap.com</span></div><div class="shot-path">Domain List › Manage › Advanced DNS</div><div class="shot-tools"><span class="mock-btn" data-add>Add New Record</span></div><div class="shot-list"><div class="shot-row head"><span>Type</span><span>Name</span><span>Value</span></div><div class="shot-row new" data-new><span>CNAME</span><span>cx1._domainkey</span><span>cx1.yourbusiness-com.dkim.centrx.co</span></div><div class="shot-row"><span>A</span><span>@</span><span>203.0.113.10</span></div><div class="shot-row"><span>CNAME</span><span>www</span><span>yourbusiness.com</span></div><div class="shot-row"><span>MX</span><span>@</span><span>mx.yourmailhost.com</span></div></div><div class="shot-form overlay" data-form><div class="f sel"><span class="fl">Type</span><span class="fv" data-v="CNAME Record">CNAME Record</span></div><div class="f hl"><span class="fl">Host</span><span class="fv" data-v="cx1._domainkey">cx1._domainkey</span><span class="tip">Only this part. Namecheap adds your domain.</span></div><div class="f"><span class="fl">Value</span><span class="fv" data-v="cx1.yourbusiness-com.dkim.centrx.co">cx1.yourbusiness-com.dkim.centrx.co</span></div><div class="f sel"><span class="fl">TTL</span><span class="fv" data-v="Automatic">Automatic</span></div><div class="shot-actions"><span class=mock-btn>Cancel</span><span class="mock-btn primary" data-save>Save all changes</span></div></div><div class="shot-toast" data-rec-toast>Record saved</div><span class="cursor" data-cursor></span></div><figcaption><span>A simplified animation of adding a record in Namecheap. The real screen may look a little different.</span><button type="button" class="demo-pause" data-pause hidden>Pause</button></figcaption></figure>
+            <p>Namecheap adds your domain to the host for you: enter <code>cx1._domainkey</code> for DKIM and <code>@</code> for SPF. If Host Records is missing or locked, your domain uses another company's nameservers (often your web host's), so add the records there.</p>
+          </section>
+          <section class="prov-panel" id="squarespace" role="tabpanel" aria-labelledby="tab-squarespace">
+            <h3>Squarespace</h3>
+          <ol>
+            <li>Open your <b>Domains</b> dashboard and select your domain.</li>
+            <li>Select <b>DNS</b>, then <b>DNS Settings</b>, and scroll to <b>Custom records</b>.</li>
+            <li>Select <b>Add record</b>. Squarespace may ask for your password or two-step code first.</li>
+            <li>Choose the <b>Type</b>, enter the <b>Name</b> (<code>@</code> for the SPF record) and paste the value into <b>Data</b>. Select <b>Save</b>, then add the next record.</li>
+          </ol>
+            <figure class="dns-demo" data-demo><div class="shot" aria-hidden="true" style="--brand-bar:#000000;--brand-word:#FFFFFF;--brand-btn:#000000"><div class="shot-brand"><span class="shot-word">Squarespace</span><span class="shot-url">squarespace.com</span></div><div class="shot-path">Domains › DNS › DNS Settings › Custom records</div><div class="shot-tools"><span class="mock-btn" data-add>Add record</span></div><div class="shot-list"><div class="shot-row head"><span>Type</span><span>Name</span><span>Value</span></div><div class="shot-row new" data-new><span>TXT</span><span>@</span><span>v=spf1 include:mail.centrx.co ~all</span></div><div class="shot-row"><span>A</span><span>@</span><span>203.0.113.10</span></div><div class="shot-row"><span>CNAME</span><span>www</span><span>yourbusiness.com</span></div><div class="shot-row"><span>MX</span><span>@</span><span>mx.yourmailhost.com</span></div></div><div class="shot-form overlay" data-form><div class="f sel"><span class="fl">Type</span><span class="fv" data-v="TXT">TXT</span></div><div class="f hl"><span class="fl">Name</span><span class="fv" data-v="@">@</span><span class="tip">@ means your main domain</span></div><div class="f"><span class="fl">Data</span><span class="fv" data-v="v=spf1 include:mail.centrx.co ~all">v=spf1 include:mail.centrx.co ~all</span></div><div class="shot-actions"><span class=mock-btn>Cancel</span><span class="mock-btn primary" data-save>Save</span></div></div><div class="shot-toast" data-rec-toast>Record saved</div><span class="cursor" data-cursor></span></div><figcaption><span>A simplified animation of adding a record in Squarespace Domains. The real screen may look a little different.</span><button type="button" class="demo-pause" data-pause hidden>Pause</button></figcaption></figure>
+            <p>Custom records only work when your domain uses Squarespace's nameservers. If the domain is only connected to Squarespace and was bought somewhere else, add the records there. If you see <b>Custom record not saved</b>, a record with the same name probably exists already. That's often an old SPF record, so edit that one instead.</p>
+          </section>
+          <section class="prov-panel" id="cloudflare" role="tabpanel" aria-labelledby="tab-cloudflare">
+            <h3>Cloudflare</h3>
+          <ol>
+            <li>Sign in and select your domain.</li>
+            <li>Go to <b>DNS</b>, then <b>Records</b>, and select <b>Add record</b>.</li>
+            <li>Choose the <b>Type</b>, enter the <b>Name</b> and paste the <b>Target</b> (for CNAME) or <b>Content</b> (for TXT).</li>
+            <li>For CNAME records, turn <b>Proxy status</b> off so it shows <b>DNS only</b>. Then select <b>Save</b>.</li>
+          </ol>
+            <figure class="dns-demo" data-demo><div class="shot" aria-hidden="true" style="--brand-bar:#FFFFFF;--brand-word:#F38020;--brand-btn:#0051C3"><div class="shot-brand"><span class="shot-word">Cloudflare</span><span class="shot-url">dash.cloudflare.com</span></div><div class="shot-path">yourbusiness.com › DNS › Records</div><div class="shot-tools"><span class="mock-btn" data-add>Add record</span></div><div class="shot-list"><div class="shot-row head"><span>Type</span><span>Name</span><span>Value</span></div><div class="shot-row new" data-new><span>CNAME</span><span>cx1._domainkey</span><span>cx1.yourbusiness-com.dkim.centrx.co</span></div><div class="shot-row"><span>A</span><span>@</span><span>203.0.113.10</span></div><div class="shot-row"><span>CNAME</span><span>www</span><span>yourbusiness.com</span></div><div class="shot-row"><span>MX</span><span>@</span><span>mx.yourmailhost.com</span></div></div><div class="shot-form overlay" data-form><div class="f sel"><span class="fl">Type</span><span class="fv" data-v="CNAME">CNAME</span></div><div class="f"><span class="fl">Name</span><span class="fv" data-v="cx1._domainkey">cx1._domainkey</span></div><div class="f"><span class="fl">Target</span><span class="fv" data-v="cx1.yourbusiness-com.dkim.centrx.co">cx1.yourbusiness-com.dkim.centrx.co</span></div><div class="f hl tog"><span class="fl">Proxy status</span><span class="toggle off" data-toggle><i></i><span class="t-on">Proxied</span><span class="t-off">DNS only</span></span><span class="tip">Switch it off: DNS only</span></div><div class="shot-actions"><span class=mock-btn>Cancel</span><span class="mock-btn primary" data-save>Save</span></div></div><div class="shot-toast" data-rec-toast>Record saved</div><span class="cursor" data-cursor></span></div><figcaption><span>A simplified animation of adding a record in Cloudflare. The real screen may look a little different.</span><button type="button" class="demo-pause" data-pause hidden>Pause</button></figcaption></figure>
+            <p>The DKIM records must be <b>DNS only</b> (grey cloud). If they're proxied (orange cloud), inboxes can't read them and verification fails. TXT records are always DNS only. Cloudflare changes usually show up within a few minutes.</p>
+          </section>
+          <section class="prov-panel" id="porkbun" role="tabpanel" aria-labelledby="tab-porkbun">
+            <h3>Porkbun</h3>
+          <ol>
+            <li>Sign in to <b>Domain Management</b>.</li>
+            <li>Next to your domain, select <b>Details</b>, then the edit icon next to <b>DNS Records</b>.</li>
+            <li>In the form at the top, choose the <b>Type</b>, enter the <b>Host</b> and paste the value into <b>Answer</b>. For records Centrx shows as <code>@</code>, leave Host empty.</li>
+            <li>Select <b>Add</b>, then add the next record.</li>
+          </ol>
+            <figure class="dns-demo" data-demo><div class="shot" aria-hidden="true" style="--brand-bar:#EF7878;--brand-word:#FFFFFF;--brand-btn:#E25C6A"><div class="shot-brand"><span class="shot-word">Porkbun</span><span class="shot-url">porkbun.com</span></div><div class="shot-path">Domain Management › Details › DNS Records</div><div class="shot-form inline" data-form><div class="f sel"><span class="fl">Type</span><span class="fv" data-v="TXT">TXT</span></div><div class="f hl"><span class="fl">Host</span><span class="fv" data-v="" data-ph="leave blank"></span><span class="tip">Leave it blank for @</span></div><div class="f"><span class="fl">Answer</span><span class="fv" data-v="v=spf1 include:mail.centrx.co ~all">v=spf1 include:mail.centrx.co ~all</span></div><div class="f sel"><span class="fl">TTL</span><span class="fv" data-v="600">600</span></div><div class="shot-actions"><span class="mock-btn primary" data-save>Add</span></div></div><div class="shot-list"><div class="shot-row head"><span>Type</span><span>Name</span><span>Value</span></div><div class="shot-row new" data-new><span>TXT</span><span>@</span><span>v=spf1 include:mail.centrx.co ~all</span></div><div class="shot-row"><span>A</span><span>@</span><span>203.0.113.10</span></div><div class="shot-row"><span>CNAME</span><span>www</span><span>yourbusiness.com</span></div><div class="shot-row"><span>MX</span><span>@</span><span>mx.yourmailhost.com</span></div></div><div class="shot-toast" data-rec-toast>Record saved</div><span class="cursor" data-cursor></span></div><figcaption><span>A simplified animation of adding a record in Porkbun. The real screen may look a little different.</span><button type="button" class="demo-pause" data-pause hidden>Pause</button></figcaption></figure>
+            <p>Porkbun shows your domain next to the Host box, so type only the part before it: <code>cx1._domainkey</code> for DKIM, <code>_dmarc</code> for DMARC and nothing at all for SPF.</p>
+          </section>
+          <section class="prov-panel" id="wix" role="tabpanel" aria-labelledby="tab-wix">
+            <h3>Wix</h3>
+          <ol>
+            <li>Go to <b>Domains</b> in your Wix account.</li>
+            <li>Select the <b>Domain Actions</b> menu next to your domain, then <b>Manage DNS Records</b>.</li>
+            <li>In the <b>TXT</b> or <b>CNAME (Aliases)</b> section, select <b>+ Add Record</b>.</li>
+            <li>Enter the <b>Host Name</b> and <b>Value</b>, then select <b>Save</b>. For records Centrx shows as <code>@</code>, leave Host Name empty.</li>
+          </ol>
+            <figure class="dns-demo" data-demo><div class="shot" aria-hidden="true" style="--brand-bar:#FFFFFF;--brand-word:#000000;--brand-btn:#116DFF"><div class="shot-brand"><span class="shot-word">Wix</span><span class="shot-url">manage.wix.com</span></div><div class="shot-path">Domains › Manage DNS Records</div><div class="shot-tools"><span class=shot-sec>TXT</span><span class="mock-btn" data-add>+ Add Record</span></div><div class="shot-list"><div class="shot-row head"><span>Type</span><span>Name</span><span>Value</span></div><div class="shot-row new" data-new><span>TXT</span><span>@</span><span>v=spf1 include:mail.centrx.co ~all</span></div><div class="shot-row"><span>A</span><span>@</span><span>203.0.113.10</span></div><div class="shot-row"><span>CNAME</span><span>www</span><span>yourbusiness.com</span></div><div class="shot-row"><span>MX</span><span>@</span><span>mx.yourmailhost.com</span></div></div><div class="shot-form overlay" data-form><div class="f hl"><span class="fl">Host Name</span><span class="fv" data-v="" data-ph="leave blank"></span><span class="tip">Leave it blank for @</span></div><div class="f"><span class="fl">Value</span><span class="fv" data-v="v=spf1 include:mail.centrx.co ~all">v=spf1 include:mail.centrx.co ~all</span></div><div class="shot-actions"><span class=mock-btn>Cancel</span><span class="mock-btn primary" data-save>Save</span></div></div><div class="shot-toast" data-rec-toast>Record saved</div><span class="cursor" data-cursor></span></div><figcaption><span>A simplified animation of adding a record in Wix. The real screen may look a little different.</span><button type="button" class="demo-pause" data-pause hidden>Pause</button></figcaption></figure>
+            <p>You can only add records in Wix if your domain is connected to Wix by <b>name servers</b>. If it's connected by pointing, add the records where you bought the domain.</p>
+          </section>
+          <section class="prov-panel" id="other" role="tabpanel" aria-labelledby="tab-other">
+            <h3>Other providers</h3>
+            <p>Every DNS screen works the same way, but the boxes have different names. Look for a page called DNS, DNS records, DNS zone or Advanced DNS, add a record, and match the boxes like this:</p>
+            <div class="table-wrap"><table>
+              <thead><tr><th>In Centrx</th><th>Your provider may call it</th></tr></thead>
+              <tbody>
+                <tr><td>Type</td><td>Type, Record type</td></tr>
+                <tr><td>Host</td><td>Name, Host, Host name, Record name</td></tr>
+                <tr><td>Value</td><td>Value, Points to, Target, Content, Data, Answer</td></tr>
+              </tbody>
+            </table></div>
+            <p><code>@</code> means your main domain. Some providers want you to type <code>@</code>, and others want the box left empty. If the provider shows your domain next to the box, type only the part before it.</p>
+            <p><b>Not sure who manages your DNS?</b> Look up your domain's nameservers with any free DNS lookup site. Nameservers ending in <code>domaincontrol.com</code> are GoDaddy, <code>registrar-servers.com</code> is Namecheap, <code>ns.cloudflare.com</code> is Cloudflare, <code>porkbun.com</code> is Porkbun and <code>wixdns.net</code> is Wix. Add the records at that company.</p>
+          </section>
+
+          <h2 id="tips">Good to know</h2>
           <ul>
-            <li><b>Already have an SPF record?</b> A domain can only have one. Don't add a second. Add Centrx to the one you have instead, or ask us and we'll tell you exactly what it should say.</li>
-            <li><b>GoDaddy and Namecheap</b> add your domain to the end of the name automatically. If Centrx shows <code>mail._domainkey.yourbusiness.com</code>, enter only <code>mail._domainkey</code>.</li>
-            <li><b>Cloudflare:</b> set CNAME records to <b>DNS only</b> (the grey cloud), not proxied.</li>
+            <li><b>Already have an SPF record?</b> A domain can only have one. Don't add a second. Add <code>include:mail.centrx.co</code> to the one you have, just before <code>~all</code> or <code>-all</code>. Or ask us and we'll tell you exactly what it should say.</li>
+            <li><b>Already have a DMARC record?</b> Keep yours and skip ours. One is enough.</li>
+            <li><b>Adding all four at once is fine.</b> Centrx checks them together when you select Verify.</li>
           </ul>
 
           <h2 id="trouble">If verification fails</h2>
@@ -102,5 +288,103 @@
   <script src="/assets/js/data/plans.js?v=13"></script>
   <script src="/assets/js/data/help.js?v=13"></script>
   <script src="/assets/js/site.js?v=13"></script>
+  <script id="prov-script">
+    // Provider picker and the animated walkthroughs. Without this script every provider shows
+    // with a still picture of the finished form.
+    (function () {
+      var tabs = [].slice.call(document.querySelectorAll('[data-prov]'));
+      var panels = tabs.map(function (t) { return document.getElementById(t.dataset.prov); });
+      if (!tabs.length) return;
+      var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var demos = [].slice.call(document.querySelectorAll('[data-demo]')).map(makeDemo);
+
+      function pick(id, focus) {
+        tabs.forEach(function (t) {
+          var on = t.dataset.prov === id;
+          t.classList.toggle('on', on); t.setAttribute('aria-selected', on); t.tabIndex = on ? 0 : -1;
+          if (on && focus) t.focus();
+        });
+        panels.forEach(function (p) { p.hidden = p.id !== id; });
+        demos.forEach(function (d) { d.panel.hidden ? d.stop() : d.maybePlay(); });
+      }
+      tabs.forEach(function (t, i) {
+        t.addEventListener('click', function () { pick(t.dataset.prov); history.replaceState(null, '', '#' + t.dataset.prov); });
+        t.addEventListener('keydown', function (e) {
+          var k = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+          if (!k) return;
+          e.preventDefault();
+          pick(tabs[(i + k + tabs.length) % tabs.length].dataset.prov, true);
+        });
+      });
+      var fromHash = location.hash.slice(1);
+      var start = panels.some(function (p) { return p.id === fromHash; }) ? fromHash : tabs[0].dataset.prov;
+      pick(start);
+      if (start === fromHash) setTimeout(function () { document.getElementById('providers').scrollIntoView(); }, 0);
+      window.addEventListener('hashchange', function () { var h = location.hash.slice(1); if (panels.some(function (p) { return p.id === h; })) { pick(h); document.getElementById('providers').scrollIntoView(); } });
+
+      function makeDemo(fig) {
+        var shot = fig.querySelector('.shot'), cur = fig.querySelector('[data-cursor]'), add = fig.querySelector('[data-add]');
+        var save = fig.querySelector('[data-save]'), row = fig.querySelector('[data-new]'), toast = fig.querySelector('[data-rec-toast]');
+        var tog = fig.querySelector('[data-toggle]'), btn = fig.querySelector('[data-pause]');
+        var fields = [].slice.call(fig.querySelectorAll('.fv')).map(function (el) { return { el: el, v: el.dataset.v, f: el.parentNode }; });
+        var run = 0, playing = false, paused = false, inView = false;
+        var api = { panel: fig.closest('.prov-panel') };
+        if (still) return { panel: api.panel, stop: function () {}, maybePlay: function () {} };
+        btn.hidden = false;
+        fig.classList.add('anim');
+
+        function wait(ms, id) { return new Promise(function (res, rej) { setTimeout(function () { id === run ? res() : rej(); }, ms); }); }
+        function moveTo(el) {
+          var a = shot.getBoundingClientRect(), b = el.getBoundingClientRect();
+          cur.style.transform = 'translate(' + Math.round(b.left - a.left + Math.min(b.width * 0.55, 46)) + 'px,' + Math.round(b.top - a.top + b.height * 0.5) + 'px)';
+        }
+        function reset() {
+          shot.classList.remove('stage-done');
+          if (add) shot.classList.add('stage-list');
+          fields.forEach(function (x) { x.el.textContent = ''; x.f.classList.remove('focus', 'shown'); });
+          row.classList.remove('in'); toast.classList.remove('in');
+          if (tog) { tog.classList.remove('off'); tog.parentNode.classList.remove('shown'); }
+          [add, save].forEach(function (b) { if (b) b.classList.remove('press'); });
+          cur.style.transform = 'translate(' + (shot.clientWidth - 60) + 'px,' + (shot.clientHeight - 40) + 'px)';
+        }
+        function press(b, id) { b.classList.add('press'); return wait(220, id).then(function () { b.classList.remove('press'); }); }
+        function type(x, id) {
+          var i = 0, step = x.v.length > 20 ? 26 : 60;
+          return (function next() {
+            if (i >= x.v.length) return Promise.resolve();
+            x.el.textContent = x.v.slice(0, ++i);
+            return wait(step, id).then(next);
+          })();
+        }
+        function loop(id) {
+          reset();
+          var p = wait(900, id);
+          if (add) p = p.then(function () { moveTo(add); return wait(750, id); }).then(function () { return press(add, id); }).then(function () { shot.classList.remove('stage-list'); return wait(500, id); });
+          fields.forEach(function (x) {
+            p = p.then(function () { moveTo(x.f.querySelector('.fv')); return wait(650, id); })
+              .then(function () { x.f.classList.add('focus'); if (x.f.classList.contains('sel')) { x.el.textContent = x.v; return wait(350, id); } return type(x, id); })
+              .then(function () { if (x.f.querySelector('.tip')) { x.f.classList.add('shown'); return wait(1800, id); } })
+              .then(function () { x.f.classList.remove('focus'); return wait(200, id); });
+          });
+          if (tog) p = p.then(function () { moveTo(tog.querySelector('i')); return wait(700, id); }).then(function () { tog.classList.add('off'); tog.parentNode.classList.add('shown'); return wait(1800, id); });
+          return p.then(function () { moveTo(save); return wait(750, id); })
+            .then(function () { return press(save, id); })
+            .then(function () { shot.classList.add('stage-done'); row.classList.add('in'); toast.classList.add('in'); return wait(3400, id); })
+            .then(function () { return loop(id); });
+        }
+        api.play = function () { if (playing) return; playing = true; loop(++run).catch(function () {}); };
+        api.stop = function () { playing = false; run++; };
+        api.maybePlay = function () { if (!paused && inView && !api.panel.hidden) api.play(); else api.stop(); };
+        btn.addEventListener('click', function () {
+          paused = !paused; btn.textContent = paused ? 'Play' : 'Pause';
+          btn.setAttribute('aria-pressed', paused);
+          api.maybePlay();
+        });
+        if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { inView = es[0].isIntersecting; api.maybePlay(); }, { threshold: 0.4 }).observe(fig);
+        else { inView = true; }
+        return api;
+      }
+    })();
+  </script>
 </body>
 </html>
