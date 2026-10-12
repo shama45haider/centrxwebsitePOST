@@ -18,7 +18,7 @@
     {
       id: 'custom-domain', cat: 'messaging', href: '/help/custom-domain',
       title: 'Send email from your own domain',
-      summary: 'Connect your domain on Pro or higher so customers get email from your own address.',
+      summary: 'Add Business Email to send from a domain you own, so customers get email from your own address.',
       keywords: 'domain dns spf dkim dmarc email sender address business verify godaddy namecheap cloudflare squarespace',
     },
     {

@@ -27,15 +27,15 @@
         items: 500, categories: 5, customStatuses: 2,
         seats: 2, locations: 1, customers: U, orders: U, links: U, labels: U, storageGB: 25,
         paymentProviders: 3, shippingProviders: 1, customRoles: 0,
-        auditDays: 30, apiKeys: 0, automations: 3, timelineMonths: 12, cenbotReplies: 500, phoneMinutes: 500, sendDomains: 0,
+        auditDays: 30, apiKeys: 0, automations: 3, timelineMonths: 12, cenbotReplies: 500, phoneMinutes: 500,
       },
       features: {
         meetup: true, customDeposit: false, requireProof: false, esignature: false, proofVideo: false, signatureExport: false,
-        segments: false, csv: true, customDomain: false, removeBranding: false,
+        segments: false, csv: true, customDomain: true, removeBranding: false,
         whiteLabel: false, webhooks: false, sso: false, enforceMfa: false,
         timelineExport: false, auditExport: false, granularPerms: false,
         onlineStore: false, storeCustomDomain: false, extraLocations: false, phoneLine: false,
-        inboxTeam: false, inboxRules: false, connectMailbox: false,
+        inboxTeam: false, inboxRules: false, connectMailbox: false, autoConnectDomain: false,
       },
       support: 'Email',
     },
@@ -43,12 +43,12 @@
       // id stays 'growth' so saved accounts and signup links keep matching.
       id: 'growth', name: 'Pro', price: 9900, inherits: 'starter',
       tagline: 'For growing teams with repeat customers.',
-      highlights: ['10 employees · 2 locations', '100 GB cloud storage', 'Online Store included', 'Send from your own domain'],
+      highlights: ['10 employees · 2 locations', '100 GB cloud storage', 'Online Store included', 'Custom branding'],
       bullets: [
         '10 employees', '2 locations', '100 GB cloud storage',
         'Advanced analytics', 'Advanced automations', 'Employee permissions',
         'Online Store with a drag-and-drop editor', 'Cenbot AI, 2,500 replies / month', 'Assign conversations and add internal notes', 'Campaign segments and tags', 'Custom branding', 'Webhooks and API keys',
-        'Require two-factor sign-in for your team', 'Priority support', 'Connect your domain and send email from it',
+        'Require two-factor sign-in for your team', 'Priority support',
       ],
       analytics: 'Advanced',
       limits: {
@@ -56,7 +56,7 @@
         items: 10000, categories: U, customStatuses: U,
         seats: 10, locations: 2, customers: U, orders: U, links: U, labels: U, storageGB: 100,
         paymentProviders: 3, shippingProviders: 3, customRoles: 5,
-        auditDays: 90, apiKeys: 2, automations: 25, timelineMonths: U, cenbotReplies: 2500, phoneMinutes: 500, sendDomains: 1,
+        auditDays: 90, apiKeys: 2, automations: 25, timelineMonths: U, cenbotReplies: 2500, phoneMinutes: 500,
       },
       features: {
         meetup: true, customDeposit: true, requireProof: true, esignature: true, proofVideo: true, signatureExport: false,
@@ -64,7 +64,7 @@
         whiteLabel: false, webhooks: true, sso: false, enforceMfa: true,
         timelineExport: false, auditExport: false, granularPerms: false,
         onlineStore: true, storeCustomDomain: false, extraLocations: false, phoneLine: false,
-        inboxTeam: true, inboxRules: false, connectMailbox: false,
+        inboxTeam: true, inboxRules: false, connectMailbox: false, autoConnectDomain: false,
       },
       support: 'Priority',
       popular: true,
@@ -76,7 +76,7 @@
       bullets: [
         'Unlimited employees', 'Up to 5 locations', '500 GB cloud storage',
         'Cenbot AI, 10,000 replies / month', 'Advanced reporting', 'Advanced permissions', 'Unlimited automations',
-        'Your Online Store on your own domain', 'Up to 5 sending domains', 'Inbox rules and auto-assign', 'Extra locations at $20/month each', '1-year audit log with export',
+        'Your Online Store on your own domain', 'One-click domain setup for Business Email (coming soon)', 'Inbox rules and auto-assign', 'Extra locations at $20/month each', '1-year audit log with export',
         'Timeline and signature record export', 'Priority support',
       ],
       analytics: 'Advanced + reporting',
@@ -85,7 +85,7 @@
         items: U, categories: U, customStatuses: U,
         seats: U, locations: 5, customers: U, orders: U, links: U, labels: U, storageGB: 500,
         paymentProviders: U, shippingProviders: U, customRoles: U,
-        auditDays: 365, apiKeys: U, automations: U, timelineMonths: U, cenbotReplies: 10000, phoneMinutes: 500, sendDomains: 5,
+        auditDays: 365, apiKeys: U, automations: U, timelineMonths: U, cenbotReplies: 10000, phoneMinutes: 500,
       },
       features: {
         meetup: true, customDeposit: true, requireProof: true, esignature: true, proofVideo: true, signatureExport: true,
@@ -93,7 +93,7 @@
         whiteLabel: false, webhooks: true, sso: false, enforceMfa: true,
         timelineExport: true, auditExport: true, granularPerms: true,
         onlineStore: true, storeCustomDomain: true, extraLocations: true, phoneLine: false,
-        inboxTeam: true, inboxRules: true, connectMailbox: true,
+        inboxTeam: true, inboxRules: true, connectMailbox: true, autoConnectDomain: true,
       },
       support: 'Priority',
     },
@@ -102,7 +102,7 @@
       tagline: 'For high-volume businesses that need more.',
       highlights: ['Unlimited employees · 15 locations', '2 TB cloud storage', 'Unlimited customers and orders', 'Business phone line'],
       bullets: [
-        'Up to 15 locations', '2 TB cloud storage', 'Up to 15 sending domains',
+        'Up to 15 locations', '2 TB cloud storage',
         'Business phone line included (2,000 minutes)', 'Cenbot AI, 50,000 replies / month',
         'Single sign-on (SSO)', 'White-label dashboard', '2-year audit log', 'Priority phone support',
       ],
@@ -112,7 +112,7 @@
         items: U, categories: U, customStatuses: U,
         seats: U, locations: 15, customers: U, orders: U, links: U, labels: U, storageGB: 2000,
         paymentProviders: U, shippingProviders: U, customRoles: U,
-        auditDays: 730, apiKeys: U, automations: U, timelineMonths: U, cenbotReplies: 50000, phoneMinutes: 2000, sendDomains: 15,
+        auditDays: 730, apiKeys: U, automations: U, timelineMonths: U, cenbotReplies: 50000, phoneMinutes: 2000,
       },
       features: {
         meetup: true, customDeposit: true, requireProof: true, esignature: true, proofVideo: true, signatureExport: true,
@@ -120,7 +120,7 @@
         whiteLabel: true, webhooks: true, sso: true, enforceMfa: true,
         timelineExport: true, auditExport: true, granularPerms: true,
         onlineStore: true, storeCustomDomain: true, extraLocations: true, phoneLine: true,
-        inboxTeam: true, inboxRules: true, connectMailbox: true,
+        inboxTeam: true, inboxRules: true, connectMailbox: true, autoConnectDomain: true,
       },
       support: 'Priority + phone',
     },
@@ -155,7 +155,7 @@
         'Campaigns and promotional email',
         'Open, click and bounce tracking',
         'Unsubscribes handled automatically',
-        'Sent from notify@centrx.co, or your own domain on Pro and up',
+        'Sent from notify@centrx.co, or your own domain with Business Email',
         'Change or cancel anytime',
       ],
       packs: [
@@ -197,6 +197,10 @@
   };
   C.SMS_NUMBER_ORDER = ['tollfree', 'local', 'existing'];
   C.EXTRA_NUMBER = 1000; // each number after the first, e.g. one per location
+  // Business Email: send from a domain the business already owns, with its inbox addresses. A monthly
+  // add-on per connected domain, open to every plan. Business and up connect with one click (coming soon);
+  // other plans follow guided copy-and-paste steps. maxDomains is a safety cap, not a plan limit.
+  C.BUSINESS_EMAIL = { price: 900, name: 'Business Email', maxDomains: 25 };
   // Extra locations beyond a plan's included count: Business and Enterprise only (below that, upgrade).
   C.EXTRA_LOCATION = { price: 2000, name: 'Extra location' };
   // Business phone line: a number customers can call and text, answered in Centrx.
@@ -277,7 +281,8 @@
     ] },
     { group: 'Messaging', rows: [
       ['Receipts, payment links & order emails', () => 'Included'],
-      ['Emails sent from', (p) => (p.limits.sendDomains > 1 ? `Up to ${p.limits.sendDomains} of your domains` : p.limits.sendDomains === 1 ? 'Your own domain' : 'notify@centrx.co')],
+      ['Business Email on your own domain', () => `${C.fmt.money0(C.BUSINESS_EMAIL.price)}/mo per domain`],
+      ['Domain setup', (p) => (p.features.autoConnectDomain ? 'One-click · coming soon' : 'Guided steps')],
       ['Shared inbox (email + SMS)', () => true],
       ['Saved replies', () => true],
       ['Assign conversations & internal notes', F('inboxTeam')],

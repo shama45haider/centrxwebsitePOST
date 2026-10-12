@@ -372,6 +372,7 @@
       'num-tollfree-review': N.tollfree && N.tollfree.review,
       'num-extra': C.EXTRA_NUMBER && `${money0(C.EXTRA_NUMBER)}/month`,
       'phone-line': C.PHONE_LINE && `${money0(C.PHONE_LINE.price)}/month`,
+      'business-email': C.BUSINESS_EMAIL && `${money0(C.BUSINESS_EMAIL.price)}/month`,
       'phone-minutes': C.PLANS.business && C.fmt.num(C.PLANS.business.limits.phoneMinutes),
       'phone-overage': C.PHONE_LINE && `${C.PHONE_LINE.overageCents}¢ a minute`,
       'extra-location': C.EXTRA_LOCATION && `${money0(C.EXTRA_LOCATION.price)}/month`,
