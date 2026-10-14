@@ -24,7 +24,7 @@
       analytics: 'Basic',
       limits: {
         orderPhotos: 10, orderVideos: 0, videoSeconds: 0,
-        items: 500, categories: 5, customStatuses: 2,
+        items: U, categories: 5, customStatuses: 2,
         seats: 2, locations: 1, customers: U, orders: U, links: U, labels: U, storageGB: 25,
         paymentProviders: 3, shippingProviders: 1, customRoles: 0,
         auditDays: 30, apiKeys: 0, automations: 3, timelineMonths: 12, cenbotReplies: 500, phoneMinutes: 500,
@@ -53,7 +53,7 @@
       analytics: 'Advanced',
       limits: {
         orderPhotos: 25, orderVideos: 2, videoSeconds: 60,
-        items: 10000, categories: U, customStatuses: U,
+        items: U, categories: U, customStatuses: U,
         seats: 10, locations: 2, customers: U, orders: U, links: U, labels: U, storageGB: 100,
         paymentProviders: 3, shippingProviders: 3, customRoles: 5,
         auditDays: 90, apiKeys: 2, automations: 25, timelineMonths: U, cenbotReplies: 2500, phoneMinutes: 500,
