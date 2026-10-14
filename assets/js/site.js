@@ -619,4 +619,135 @@
       }, 900);
     });
   }
+  /* ---------- Waitlist ---------- */
+  /* Flip WAITLIST_MODE to false at launch: sign-up buttons go back to the app.
+     ENDPOINT is where signups are POSTed as JSON ({email, business, type, ref, source, ...}).
+     Leave it empty and the form refuses to submit rather than silently dropping signups. */
+  const WAITLIST_MODE = true;
+  const WAITLIST = { endpoint: '', offer: '2 months free' };
+  if (WAITLIST_MODE) {
+    const KEY = 'centrx-waitlist';
+    const store = {
+      get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+      set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+    };
+    const q = new URLSearchParams(location.search);
+    if (q.get('ref')) store.set(KEY + '-ref', q.get('ref').slice(0, 40));
+    ['utm_source', 'utm_medium', 'utm_campaign'].forEach((k) => q.get(k) && store.set(KEY + '-' + k, q.get(k).slice(0, 60)));
+
+    const isSignup = (a) => /\/app#\/(signup|custom-plan)|\/app#\/settings\/billing\?addon=/.test(a.getAttribute('href') || '');
+    const relabel = (a) => {
+      const t = [...a.childNodes].find((n) => n.nodeType === 3 && /\S/.test(n.nodeValue));
+      if (t) t.nodeValue = t.nodeValue.replace(/Start free trial|Apply for Custom|Add to your plan/, 'Join the waitlist');
+    };
+    const prep = () => $$('a').filter(isSignup).forEach((a) => { a.dataset.waitlist = ''; relabel(a); });
+    prep();
+    // plan cards re-render on billing toggle; catch late additions
+    new MutationObserver(prep).observe(document.body, { childList: true, subtree: true });
+
+    let modal, lastFocus;
+    const build = () => {
+      modal = document.createElement('div');
+      modal.className = 'wl-modal';
+      modal.hidden = true;
+      modal.innerHTML = `<div class="wl-backdrop" data-wl-close></div>
+        <div class="wl-card" role="dialog" aria-modal="true" aria-labelledby="wl-title">
+          <button class="wl-x" type="button" data-wl-close aria-label="Close">${C.icon('x', 18)}</button>
+          <div data-wl-body>${formHtml('wl')}</div>
+        </div>`;
+      document.body.appendChild(modal);
+      modal.addEventListener('click', (e) => { if (e.target.closest('[data-wl-close]')) close(); });
+      wire($('form', modal));
+    };
+    const formHtml = (id) => `
+      <span class="badge wl-badge">${esc(WAITLIST.offer)}</span>
+      <h2 class="h3" id="${id === 'wl' ? 'wl-title' : ''}">Join the Centrx waitlist</h2>
+      <p class="body-muted" style="margin-top:8px">Be first in when we open. Everyone on the waitlist gets <strong>${esc(WAITLIST.offer)}</strong> after their trial.</p>
+      <form data-waitlist-form novalidate>
+        <div class="field form-row"><label class="label" for="${id}-email">Work email</label><input class="input" id="${id}-email" name="email" type="email" autocomplete="email" inputmode="email"><span class="error-text" aria-live="polite"></span></div>
+        <div class="field form-row"><label class="label" for="${id}-biz">Business name</label><input class="input" id="${id}-biz" name="business" autocomplete="organization"><span class="error-text" aria-live="polite"></span></div>
+        <div class="field form-row"><label class="label" for="${id}-type">What do you sell? <span class="opt">Optional</span></label>
+          <select class="select" id="${id}-type" name="type"><option value="">Choose one</option><option>Products</option><option>Services</option><option>Both</option><option>Not sure yet</option></select></div>
+        <input class="wl-hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <button class="btn btn-primary btn-lg btn-block" type="submit" style="margin-top:18px">Join the waitlist</button>
+        <p class="error-text wl-fail" role="alert" hidden></p>
+        <p class="micro" style="margin-top:10px">No card. We'll only email you about Centrx. <a href="/privacy">Privacy</a></p>
+      </form>`;
+    const wire = (form) => {
+      const EM = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const err = (el, m) => { el.setAttribute('aria-invalid', m ? 'true' : 'false'); el.parentElement.querySelector('.error-text').textContent = m; };
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const f = form.elements;
+        const checks = [[f.email, EM.test(f.email.value.trim()) ? '' : 'Enter a valid email.'], [f.business, f.business.value.trim() ? '' : 'Enter your business name.']];
+        checks.forEach(([i, m]) => err(i, m));
+        const bad = checks.find(([, m]) => m);
+        if (bad) return bad[0].focus();
+        if (f.website.value) return done(form); // honeypot: pretend success
+        const fail = $('.wl-fail', form), btn = $('button[type=submit]', form);
+        fail.hidden = true;
+        if (!WAITLIST.endpoint) { fail.textContent = 'Sign-ups are not connected yet. Please email sales@centrx.co.'; fail.hidden = false; return; }
+        btn.classList.add('busy'); btn.disabled = true;
+        try {
+          const r = await fetch(WAITLIST.endpoint, {
+            method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({
+              email: f.email.value.trim(), business: f.business.value.trim(), type: f.type.value,
+              ref: store.get(KEY + '-ref') || '', source: page || 'home', offer: WAITLIST.offer,
+              utm_source: store.get(KEY + '-utm_source') || '', utm_medium: store.get(KEY + '-utm_medium') || '', utm_campaign: store.get(KEY + '-utm_campaign') || '',
+            }),
+          });
+          if (!r.ok) throw new Error(r.status);
+          store.set(KEY, String(Date.now()));
+          done(form);
+        } catch (x) {
+          btn.classList.remove('busy'); btn.disabled = false;
+          fail.textContent = 'Something went wrong. Please try again, or email sales@centrx.co.'; fail.hidden = false;
+        }
+      });
+    };
+    const done = (form) => {
+      const body = form.parentElement;
+      body.innerHTML = `<div class="form-done" role="status"><span class="done-ring">${C.icon('check', 24)}</span>
+        <h2 class="h3">You're on the list.</h2>
+        <p class="body-muted" style="margin-top:8px">Check your inbox. When we open, your ${esc(WAITLIST.offer)} is waiting.</p></div>`;
+    };
+    const open = () => {
+      if (!modal) build();
+      lastFocus = document.activeElement;
+      modal.hidden = false; document.documentElement.classList.add('wl-lock');
+      requestAnimationFrame(() => modal.classList.add('on'));
+      const first = $('input', modal) || $('.wl-x', modal);
+      setTimeout(() => first && first.focus(), 50);
+    };
+    const close = () => {
+      modal.classList.remove('on'); document.documentElement.classList.remove('wl-lock');
+      setTimeout(() => { modal.hidden = true; }, RM ? 0 : 200);
+      store.set(KEY + '-seen', String(Date.now()));
+      lastFocus && lastFocus.focus && lastFocus.focus();
+    };
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('a[data-waitlist]');
+      if (!a || e.metaKey || e.ctrlKey) return;
+      e.preventDefault(); open();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (!modal || modal.hidden) return;
+      if (e.key === 'Escape') return close();
+      if (e.key !== 'Tab') return;
+      const f = $$('input,select,button,a[href]', modal).filter((n) => !n.disabled && n.offsetParent && !n.classList.contains('wl-hp'));
+      if (!f.length) return;
+      const a = f[0], z = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); }
+      else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+    });
+    // inline form on /waitlist
+    const inline = $('[data-waitlist-inline]');
+    if (inline) { inline.innerHTML = formHtml('wi'); wire($('form', inline)); }
+    // auto-open once per 14 days, after a pause, never on the waitlist page or over a typed form
+    const last = +store.get(KEY + '-seen') || 0, joined = store.get(KEY);
+    if (!inline && !joined && Date.now() - last > 14 * 864e5 && page !== 'legal') {
+      setTimeout(() => { if (!(modal && !modal.hidden) && !document.activeElement.matches('input,textarea,select')) open(); }, 12000);
+    }
+  }
 })();

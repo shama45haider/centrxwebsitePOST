@@ -789,3 +789,22 @@
 .inbox-note { padding: 8px 10px; border: 1px dashed #F2C879; border-radius: 8px; background: var(--warn-tint); color: var(--warn); font-size: 12.5px; line-height: 1.45; }
 .inbox-assign { justify-self: center; }
 @media (max-width: 520px) { .inbox-body { grid-template-columns: minmax(0, 1fr); } .inbox-list { border-right: 0; border-bottom: 1px solid var(--border); } .inbox-row:nth-child(n+3) { display: none; } }
+
+/* ---------- Waitlist modal ---------- */
+.wl-lock { overflow: hidden; }
+.wl-modal { position: fixed; inset: 0; z-index: 200; display: grid; align-items: end; justify-items: center; opacity: 0; transition: opacity .2s; }
+.wl-modal.on { opacity: 1; }
+.wl-backdrop { position: absolute; inset: 0; background: rgba(10, 12, 18, .5); }
+.wl-card { position: relative; width: 100%; max-width: 440px; max-height: 92vh; overflow: auto; background: var(--bg, #fff); color: inherit; border-radius: 20px 20px 0 0; padding: 28px 22px calc(24px + env(safe-area-inset-bottom)); transform: translateY(24px); transition: transform .25s; box-shadow: 0 -8px 40px rgba(0,0,0,.18); }
+.wl-modal.on .wl-card { transform: none; }
+.wl-x { position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; border: 0; border-radius: 50%; background: transparent; cursor: pointer; color: inherit; display: grid; place-items: center; }
+.wl-x:hover { background: rgba(127,127,127,.15); }
+.wl-badge { margin-bottom: 12px; }
+.wl-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.wl-fail { margin-top: 12px; }
+.wl-page { max-width: 460px; margin: 0 auto; }
+@media (min-width: 640px) {
+  .wl-modal { align-items: center; }
+  .wl-card { border-radius: 20px; padding: 32px; }
+}
+@media (prefers-reduced-motion: reduce) { .wl-modal, .wl-card { transition: none; } }
