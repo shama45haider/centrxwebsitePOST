@@ -808,3 +808,4 @@
   .wl-card { border-radius: 20px; padding: 32px; }
 }
 @media (prefers-reduced-motion: reduce) { .wl-modal, .wl-card { transition: none; } }
+.wl-frame { width: 100%; height: 560px; border: 0; display: block; }

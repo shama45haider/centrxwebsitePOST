@@ -624,7 +624,8 @@
      ENDPOINT is where signups are POSTed as JSON ({email, business, type, ref, source, ...}).
      Leave it empty and the form refuses to submit rather than silently dropping signups. */
   const WAITLIST_MODE = true;
-  const WAITLIST = { endpoint: '', offer: '2 months free' };
+  const WAITLIST = { endpoint: '', jotform: '262864995190068', offer: '2 months free' };
+  // With no endpoint, the Jotform form is embedded instead so signups are always collected.
   if (WAITLIST_MODE) {
     const KEY = 'centrx-waitlist';
     const store = {
@@ -657,9 +658,14 @@
         </div>`;
       document.body.appendChild(modal);
       modal.addEventListener('click', (e) => { if (e.target.closest('[data-wl-close]')) close(); });
-      wire($('form', modal));
+      if ($('form', modal)) wire($('form', modal));
     };
-    const formHtml = (id) => `
+    const formHtml = (id) => WAITLIST.endpoint || !WAITLIST.jotform ? ownForm(id) : `
+      <span class="badge wl-badge">${esc(WAITLIST.offer)}</span>
+      <h2 class="h3" id="${id === 'wl' ? 'wl-title' : ''}">Join the Centrx waitlist</h2>
+      <p class="body-muted" style="margin:8px 0 12px">Everyone on the waitlist gets <strong>${esc(WAITLIST.offer)}</strong> after their trial.</p>
+      <iframe class="wl-frame" title="Waitlist sign-up" loading="lazy" src="https://form.jotform.com/${WAITLIST.jotform}"></iframe>`;
+    const ownForm = (id) => `
       <span class="badge wl-badge">${esc(WAITLIST.offer)}</span>
       <h2 class="h3" id="${id === 'wl' ? 'wl-title' : ''}">Join the Centrx waitlist</h2>
       <p class="body-muted" style="margin-top:8px">Be first in when we open. Everyone on the waitlist gets <strong>${esc(WAITLIST.offer)}</strong> after their trial.</p>
@@ -743,7 +749,7 @@
     });
     // inline form on /waitlist
     const inline = $('[data-waitlist-inline]');
-    if (inline) { inline.innerHTML = formHtml('wi'); wire($('form', inline)); }
+    if (inline) { inline.innerHTML = formHtml('wi'); if ($('form', inline)) wire($('form', inline)); }
     // auto-open once per 14 days, after a pause, never on the waitlist page or over a typed form
     const last = +store.get(KEY + '-seen') || 0, joined = store.get(KEY);
     if (!inline && !joined && Date.now() - last > 14 * 864e5 && page !== 'legal') {
