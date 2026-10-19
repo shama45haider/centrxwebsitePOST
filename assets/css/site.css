@@ -83,6 +83,9 @@
 
 /* Typed headline: phrases type in, pause, backspace. A hidden sizer holds the height so nothing jumps. */
 .hero-top .display.typer-h1 { max-width: none; font-size: clamp(38px, 5.2vw, 66px); }
+/* The typed headline is shorter than the copy beside it; top-align it so it doesn't sink under empty space. */
+.hero-top:has(> .typer-h1) { align-items: start; }
+.hero:has(.typer-h1) { padding-top: 64px; }
 .typer { display: grid; color: var(--accent); }
 .typer > * { grid-area: 1 / 1; }
 .typer-size { visibility: hidden; white-space: nowrap; }
