@@ -3,7 +3,7 @@
 (function () {
   const C = window.Centrx;
   const $ = C.$, $$ = C.$$, esc = C.esc;
-  const APP = '/app';
+  const APP = 'https://app.centrx.co/';
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const I = (name) => `<span data-i="${name}"></span>`;
   const page = document.body.dataset.page || '';
