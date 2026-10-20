@@ -555,6 +555,27 @@
 @media (max-width: 900px) { .contact-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; } }
 @media (max-width: 520px) { .form-card { padding: 22px; } }
 
+/* Launch waitlist popup (site.js): the panel's modal, sized for one email field */
+.wl-open { overflow: hidden; }
+.wl { padding: 16px; }
+.wl-modal { width: min(460px, 100%); }
+.wl-body { padding: 30px 28px 24px; }
+.wl-body > .h3 { padding-right: 28px; }
+.wl-body > .body-muted { margin-top: 8px; font-size: 15px; }
+.wl-body form { margin-top: 20px; }
+.wl-x { position: absolute; top: 10px; right: 10px; }
+.wl-row { display: flex; gap: 8px; }
+.wl-row .input { flex: 1; min-width: 0; height: 42px; font-size: 15px; }
+.wl-row .btn { height: 42px; flex: none; }
+.wl-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.wl .form-done { padding: 8px 0 4px; }
+.wl .form-done .h3:focus { outline: none; }
+@media (max-width: 480px) {
+  .wl-body { padding: 26px 20px 20px; }
+  .wl-row { flex-direction: column; }
+  .wl-row .input { flex: none; }
+}
+
 /* Legal */
 .legal-wrap { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 64px; align-items: start; }
 .legal-toc { position: sticky; top: calc(var(--header-h) + 32px); display: grid; gap: 2px; font-size: 14px; }

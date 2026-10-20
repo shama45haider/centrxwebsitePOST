@@ -25,7 +25,7 @@
       <nav class="site-nav" aria-label="Main">${navLinks}</nav>
       <div class="site-actions">
         <a class="btn btn-ghost" href="${APP}#/login">Sign in</a>
-        <a class="btn btn-primary" href="${APP}#/signup">Start free trial</a>
+        <a class="btn btn-primary" href="${APP}#/signup" data-waitlist="${page || 'site'}" data-wl-label="Join the waitlist">Get started free</a>
       </div>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-sheet" aria-label="Open menu">${I('menu')}</button>
       <div class="nav-sheet" id="nav-sheet">
@@ -33,7 +33,7 @@
         <a href="${APP}?demo#/">Live demo</a>
         <div class="sheet-cta">
           <a class="btn btn-lg" href="${APP}#/login">Sign in</a>
-          <a class="btn btn-lg btn-primary" href="${APP}#/signup">Start free trial</a>
+          <a class="btn btn-lg btn-primary" href="${APP}#/signup" data-waitlist="${page || 'site'}" data-wl-label="Join the waitlist">Get started free</a>
         </div>
       </div>
     </div>`;
@@ -98,7 +98,7 @@
       <p class="plan-tag">${esc(p.tagline)}</p>
       <div class="price"><span class="price-amt num" data-amt>${money0(priceFor(p, billing))}</span><span class="price-per" data-per>${perFor(billing)}</span></div>
       <p class="price-note" data-note>${noteFor(p, billing)}</p>
-      <a class="btn btn-lg btn-block${p.popular ? ' btn-primary' : ''}" data-cta href="${signupUrl(p.id, billing)}">Start free trial</a>
+      <a class="btn btn-lg btn-block${p.popular ? ' btn-primary' : ''}" data-cta href="${signupUrl(p.id, billing)}" data-waitlist="${page || 'site'}" data-wl-label="Join the waitlist">Choose ${esc(p.name)}</a>
       ${second}
       <ul class="plan-list">
         ${parent ? `<li class="inherit">Everything in ${esc(parent.name)}, plus:</li>` : ''}
@@ -251,7 +251,7 @@
         <ul class="pf-list">${p.bullets.map((b) => `<li>${fmtBullet(b)}</li>`).join('')}</ul>
         <div class="pf-side">
           <p class="pf-fee"><span class="pf-pct num">${p.cardFeePct}%</span><span>On Free, Centrx keeps ${p.cardFeePct}% of each card payment. Paid plans have no Centrx fee, so once you take more than ${money0(breakEven)} a month by card, ${esc(up.name)} costs less.</span></p>
-          <a class="btn btn-lg btn-block" href="${APP}#/signup?plan=${p.id}">Start for free</a>
+          <a class="btn btn-lg btn-block" href="${APP}#/signup?plan=${p.id}" data-waitlist="${page || 'site'}" data-wl-label="Join the waitlist">Start for free</a>
         </div>
       </article>`;
     });
@@ -607,6 +607,98 @@
       });
     }), { rootMargin: '-45% 0px -50% 0px' });
     $$('.feature[id]').forEach((s) => spy.observe(s));
+  }
+
+  /* ---------- Launch waitlist ----------
+     Until launch, a first visit opens a popup asking for an email; anything marked [data-waitlist]
+     opens it too. Emails go to the Centrx server (server/src/waitlist.mjs), which answers the same
+     for a new email and one already on the list. Closing it keeps it shut for a week; joining, for good. */
+  const LAUNCH = new Date('2026-11-18T00:00:00-05:00');
+  const WL_KEY = 'centrx.waitlist';
+  const wlSeen = () => { try { const v = localStorage.getItem(WL_KEY); return v === 'joined' || (v && Date.now() - Number(v) < 7 * 864e5); } catch { return false; } };
+  const wlSave = (v) => { try { localStorage.setItem(WL_KEY, v); } catch { /* private mode: it just shows again */ } };
+  function openWaitlist(source) {
+    if ($('.wl')) return;
+    const back = document.activeElement;
+    const box = document.createElement('div');
+    box.className = 'overlay wl';
+    box.innerHTML = `<div class="overlay-scrim" data-wl-close></div>
+      <div class="modal wl-modal" role="dialog" aria-modal="true" aria-labelledby="wl-title" aria-describedby="wl-sub">
+        <button class="btn btn-ghost btn-icon wl-x" type="button" data-wl-close aria-label="Close">${C.icon('x', 18)}</button>
+        <div class="wl-body">
+          <h2 class="h3" id="wl-title">Centrx opens November 18</h2>
+          <p class="body-muted" id="wl-sub">Join the waitlist and your first 2 months on any paid plan are free.</p>
+          <form novalidate data-wl-form>
+            <div class="field"><label class="label" for="wl-email">Email</label>
+              <div class="wl-row"><input class="input" id="wl-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@yourbusiness.com" maxlength="254"><button class="btn btn-primary" type="submit">Join the waitlist</button></div>
+              <div class="error-text" aria-live="polite"></div></div>
+            <input class="wl-hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <p class="form-legal">We'll email you on launch day and not before. See our <a href="/privacy">privacy policy</a>.</p>
+          </form>
+        </div>
+      </div>`;
+    document.body.appendChild(box);
+    document.documentElement.classList.add('wl-open');
+    const f = $('[data-wl-form]', box), input = f.elements.email, msg = $('.error-text', box);
+    const close = () => {
+      if (!box.isConnected) return;
+      if (!box.dataset.joined) wlSave(String(Date.now()));
+      box.remove();
+      document.documentElement.classList.remove('wl-open');
+      document.removeEventListener('keydown', onKey);
+      if (back && back.focus) back.focus();
+    };
+    const onKey = (e) => {
+      if (e.key === 'Escape') return close();
+      if (e.key !== 'Tab') return;
+      const els = $$('button, input:not(.wl-hp), a[href]', box).filter((x) => x.offsetParent);
+      const first = els[0], last = els[els.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    };
+    document.addEventListener('keydown', onKey);
+    box.addEventListener('click', (e) => { if (e.target.closest('[data-wl-close]')) close(); });
+    const err = (text) => { msg.textContent = text; input.classList.toggle('invalid', !!text); input.setAttribute('aria-invalid', !!text); };
+    input.addEventListener('input', () => { if (msg.textContent) err(''); });
+    f.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = input.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { err('Enter a valid email address.'); return input.focus(); }
+      const btn = $('button[type="submit"]', f);
+      btn.classList.add('busy');
+      let ok = false, text = '';
+      try {
+        const r = await fetch(`${APP}api/waitlist`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email, source, company: f.elements.company.value }) });
+        ok = r.ok;
+        if (!ok) text = ((await r.json().catch(() => ({}))).error || {}).message || '';
+      } catch { /* offline, or the server isn't reachable */ }
+      btn.classList.remove('busy');
+      if (!ok) { err(text || 'We couldn’t add you just now. Try again in a moment, or email sales@centrx.co.'); return; }
+      box.dataset.joined = '1';
+      wlSave('joined');
+      $('.wl-body', box).innerHTML = `<div class="form-done" role="status">
+          <span class="done-ring">${C.icon('check', 24)}</span>
+          <h2 class="h3" id="wl-title" tabindex="-1">You’re on the list</h2>
+          <p class="body-muted" style="margin-top:8px">We’ll email ${esc(email)} on November 18. Your first 2 months on any paid plan are free when you sign up with that address.</p>
+          <div class="hero-cta" style="margin-top:24px;justify-content:center"><button class="btn btn-lg" type="button" data-wl-close>Done</button></div>
+        </div>`;
+      $('#wl-title', box).focus();
+    });
+    setTimeout(() => input.focus(), 30);
+  }
+  if (Date.now() < LAUNCH) {
+    // Before launch: [data-prelaunch] shows, and [data-wl-label] swaps its words (icons stay) for the waitlist's.
+    $$('[data-prelaunch]').forEach((el) => { el.hidden = false; });
+    $$('[data-wl-label]').forEach((el) => {
+      const t = [...el.childNodes].find((n) => n.nodeType === 3 && n.textContent.trim());
+      if (t) t.textContent = el.dataset.wlLabel + (t.nextSibling ? ' ' : '');
+      else el.textContent = el.dataset.wlLabel;
+    });
+    document.addEventListener('click', (e) => {
+      const t = e.target.closest('[data-waitlist]');
+      if (t) { e.preventDefault(); openWaitlist(t.dataset.waitlist || 'site'); }
+    });
+    if (header && page !== '404' && !wlSeen()) setTimeout(() => openWaitlist(`${page || 'site'}-popup`), RM ? 400 : 1200);
   }
 
   /* ---------- Contact form (simulated; nothing leaves the browser) ---------- */

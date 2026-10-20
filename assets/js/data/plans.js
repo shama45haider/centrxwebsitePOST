@@ -6,7 +6,7 @@
   const U = Infinity;
 
   // Free comes first: signup offers it and Plan & billing can move down to it. PAID_PLAN_ORDER is
-  // the plans with a price: the pricing cards, trials, annual billing and add-ons.
+  // the plans with a price: the pricing cards, annual billing and add-ons.
   C.PLAN_ORDER = ['free', 'starter', 'growth', 'business', 'enterprise'];
   C.PAID_PLAN_ORDER = C.PLAN_ORDER.slice(1);
   C.ANNUAL_MONTHS = 10; // yearly price = 10 × monthly (2 months free)
@@ -64,7 +64,7 @@
         meetup: true, customDeposit: false, requireProof: false, esignature: false, proofVideo: false, signatureExport: false,
         segments: false, csv: true, customDomain: true, removeBranding: false,
         whiteLabel: false, webhooks: false, sso: false, enforceMfa: false,
-        timelineExport: false, auditExport: false, granularPerms: false,
+        timelineExport: false, auditExport: false, granularPerms: false, advancedAutomations: false, advancedAnalytics: false, reports: false,
         onlineStore: false, storeCustomDomain: false, extraLocations: false, phoneLine: false,
         inboxTeam: false, inboxRules: false, connectMailbox: false, autoConnectDomain: false,
       },
@@ -93,7 +93,7 @@
         meetup: true, customDeposit: true, requireProof: true, esignature: true, proofVideo: true, signatureExport: false,
         segments: true, csv: true, customDomain: true, removeBranding: true,
         whiteLabel: false, webhooks: true, sso: false, enforceMfa: true,
-        timelineExport: false, auditExport: false, granularPerms: false,
+        timelineExport: false, auditExport: false, granularPerms: false, advancedAutomations: true, advancedAnalytics: true, reports: false,
         onlineStore: true, storeCustomDomain: false, extraLocations: false, phoneLine: false,
         inboxTeam: true, inboxRules: false, connectMailbox: false, autoConnectDomain: false,
       },
@@ -122,7 +122,7 @@
         meetup: true, customDeposit: true, requireProof: true, esignature: true, proofVideo: true, signatureExport: true,
         segments: true, csv: true, customDomain: true, removeBranding: true,
         whiteLabel: false, webhooks: true, sso: false, enforceMfa: true,
-        timelineExport: true, auditExport: true, granularPerms: true,
+        timelineExport: true, auditExport: true, granularPerms: true, advancedAutomations: true, advancedAnalytics: true, reports: true,
         onlineStore: true, storeCustomDomain: true, extraLocations: true, phoneLine: false,
         inboxTeam: true, inboxRules: true, connectMailbox: true, autoConnectDomain: true,
       },
@@ -135,7 +135,7 @@
       bullets: [
         'Up to 15 locations', '2 TB cloud storage',
         'Business phone line included (2,000 minutes)', 'Cenbot AI, 50,000 replies / month',
-        'Single sign-on (SSO)', 'White-label dashboard', '2-year audit log', 'Priority phone support',
+        'Single sign-on (SSO)', 'Custom branded panel', '2-year audit log', 'Priority phone support',
       ],
       analytics: 'Advanced + reporting',
       limits: {
@@ -149,7 +149,7 @@
         meetup: true, customDeposit: true, requireProof: true, esignature: true, proofVideo: true, signatureExport: true,
         segments: true, csv: true, customDomain: true, removeBranding: true,
         whiteLabel: true, webhooks: true, sso: true, enforceMfa: true,
-        timelineExport: true, auditExport: true, granularPerms: true,
+        timelineExport: true, auditExport: true, granularPerms: true, advancedAutomations: true, advancedAnalytics: true, reports: true,
         onlineStore: true, storeCustomDomain: true, extraLocations: true, phoneLine: true,
         inboxTeam: true, inboxRules: true, connectMailbox: true, autoConnectDomain: true,
       },
@@ -282,7 +282,7 @@
       ['Customer timeline', (p) => (p.limits.timelineMonths === U ? (p.features.timelineExport ? 'Full history + export' : 'Full history') : '12 months')],
       ['Analytics', (p) => p.analytics],
       ['Cenbot AI assistant', (p) => (p.limits.cenbotReplies ? `${C.fmt.num(p.limits.cenbotReplies)} replies / month` : false)],
-      ['Automations', (p) => (!p.limits.automations ? false : p.limits.automations === U ? 'Unlimited' : `${p.limits.automations} active`)],
+      ['Automations', (p) => (p.limits.automations ? `${p.limits.automations === U ? 'Unlimited' : `${p.limits.automations} active`} · ${p.features.advancedAutomations ? 'advanced' : 'basic'}` : false)],
     ] },
     { group: 'Cloud storage', rows: [
       ['Storage included', (p) => C.fmtStorage(p.limits.storageGB)],
@@ -342,16 +342,17 @@
     { group: 'Brand & support', rows: [
       ['CSV import & export', F('csv')],
       ['Custom branding (no "Powered by Centrx")', F('removeBranding')],
-      ['White-label dashboard', F('whiteLabel')],
+      ['Custom branded panel', F('whiteLabel')],
       ['Support', (p) => p.support],
     ] },
   ];
 
   const tenant = () => (C.tenant && C.tenant()) || {};
-  // Canonical id first; saved sessions may hold retired ids (hobby → starter and pro → growth, the ids behind the Hobby and Pro plans). Unknown → Pro (trial default).
+  // Canonical id first; saved sessions may hold retired ids (hobby → starter and pro → growth, the ids behind the Hobby and Pro plans). Unknown → Pro (the default plan).
   const LEGACY = { hobby: 'starter', pro: 'growth' };
-  C.planId = (id) => (C.PLAN_ORDER.includes(id) ? id : Object.prototype.hasOwnProperty.call(LEGACY, id) ? LEGACY[id] : 'growth');
-  const plan = () => C.PLANS[C.planId(tenant().plan)];
+  // 'custom' exists only where the platform store loads (panel and staff console), never on the public site.
+  C.planId = (id) => (C.PLAN_ORDER.includes(id) || (id === 'custom' && C.PLANS.custom) ? id : Object.prototype.hasOwnProperty.call(LEGACY, id) ? LEGACY[id] : 'growth');
+  const plan = () => { const t = tenant(), id = C.planId(t.plan); return id === 'custom' && C.customPlanFor ? C.customPlanFor(t) : C.PLANS[id]; };
   C.plan = plan;
   C.addon = (ch) => C.addonPack(C.normAddons(tenant().addons)[ch]); // current pack or null
   C.hasPack = (k) => !!C.addon(C.ADDON_METRIC[k] || k); // accepts 'email' | 'sms' | 'promoEmails'

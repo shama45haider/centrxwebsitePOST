@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pricing · Centrx</title>
-  <meta name="description" content="Centrx plans: Free, then Hobby $39, Pro $99, Business $199 and Enterprise $349 per month, with email and SMS packs priced by what you send. Annual billing saves two months. 30-day free trial on paid plans, with nothing charged until day 30.">
+  <meta name="description" content="Centrx plans: Free, then Hobby $39, Pro $99, Business $199 and Enterprise $349 per month, with email and SMS packs priced by what you send. Annual billing saves two months. Start on Free and upgrade anytime.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Centrx pricing">
   <meta property="og:description" content="A free plan and four paid plans, plus email and SMS packs priced by what you send.">
@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="/assets/css/tokens.css?v=13">
   <link rel="stylesheet" href="/assets/css/base.css?v=13">
   <link rel="stylesheet" href="/assets/css/components.css?v=13">
-  <link rel="stylesheet" href="/assets/css/site.css?v=15">
+  <link rel="stylesheet" href="/assets/css/site.css?v=16">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body class="site" data-page="pricing">
@@ -39,7 +39,7 @@
       <div class="container hero-top">
         <h1 class="display" data-reveal>Pricing that grows with you.</h1>
         <div class="hero-side" data-reveal style="--d:2">
-          <p class="lead">Choose the plan that fits your team and volume. Every paid plan includes a 30-day free trial, and your card isn’t charged until it ends. Just you? Start on Free.</p>
+          <p class="lead">Choose the plan that fits your team and volume. Just you? Start on Free and upgrade whenever you need more.</p>
           <div class="billing-toggle">
             <div class="segmented" role="group" aria-label="Billing period" data-billing>
               <button type="button" data-value="monthly" class="on" aria-pressed="true">Monthly</button>
@@ -129,8 +129,12 @@
             <div class="answer">Yes. Free costs $0 a month for one person at one location, with up to 50 customers, 25 inventory items, 1 GB of storage and unlimited orders and payment links. On Free, Centrx keeps <span data-fact="free-fee">5%</span> of each card payment, on top of the payment provider's own fee. Paid plans have no Centrx fee, so once you take more than <span data-fact="free-breakeven">$780</span> a month by card, Hobby costs less. Cenbot, automations and add-ons need a paid plan.</div>
           </details>
           <details>
-            <summary>How does the free trial work?<span data-i="plus"></span></summary>
-            <div class="answer">You get 30 days on the paid plan you choose. You add a card when you sign up, but nothing is charged until day 30, and we email you three days before. Cancel before then and you pay nothing. Switch plans anytime along the way.</div>
+            <summary>Is there a free trial?<span data-i="plus"></span></summary>
+            <div class="answer">No. The Free plan does that job: use Centrx at $0 for as long as you like, then upgrade when you need more people, locations, Cenbot or automations. A paid plan is charged the day you choose it. Cancel anytime and you move back to Free when the period you paid for ends.</div>
+          </details>
+          <details data-prelaunch hidden>
+            <summary>What do I get for joining the waitlist?<span data-i="plus"></span></summary>
+            <div class="answer">Centrx opens on November 18. Join the waitlist before then and your first two months on any paid plan are free. Sign up with the email you joined with and we apply it to your account. <a href="#" data-waitlist="pricing">Join the waitlist</a>.</div>
           </details>
           <details>
             <summary>Can I change plans later?<span data-i="plus"></span></summary>
@@ -197,10 +201,10 @@
         <div class="cta-band solo" data-reveal>
           <div>
             <h2 class="h2">Start free. Upgrade when you grow.</h2>
-            <p class="lead">Free for one person, or 30 days on any paid plan with nothing charged until day 30.</p>
+            <p class="lead" data-wl-label="Join the waitlist before November 18 and your first 2 months on any paid plan are free.">Free for one person, for as long as you like. Upgrade when you need more.</p>
           </div>
           <div class="hero-cta">
-            <a class="btn btn-dark btn-xl" href="https://app.centrx.co/#/signup">Start free trial <span class="nudge" data-i="arrowRight"></span></a>
+            <a class="btn btn-dark btn-xl" href="https://app.centrx.co/#/signup" data-waitlist="pricing" data-wl-label="Join the waitlist">Get started free <span class="nudge" data-i="arrowRight"></span></a>
             <a class="btn btn-outline-dark btn-xl" href="/contact">Talk to sales</a>
           </div>
         </div>
@@ -211,9 +215,9 @@
   <footer class="site-footer" data-site-footer></footer>
 
   <script src="/assets/js/core/ns.js?v=13"></script>
-  <script src="/assets/js/core/icons.js?v=13"></script>
-  <script src="/assets/js/data/plans.js?v=15"></script>
+  <script src="/assets/js/core/icons.js?v=14"></script>
+  <script src="/assets/js/data/plans.js?v=16"></script>
   <script src="/assets/js/people.js?v=13"></script>
-  <script src="/assets/js/site.js?v=16"></script>
+  <script src="/assets/js/site.js?v=17"></script>
 </body>
 </html>
