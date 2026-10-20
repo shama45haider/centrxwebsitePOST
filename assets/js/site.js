@@ -612,7 +612,8 @@
   /* ---------- Launch waitlist ----------
      Until launch, a first visit opens a popup asking for an email; anything marked [data-waitlist]
      opens it too. Emails go to the Centrx server (server/src/waitlist.mjs), which answers the same
-     for a new email and one already on the list. Closing it keeps it shut for a week; joining, for good. */
+     for a new email and one already on the list. Closing it keeps it shut for a week; joining, for good.
+     Cenbot (assets/brand/cenbot-wave.svg) waves from the left and counts down the days to launch. */
   const LAUNCH = new Date('2026-11-18T00:00:00-05:00');
   const WL_KEY = 'centrx.waitlist';
   const wlSeen = () => { try { const v = localStorage.getItem(WL_KEY); return v === 'joined' || (v && Date.now() - Number(v) < 7 * 864e5); } catch { return false; } };
@@ -622,18 +623,28 @@
     const back = document.activeElement;
     const box = document.createElement('div');
     box.className = 'overlay wl';
+    // Whole days left until launch, counted the way people say it: "Tomorrow" on the last day.
+    const days = Math.max(1, Math.ceil((LAUNCH - Date.now()) / 864e5));
+    const countdown = days === 1 ? 'Tomorrow’s the day!' : `${days} days to go!`;
+    // The X mark's four blades, faint behind Cenbot, as on the Custom plan card.
+    const blades = (C.BRAND_PATH || '').split('Z').filter(Boolean).map((d) => `<path d="${d}Z"/>`).join('');
     box.innerHTML = `<div class="overlay-scrim" data-wl-close></div>
       <div class="modal wl-modal" role="dialog" aria-modal="true" aria-labelledby="wl-title" aria-describedby="wl-sub">
         <button class="btn btn-ghost btn-icon wl-x" type="button" data-wl-close aria-label="Close">${C.icon('x', 18)}</button>
+        <div class="wl-art">
+          <svg class="wl-mark" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="wlBlade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A5CFF"/><stop offset="1" stop-color="#38BDF8"/></linearGradient></defs>${blades}</svg>
+          <p class="wl-say wl-pop" data-wl-say>${countdown} Leave your email and I’ll keep you posted.</p>
+          <img class="wl-bot" src="/assets/brand/cenbot-wave.svg" width="150" height="211" alt="">
+        </div>
         <div class="wl-body">
           <h2 class="h3" id="wl-title">Centrx opens November 18</h2>
-          <p class="body-muted" id="wl-sub">Join the waitlist and your first 2 months on any paid plan are free.</p>
+          <p class="body-muted" id="wl-sub">Join the waitlist for updates as we get ready, and your first 2 months on any paid plan are free.</p>
           <form novalidate data-wl-form>
             <div class="field"><label class="label" for="wl-email">Email</label>
               <div class="wl-row"><input class="input" id="wl-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@yourbusiness.com" maxlength="254"><button class="btn btn-primary" type="submit">Join the waitlist</button></div>
               <div class="error-text" aria-live="polite"></div></div>
             <input class="wl-hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
-            <p class="form-legal">We'll email you on launch day and not before. See our <a href="/privacy">privacy policy</a>.</p>
+            <p class="form-legal">We’ll email you updates before launch and on the day we open. Unsubscribe anytime. See our <a href="/privacy">privacy policy</a>.</p>
           </form>
         </div>
       </div>`;
@@ -676,10 +687,14 @@
       if (!ok) { err(text || 'We couldn’t add you just now. Try again in a moment, or email sales@centrx.co.'); return; }
       box.dataset.joined = '1';
       wlSave('joined');
+      // Cenbot says so too: the bubble pops in again with the new line.
+      const say = $('[data-wl-say]', box);
+      say.textContent = 'You’re on my list. Talk soon!';
+      say.classList.remove('wl-pop'); void say.offsetWidth; say.classList.add('wl-pop');
       $('.wl-body', box).innerHTML = `<div class="form-done" role="status">
           <span class="done-ring">${C.icon('check', 24)}</span>
           <h2 class="h3" id="wl-title" tabindex="-1">You’re on the list</h2>
-          <p class="body-muted" style="margin-top:8px">We’ll email ${esc(email)} on November 18. Your first 2 months on any paid plan are free when you sign up with that address.</p>
+          <p class="body-muted" style="margin-top:8px">We’ll send updates to ${esc(email)} as launch gets closer, and let you know the day we open. Your first 2 months on any paid plan are free when you sign up with that address.</p>
           <div class="hero-cta" style="margin-top:24px;justify-content:center"><button class="btn btn-lg" type="button" data-wl-close>Done</button></div>
         </div>`;
       $('#wl-title', box).focus();

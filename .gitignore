@@ -8,6 +8,7 @@
 !/.github/workflows/static.yml
 
 !/index.html
+!/home.html
 !/404.html
 !/features.html
 !/pricing.html
@@ -47,6 +48,7 @@
 !/assets/brand/favicon-32.png
 !/assets/brand/apple-touch-icon.png
 !/assets/brand/og-card.png
+!/assets/brand/cenbot-wave.svg
 
 # Secrets never belong in git, even inside a listed folder
 .env

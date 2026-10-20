@@ -555,11 +555,24 @@
 @media (max-width: 900px) { .contact-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; } }
 @media (max-width: 520px) { .form-card { padding: 22px; } }
 
-/* Launch waitlist popup (site.js): the panel's modal, sized for one email field */
+/* Launch waitlist popup (site.js): the panel's modal. Cenbot waves from a panel in the Custom plan
+   card's sky colours, with the countdown in a speech bubble; the form sits beside it, and under it on phones. */
 .wl-open { overflow: hidden; }
 .wl { padding: 16px; }
-.wl-modal { width: min(460px, 100%); }
-.wl-body { padding: 30px 28px 24px; }
+.wl-modal { display: grid; grid-template-columns: 250px minmax(0, 1fr); width: min(720px, 100%); overflow: hidden auto; }
+.wl-art { position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 14px; padding: 28px 20px 0;
+  background: linear-gradient(125deg, #EEF4FF 0%, #F8FBFF 48%, #EAF7FF 100%); box-shadow: inset -1px 0 0 rgba(10, 92, 255, .12); }
+.wl-mark { position: absolute; z-index: -1; left: -80px; top: -60px; width: 330px; height: 330px; fill: url(#wlBlade); opacity: .12; overflow: visible; }
+.wl-say { position: relative; align-self: stretch; margin: 0; padding: 11px 14px; border: 1px solid rgba(10, 92, 255, .16); border-radius: 14px; background: var(--bg);
+  box-shadow: 0 10px 22px -14px rgba(10, 92, 255, .5); font-size: 14px; font-weight: 500; line-height: 1.45; color: var(--ink); }
+/* The bubble's tail points at Cenbot's head */
+.wl-say::after { content: ""; position: absolute; left: 50%; bottom: -7px; width: 12px; height: 12px; margin-left: -6px; background: var(--bg);
+  border: solid rgba(10, 92, 255, .16); border-width: 0 1px 1px 0; transform: rotate(45deg); }
+.wl-pop { animation: wl-pop 380ms var(--ease) 350ms both; transform-origin: 50% 100%; }
+@keyframes wl-pop { from { opacity: 0; transform: translateY(6px) scale(.94); } }
+.wl-bot { display: block; width: 150px; height: auto; margin-bottom: -4px; animation: wl-float 5s ease-in-out infinite; }
+@keyframes wl-float { 50% { transform: translateY(-5px); } }
+.wl-body { align-self: center; padding: 34px 30px 26px; }
 .wl-body > .h3 { padding-right: 28px; }
 .wl-body > .body-muted { margin-top: 8px; font-size: 15px; }
 .wl-body form { margin-top: 20px; }
@@ -570,8 +583,19 @@
 .wl-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 .wl .form-done { padding: 8px 0 4px; }
 .wl .form-done .h3:focus { outline: none; }
+@media (prefers-reduced-motion: reduce) { .wl-pop, .wl-bot { animation: none; } }
+/* Phones: a short band on top, Cenbot on the left with the bubble beside him */
+@media (max-width: 640px) {
+  .wl-modal { grid-template-columns: minmax(0, 1fr); }
+  .wl-art { flex-direction: row; align-items: flex-end; justify-content: center; gap: 12px; height: 150px; padding: 18px 52px 0 16px; box-shadow: inset 0 -1px 0 rgba(10, 92, 255, .12); }
+  .wl-mark { left: auto; right: -90px; top: -110px; }
+  .wl-bot { order: -1; flex: none; width: 92px; }
+  .wl-say { align-self: center; flex: 0 1 230px; font-size: 13.5px; }
+  .wl-say::after { left: -7px; bottom: auto; top: 50%; margin: -6px 0 0; border-width: 0 0 1px 1px; }
+  .wl-pop { transform-origin: 0 50%; }
+  .wl-body { padding: 22px 20px 20px; }
+}
 @media (max-width: 480px) {
-  .wl-body { padding: 26px 20px 20px; }
   .wl-row { flex-direction: column; }
   .wl-row .input { flex: none; }
 }
