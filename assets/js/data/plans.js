@@ -7,8 +7,38 @@
 
   C.PLAN_ORDER = ['starter', 'growth', 'business', 'enterprise'];
   C.ANNUAL_MONTHS = 10; // yearly price = 10 × monthly (2 months free)
+  // Free is listed on the marketing site only, until the panel and server support it. It isn't in
+  // PLAN_ORDER, so signup, billing and the staff console never offer it.
+  C.SITE_PLAN_ORDER = ['free', ...C.PLAN_ORDER];
 
   C.PLANS = {
+    free: {
+      // $0, but Centrx keeps cardFeePct of each card payment, so a growing shop is better off upgrading.
+      id: 'free', name: 'Free', price: 0, cardFeePct: 2,
+      tagline: 'For trying Centrx on your own.',
+      bullets: [
+        '1 employee', '1 location', '1 GB cloud storage', '25 inventory items', 'Up to 50 customers',
+        'Unlimited orders and payment links', 'Stripe, PayPal and Square', 'Meetup and dropoff payment pages',
+        'Help center support',
+      ],
+      analytics: 'Basic',
+      limits: {
+        orderPhotos: 3, orderVideos: 0, videoSeconds: 0,
+        items: 25, categories: 2, customStatuses: 0,
+        seats: 1, locations: 1, customers: 50, orders: U, links: U, labels: U, storageGB: 1,
+        paymentProviders: 3, shippingProviders: 1, customRoles: 0,
+        auditDays: 7, apiKeys: 0, automations: 0, timelineMonths: 12, cenbotReplies: 0, phoneMinutes: 0,
+      },
+      features: {
+        meetup: true, customDeposit: false, requireProof: false, esignature: false, proofVideo: false, signatureExport: false,
+        segments: false, csv: true, customDomain: false, removeBranding: false,
+        whiteLabel: false, webhooks: false, sso: false, enforceMfa: false,
+        timelineExport: false, auditExport: false, granularPerms: false, advancedAutomations: false, advancedAnalytics: false, reports: false,
+        onlineStore: false, storeCustomDomain: false, extraLocations: false, phoneLine: false,
+        inboxTeam: false, inboxRules: false, connectMailbox: false, autoConnectDomain: false,
+      },
+      support: 'Help center',
+    },
     starter: {
       // id stays 'starter' so saved accounts and signup links keep matching.
       id: 'starter', name: 'Hobby', price: 3900, // cents / month
@@ -208,7 +238,7 @@
   // Minutes cover calls in and out; past the allowance each extra minute costs overage cents. Enterprise gets more minutes.
   C.PHONE_LINE = { price: 2500, name: 'Business phone line', overageCents: 4 };
   // Cloud storage: each plan includes an allowance for photos, IDs, videos, receipts and recordings.
-  // Customers, orders and payment links are unlimited on every plan, so storage is the usage limit.
+  // Customers, orders and payment links are unlimited on every paid plan, so storage is the usage limit.
   // Extra storage is sold in blocks, billed monthly, and can be added or removed anytime.
   C.STORAGE_ADDON = { gb: 100, price: 500, name: 'Extra cloud storage' };
   C.fmtStorage = (gb) => (gb >= 1000 ? `${+(gb / 1000).toFixed(1)} TB` : `${gb} GB`);
@@ -238,6 +268,7 @@
   // Comparison table (billing, signup, marketing site). v(plan) → display string, number or boolean.
   const L = (k) => (p) => p.limits[k];
   const F = (k) => (p) => p.features[k];
+  const paid = (p) => p.price > 0; // add-ons and messaging packs are for paid plans
   C.PLAN_MATRIX = [
     { group: 'Core', rows: [
       ['Employees', L('seats')],
@@ -249,24 +280,25 @@
       ['Customer & order management', () => true],
       ['Customer timeline', (p) => (p.limits.timelineMonths === U ? (p.features.timelineExport ? 'Full history + export' : 'Full history') : '12 months')],
       ['Analytics', (p) => p.analytics],
-      ['Cenbot AI assistant', (p) => `${C.fmt.num(p.limits.cenbotReplies)} replies / month`],
-      ['Automations', (p) => (p.limits.automations === U ? 'Unlimited' : `${p.limits.automations} active`)],
+      ['Cenbot AI assistant', (p) => (p.limits.cenbotReplies ? `${C.fmt.num(p.limits.cenbotReplies)} replies / month` : false)],
+      ['Automations', (p) => (!p.limits.automations ? false : p.limits.automations === U ? 'Unlimited' : `${p.limits.automations} active`)],
     ] },
     { group: 'Cloud storage', rows: [
       ['Storage included', (p) => C.fmtStorage(p.limits.storageGB)],
       ['Photos, videos, IDs, receipts & recordings', () => 'Counted in your storage'],
-      ['Extra storage', () => `${C.fmtStorage(C.STORAGE_ADDON.gb)} for ${C.fmt.money0(C.STORAGE_ADDON.price)}/mo`],
+      ['Extra storage', (p) => (paid(p) ? `${C.fmtStorage(C.STORAGE_ADDON.gb)} for ${C.fmt.money0(C.STORAGE_ADDON.price)}/mo` : false)],
       ['Private by default and backed up', () => true],
     ] },
     { group: 'Payments & shipping', rows: [
       ['Payment providers', () => 'Stripe, PayPal + Square'],
+      ['Centrx fee on card payments', (p) => (p.cardFeePct ? `${p.cardFeePct}%` : 'None')],
       ['Shipping labels', () => 'Unlimited'],
       ['Shipping providers', L('shippingProviders')],
     ] },
     { group: 'Inventory', rows: [
       ['Inventory items', L('items')],
       ['Custom categories & fields', (p) => (p.limits.categories === U ? 'Unlimited' : `${p.limits.categories} categories`)],
-      ['Custom statuses', (p) => (p.limits.customStatuses === U ? 'Unlimited' : `${p.limits.customStatuses} + defaults`)],
+      ['Custom statuses', (p) => (p.limits.customStatuses === U ? 'Unlimited' : p.limits.customStatuses ? `${p.limits.customStatuses} + defaults` : 'Defaults only')],
       ['Photos per item', () => 'Within your storage'],
     ] },
     { group: 'Meetup / Dropoff', rows: [
@@ -281,16 +313,16 @@
     ] },
     { group: 'Messaging', rows: [
       ['Receipts, payment links & order emails', () => 'Included'],
-      ['Business Email on your own domain', () => `${C.fmt.money0(C.BUSINESS_EMAIL.price)}/mo per domain`],
-      ['Domain setup', (p) => (p.features.autoConnectDomain ? 'One-click · coming soon' : 'Guided steps')],
+      ['Business Email on your own domain', (p) => (paid(p) ? `${C.fmt.money0(C.BUSINESS_EMAIL.price)}/mo per domain` : false)],
+      ['Domain setup', (p) => (!paid(p) ? false : p.features.autoConnectDomain ? 'One-click · coming soon' : 'Guided steps')],
       ['Shared inbox (email + SMS)', () => true],
       ['Saved replies', () => true],
       ['Assign conversations & internal notes', F('inboxTeam')],
       ['Inbox rules & auto-assign', F('inboxRules')],
       ['Connect your Gmail or Outlook', (p) => (p.features.connectMailbox ? 'Coming soon' : false)],
-      ['Campaign audiences', (p) => (p.features.segments ? 'Segments & tags' : 'All subscribers')],
-      ['Campaign email & SMS', () => 'Add-on packs'],
-      ['Business phone line (calls + texts)', (p) => (p.features.phoneLine ? `Included · ${C.fmt.num(p.limits.phoneMinutes)} min` : `${C.fmt.money0(C.PHONE_LINE.price)}/mo · ${C.fmt.num(p.limits.phoneMinutes)} min`)],
+      ['Campaign audiences', (p) => (!paid(p) ? false : p.features.segments ? 'Segments & tags' : 'All subscribers')],
+      ['Campaign email & SMS', (p) => (paid(p) ? 'Add-on packs' : false)],
+      ['Business phone line (calls + texts)', (p) => (!paid(p) ? false : p.features.phoneLine ? `Included · ${C.fmt.num(p.limits.phoneMinutes)} min` : `${C.fmt.money0(C.PHONE_LINE.price)}/mo · ${C.fmt.num(p.limits.phoneMinutes)} min`)],
     ] },
     { group: 'Online Store', rows: [
       ['Online Store with your inventory', F('onlineStore')],
@@ -298,7 +330,7 @@
       ['Store address', (p) => (p.features.storeCustomDomain ? 'Your own domain' : p.features.onlineStore ? 'A Centrx address' : false)],
     ] },
     { group: 'Team & security', rows: [
-      ['Employee permissions', (p) => (p.limits.customRoles === 0 ? 'Owner + Staff' : p.features.granularPerms ? 'Advanced · per action' : `Up to ${p.limits.customRoles} custom roles`)],
+      ['Employee permissions', (p) => (p.limits.seats === 1 ? 'Owner only' : p.limits.customRoles === 0 ? 'Owner + Staff' : p.features.granularPerms ? 'Advanced · per action' : `Up to ${p.limits.customRoles} custom roles`)],
       ['Two-factor auth & sessions', () => true],
       ['Require two-factor for your team', F('enforceMfa')],
       ['Single sign-on (SSO)', F('sso')],

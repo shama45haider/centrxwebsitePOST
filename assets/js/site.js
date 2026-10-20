@@ -235,6 +235,28 @@
     draw('email');
   }
 
+  // Free: $0, with Centrx keeping a share of card payments. One wide card under the paid plans, so
+  // the four-up row stays intact. It isn't a .plan[data-plan], so the billing toggle leaves it alone.
+  function renderFree() {
+    const p = C.PLANS.free, up = C.PLANS[C.PLAN_ORDER[0]];
+    if (!p) return;
+    const breakEven = (up.price * 100) / p.cardFeePct; // monthly card sales where the cheapest paid plan costs less
+    $$('[data-free-plan]').forEach((el) => {
+      el.innerHTML = `<article class="plan-free" id="free">
+        <div class="pf-head">
+          <h3 class="plan-name">${esc(p.name)}</h3>
+          <div class="price"><span class="price-amt num">${money0(p.price)}</span><span class="price-per">/month</span></div>
+          <p class="plan-tag">${esc(p.tagline)}</p>
+        </div>
+        <ul class="pf-list">${p.bullets.map((b) => `<li>${fmtBullet(b)}</li>`).join('')}</ul>
+        <div class="pf-side">
+          <p class="pf-fee"><span class="pf-pct num">${p.cardFeePct}%</span><span>On Free, Centrx keeps ${p.cardFeePct}% of each card payment. Paid plans have no Centrx fee, so once you take more than ${money0(breakEven)} a month by card, ${esc(up.name)} costs less.</span></p>
+          <a class="btn btn-lg btn-block" href="${APP}#/signup?plan=${p.id}">Start for free</a>
+        </div>
+      </article>`;
+    });
+  }
+
   // Custom: by application from inside the app, never a self-serve checkout.
   function renderCustom() {
     const el = $('[data-custom-plan]'), c = C.CUSTOM_PLAN;
@@ -275,7 +297,7 @@
   function renderCompare() {
     const el = $('[data-compare]');
     if (!el) return;
-    const plans = C.PLAN_ORDER.map((id) => C.PLANS[id]);
+    const plans = (C.SITE_PLAN_ORDER || C.PLAN_ORDER).map((id) => C.PLANS[id]);
     const cell = (v) => {
       if (v === true) return `<span class="yes" aria-label="Included">${I('check')}</span>`;
       if (v === false || v == null || v === 0) return `<span class="no" aria-label="Not included">${I('minus')}</span>`;
@@ -319,6 +341,7 @@
 
   if (hasPlans) {
     renderPlans();
+    renderFree();
     renderCustom();
     renderPacks();
     renderCompare();
@@ -380,6 +403,8 @@
       'email-overage': A.email && A.email.overage.label,
       'sms-overage': A.sms && A.sms.overage.label,
       'annual-list': ((l) => `${l.slice(0, -1).join(', ')} or ${l[l.length - 1]}`)(C.PLAN_ORDER.map((id) => `${C.PLANS[id].name} ${money0(annualTotal(C.PLANS[id]))}`)),
+      'free-fee': C.PLANS.free && `${C.PLANS.free.cardFeePct}%`,
+      'free-breakeven': C.PLANS.free && money0((C.PLANS[C.PLAN_ORDER[0]].price * 100) / C.PLANS.free.cardFeePct),
     };
     $$('[data-fact]').forEach((el) => { if (FACTS[el.dataset.fact]) el.textContent = FACTS[el.dataset.fact]; });
     // Pack tables: one row per pack, straight from the pricing data.

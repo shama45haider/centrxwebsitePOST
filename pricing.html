@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pricing · Centrx</title>
-  <meta name="description" content="Centrx plans: Hobby $39, Pro $99, Business $199 and Enterprise $349 per month, with email and SMS packs priced by what you send. Annual billing saves two months. 30-day free trial, with nothing charged until day 30.">
+  <meta name="description" content="Centrx plans: Free, then Hobby $39, Pro $99, Business $199 and Enterprise $349 per month, with email and SMS packs priced by what you send. Annual billing saves two months. 30-day free trial on paid plans, with nothing charged until day 30.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Centrx pricing">
-  <meta property="og:description" content="Four plans, plus email and SMS packs priced by what you send.">
+  <meta property="og:description" content="A free plan and four paid plans, plus email and SMS packs priced by what you send.">
   <link rel="canonical" href="https://centrx.co/pricing">
   <meta property="og:url" content="https://centrx.co/pricing">
   <meta property="og:site_name" content="Centrx">
@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="/assets/css/tokens.css?v=13">
   <link rel="stylesheet" href="/assets/css/base.css?v=13">
   <link rel="stylesheet" href="/assets/css/components.css?v=13">
-  <link rel="stylesheet" href="/assets/css/site.css?v=14">
+  <link rel="stylesheet" href="/assets/css/site.css?v=15">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body class="site" data-page="pricing">
@@ -39,7 +39,7 @@
       <div class="container hero-top">
         <h1 class="display" data-reveal>Pricing that grows with you.</h1>
         <div class="hero-side" data-reveal style="--d:2">
-          <p class="lead">Choose the plan that fits your team and volume. Every plan includes a 30-day free trial. Your card isn’t charged until it ends.</p>
+          <p class="lead">Choose the plan that fits your team and volume. Every paid plan includes a 30-day free trial, and your card isn’t charged until it ends. Just you? Start on Free.</p>
           <div class="billing-toggle">
             <div class="segmented" role="group" aria-label="Billing period" data-billing>
               <button type="button" data-value="monthly" class="on" aria-pressed="true">Monthly</button>
@@ -63,6 +63,7 @@
     <section class="section tight">
       <div class="container">
         <div class="plans swipe" data-plans data-reveal></div>
+        <div data-free-plan data-reveal></div>
         <div data-custom-plan data-reveal></div>
         <div class="includes" data-reveal>
           <div class="includes-head">Included on every plan</div>
@@ -71,7 +72,7 @@
             <li>Customer timeline and search</li>
             <li>Meetup and dropoff payment pages</li>
             <li>Stripe, PayPal and Square payments</li>
-            <li>Unlimited customers, orders and payment links</li>
+            <li>Unlimited orders and payment links</li>
             <li>Unlimited shipping labels</li>
             <li>Two-factor sign-in and session control</li>
             <li>Receipts and order emails at no extra cost</li>
@@ -85,7 +86,7 @@
         <div class="pack-head" data-reveal>
           <div class="section-head">
             <h2 class="h2">Email and SMS add-ons</h2>
-            <p class="lead">Add a monthly pack to any plan and change it anytime. Receipts and order emails are always free; packs cover campaign email and every text you send.</p>
+            <p class="lead">Add a monthly pack to any paid plan and change it anytime. Receipts and order emails are always free; packs cover campaign email and every text you send.</p>
           </div>
           <div class="segmented pack-toggle" role="group" aria-label="Add-on type" data-pack-toggle>
             <button type="button" data-pack-ch="email" class="on" aria-pressed="true">Email</button>
@@ -100,7 +101,7 @@
         </div>
         <div class="numbers" data-reveal>
           <div class="numbers-head"><h3 class="h4">Business Email: send from your own domain</h3>
-            <p>Add it to any plan for <span data-fact="business-email">$9/month</span> per domain you already own. Customers get email from you@yourbusiness.com, and replies come into your shared inbox. Business and Enterprise connect with one click, coming soon. Other plans follow a few copy-and-paste steps, and <a href="/help/custom-domain">the guide</a> shows how.</p></div>
+            <p>Add it to any paid plan for <span data-fact="business-email">$9/month</span> per domain you already own. Customers get email from you@yourbusiness.com, and replies come into your shared inbox. Business and Enterprise connect with one click, coming soon. Other plans follow a few copy-and-paste steps, and <a href="/help/custom-domain">the guide</a> shows how.</p></div>
         </div>
       </div>
     </section>
@@ -124,8 +125,12 @@
         </div>
         <div class="faq" data-reveal>
           <details>
+            <summary>Is there a free plan?<span data-i="plus"></span></summary>
+            <div class="answer">Yes. Free costs $0 a month for one person at one location, with up to 50 customers, 25 inventory items, 1 GB of storage and unlimited orders and payment links. On Free, Centrx keeps <span data-fact="free-fee">2%</span> of each card payment, on top of the payment provider's own fee. Paid plans have no Centrx fee, so once you take more than <span data-fact="free-breakeven">$1,950</span> a month by card, Hobby costs less. Cenbot, automations and add-ons need a paid plan.</div>
+          </details>
+          <details>
             <summary>How does the free trial work?<span data-i="plus"></span></summary>
-            <div class="answer">You get 30 days on the plan you choose. You add a card when you sign up, but nothing is charged until day 30, and we email you three days before. Cancel before then and you pay nothing. Switch plans anytime along the way.</div>
+            <div class="answer">You get 30 days on the paid plan you choose. You add a card when you sign up, but nothing is charged until day 30, and we email you three days before. Cancel before then and you pay nothing. Switch plans anytime along the way.</div>
           </details>
           <details>
             <summary>Can I change plans later?<span data-i="plus"></span></summary>
@@ -137,7 +142,7 @@
           </details>
           <details>
             <summary>What counts toward cloud storage?<span data-i="plus"></span></summary>
-            <div class="answer">Files you keep in Centrx: inventory photos, proof photos and videos, customer ID scans, signed agreements, Online Store images, email attachments, voicemail and call recordings. Customers, orders, payments and messages don't count, and neither do receipts, which are made whenever they're needed. Every plan includes an allowance, and you can add <span data-fact="storage-addon">100 GB for $5/month</span> whenever you need more.</div>
+            <div class="answer">Files you keep in Centrx: inventory photos, proof photos and videos, customer ID scans, signed agreements, Online Store images, email attachments, voicemail and call recordings. Customers, orders, payments and messages don't count, and neither do receipts, which are made whenever they're needed. Every plan includes an allowance, and on paid plans you can add <span data-fact="storage-addon">100 GB for $5/month</span> whenever you need more.</div>
           </details>
           <details>
             <summary>Why aren't email and SMS part of the plans?<span data-i="plus"></span></summary>
@@ -149,7 +154,7 @@
           </details>
           <details>
             <summary>Can I send email from my own domain?<span data-i="plus"></span></summary>
-            <div class="answer">Yes, with Business Email: <span data-fact="business-email">$9/month</span> for each domain you connect, on any plan. You send as notifications@yourbusiness.com instead of notify@centrx.co, and add a domain for each location if you like. Business and Enterprise connect with one click (coming soon), and other plans follow guided copy-and-paste steps. Without it, email goes out from notify@centrx.co with your business name as the sender. <a href="/help/custom-domain">See how to connect your domain.</a></div>
+            <div class="answer">Yes, with Business Email: <span data-fact="business-email">$9/month</span> for each domain you connect, on any paid plan. You send as notifications@yourbusiness.com instead of notify@centrx.co, and add a domain for each location if you like. Business and Enterprise connect with one click (coming soon), and other plans follow guided copy-and-paste steps. Without it, email goes out from notify@centrx.co with your business name as the sender. <a href="/help/custom-domain">See how to connect your domain.</a></div>
           </details>
           <details>
             <summary>Is annual billing available?<span data-i="plus"></span></summary>
@@ -161,7 +166,7 @@
           </details>
           <details>
             <summary>Can customers call my business through Centrx?<span data-i="plus"></span></summary>
-            <div class="answer">Yes, with a business phone line: a number customers can call and text, answered right in Centrx. It's <span data-fact="phone-line">$25/month</span> on any plan and includes <span data-fact="phone-minutes">500</span> minutes of calls a month, then <span data-fact="phone-overage">4¢ a minute</span>. Enterprise includes the line with 2,000 minutes. You can get a new local or toll-free number, or bring the one you already have.</div>
+            <div class="answer">Yes, with a business phone line: a number customers can call and text, answered right in Centrx. It's <span data-fact="phone-line">$25/month</span> on any paid plan and includes <span data-fact="phone-minutes">500</span> minutes of calls a month, then <span data-fact="phone-overage">4¢ a minute</span>. Enterprise includes the line with 2,000 minutes. You can get a new local or toll-free number, or bring the one you already have.</div>
           </details>
           <details>
             <summary>Can I add more locations?<span data-i="plus"></span></summary>
@@ -169,7 +174,7 @@
           </details>
           <details>
             <summary>Does Centrx include an AI assistant?<span data-i="plus"></span></summary>
-            <div class="answer">Yes. Cenbot, our AI assistant, is built into the panel on every plan, with a monthly allowance of replies that grows with your plan: 500 on Hobby, 2,500 on Pro, 10,000 on Business and 50,000 on Enterprise. A reply is each answer or message Cenbot writes. If you use them all, Cenbot pauses until your next month starts, and you can always answer yourself or move up a plan. Ask it how to do something, get answers from your own sales and customer data, or let it reply to customer texts about hours, orders and pickups. It works within each employee's permissions, and texts it sends count toward your SMS pack.</div>
+            <div class="answer">Yes. Cenbot, our AI assistant, is built into the panel on every paid plan, with a monthly allowance of replies that grows with your plan: 500 on Hobby, 2,500 on Pro, 10,000 on Business and 50,000 on Enterprise. A reply is each answer or message Cenbot writes. If you use them all, Cenbot pauses until your next month starts, and you can always answer yourself or move up a plan. Ask it how to do something, get answers from your own sales and customer data, or let it reply to customer texts about hours, orders and pickups. It works within each employee's permissions, and texts it sends count toward your SMS pack.</div>
           </details>
           <details>
             <summary>How is my data kept safe?<span data-i="plus"></span></summary>
@@ -192,7 +197,7 @@
         <div class="cta-band solo" data-reveal>
           <div>
             <h2 class="h2">Start free. Upgrade when you grow.</h2>
-            <p class="lead">30 days on any plan. Nothing charged until day 30.</p>
+            <p class="lead">Free for one person, or 30 days on any paid plan with nothing charged until day 30.</p>
           </div>
           <div class="hero-cta">
             <a class="btn btn-dark btn-xl" href="https://app.centrx.co/#/signup">Start free trial <span class="nudge" data-i="arrowRight"></span></a>
@@ -207,8 +212,8 @@
 
   <script src="/assets/js/core/ns.js?v=13"></script>
   <script src="/assets/js/core/icons.js?v=13"></script>
-  <script src="/assets/js/data/plans.js?v=13"></script>
+  <script src="/assets/js/data/plans.js?v=14"></script>
   <script src="/assets/js/people.js?v=13"></script>
-  <script src="/assets/js/site.js?v=14"></script>
+  <script src="/assets/js/site.js?v=15"></script>
 </body>
 </html>
