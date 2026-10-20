@@ -170,7 +170,7 @@
 
   function renderPlans() {
     $$('[data-plans]').forEach((el) => {
-      el.innerHTML = C.PLAN_ORDER.map((id) => planCard(C.PLANS[id])).join('');
+      el.innerHTML = C.PAID_PLAN_ORDER.map((id) => planCard(C.PLANS[id])).join('');
       if (el.classList.contains('swipe')) {
         // One tap opens every card's list, so the row stays even as you swipe.
         el.addEventListener('click', (e) => {
@@ -181,7 +181,7 @@
             b.textContent = open ? 'Show fewer features' : `Show all ${$$('.plan-list li:not(.inherit)', b.closest('.plan')).length} features`;
           });
         });
-        swipeRow(el, C.PLAN_ORDER.map((id) => C.PLANS[id].name), Math.max(0, C.PLAN_ORDER.findIndex((id) => C.PLANS[id].popular)));
+        swipeRow(el, C.PAID_PLAN_ORDER.map((id) => C.PLANS[id].name), Math.max(0, C.PAID_PLAN_ORDER.findIndex((id) => C.PLANS[id].popular)));
       }
     });
     $$('[data-billing]').forEach((el) => {
@@ -238,7 +238,7 @@
   // Free: $0, with Centrx keeping a share of card payments. One wide card under the paid plans, so
   // the four-up row stays intact. It isn't a .plan[data-plan], so the billing toggle leaves it alone.
   function renderFree() {
-    const p = C.PLANS.free, up = C.PLANS[C.PLAN_ORDER[0]];
+    const p = C.PLANS.free, up = C.PLANS[C.PAID_PLAN_ORDER[0]];
     if (!p) return;
     const breakEven = (up.price * 100) / p.cardFeePct; // monthly card sales where the cheapest paid plan costs less
     $$('[data-free-plan]').forEach((el) => {
@@ -297,7 +297,7 @@
   function renderCompare() {
     const el = $('[data-compare]');
     if (!el) return;
-    const plans = (C.SITE_PLAN_ORDER || C.PLAN_ORDER).map((id) => C.PLANS[id]);
+    const plans = C.PLAN_ORDER.map((id) => C.PLANS[id]);
     const cell = (v) => {
       if (v === true) return `<span class="yes" aria-label="Included">${I('check')}</span>`;
       if (v === false || v == null || v === 0) return `<span class="no" aria-label="Not included">${I('minus')}</span>`;
@@ -348,7 +348,7 @@
     setBilling(billing, false);
     $$('[data-overage]').forEach((el) => { el.textContent = C.ADDONS[el.dataset.overage].overage.label; });
     $$('[data-annual-list]').forEach((el) => {
-      const parts = C.PLAN_ORDER.map((id) => `${C.PLANS[id].name} ${money0(annualTotal(C.PLANS[id]))}`);
+      const parts = C.PAID_PLAN_ORDER.map((id) => `${C.PLANS[id].name} ${money0(annualTotal(C.PLANS[id]))}`);
       el.textContent = parts.slice(0, -1).join(', ') + ' or ' + parts[parts.length - 1];
     });
   }
@@ -402,9 +402,9 @@
       'storage-addon': C.STORAGE_ADDON && `${C.fmtStorage(C.STORAGE_ADDON.gb)} for ${money0(C.STORAGE_ADDON.price)}/month`,
       'email-overage': A.email && A.email.overage.label,
       'sms-overage': A.sms && A.sms.overage.label,
-      'annual-list': ((l) => `${l.slice(0, -1).join(', ')} or ${l[l.length - 1]}`)(C.PLAN_ORDER.map((id) => `${C.PLANS[id].name} ${money0(annualTotal(C.PLANS[id]))}`)),
+      'annual-list': ((l) => `${l.slice(0, -1).join(', ')} or ${l[l.length - 1]}`)(C.PAID_PLAN_ORDER.map((id) => `${C.PLANS[id].name} ${money0(annualTotal(C.PLANS[id]))}`)),
       'free-fee': C.PLANS.free && `${C.PLANS.free.cardFeePct}%`,
-      'free-breakeven': C.PLANS.free && money0((C.PLANS[C.PLAN_ORDER[0]].price * 100) / C.PLANS.free.cardFeePct),
+      'free-breakeven': C.PLANS.free && money0((C.PLANS[C.PAID_PLAN_ORDER[0]].price * 100) / C.PLANS.free.cardFeePct),
     };
     $$('[data-fact]').forEach((el) => { if (FACTS[el.dataset.fact]) el.textContent = FACTS[el.dataset.fact]; });
     // Pack tables: one row per pack, straight from the pricing data.

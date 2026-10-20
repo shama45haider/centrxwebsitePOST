@@ -5,17 +5,18 @@
   const C = window.Centrx;
   const U = Infinity;
 
-  C.PLAN_ORDER = ['starter', 'growth', 'business', 'enterprise'];
+  // Free comes first: signup offers it and Plan & billing can move down to it. PAID_PLAN_ORDER is
+  // the plans with a price: the pricing cards, trials, annual billing and add-ons.
+  C.PLAN_ORDER = ['free', 'starter', 'growth', 'business', 'enterprise'];
+  C.PAID_PLAN_ORDER = C.PLAN_ORDER.slice(1);
   C.ANNUAL_MONTHS = 10; // yearly price = 10 × monthly (2 months free)
-  // Free is listed on the marketing site only, until the panel and server support it. It isn't in
-  // PLAN_ORDER, so signup, billing and the staff console never offer it.
-  C.SITE_PLAN_ORDER = ['free', ...C.PLAN_ORDER];
 
   C.PLANS = {
     free: {
       // $0, but Centrx keeps cardFeePct of each card payment, so a growing shop is better off upgrading.
-      id: 'free', name: 'Free', price: 0, cardFeePct: 2,
+      id: 'free', name: 'Free', price: 0, cardFeePct: 5,
       tagline: 'For trying Centrx on your own.',
+      highlights: ['1 employee · 1 location', '1 GB cloud storage', 'Up to 50 customers', '5% fee on card payments'],
       bullets: [
         '1 employee', '1 location', '1 GB cloud storage', '25 inventory items', 'Up to 50 customers',
         'Unlimited orders and payment links', 'Stripe, PayPal and Square', 'Meetup and dropoff payment pages',
