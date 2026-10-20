@@ -7,6 +7,9 @@
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const I = (name) => `<span data-i="${name}"></span>`;
   const page = document.body.dataset.page || '';
+  // Launch day. Until then "Get started" buttons join the waitlist instead (see "Launch waitlist" below).
+  const LAUNCH = new Date('2026-11-18T00:00:00-05:00');
+  const PRELAUNCH = Date.now() < LAUNCH;
 
   /* ---------- Chrome ---------- */
   const NAV = [
@@ -77,34 +80,55 @@
   // Whole-dollar prices drop the cents ($49); prices like $12.50 keep them.
   const money0 = (c) => (c % 100 ? C.fmt.money(c) : C.fmt.money0(c));
   const annualTotal = (p) => p.price * C.ANNUAL_MONTHS;
+  // Free has no yearly price: it stays "$0/month" whichever billing is picked.
   const priceFor = (p, b) => (b === 'annual' ? annualTotal(p) : p.price);
-  const perFor = (b) => (b === 'annual' ? '/year' : '/month');
-  const noteFor = (p, b) => (b === 'annual'
-    ? `${C.fmt.money(annualTotal(p) / 12)}/mo billed yearly · 2 months free`
-    : `or ${money0(annualTotal(p))}/yr, 2 months free`);
+  const perFor = (p, b) => (b === 'annual' && p.price ? '/year' : '/month');
+  const noteFor = (p, b) => (!p.price ? 'Free for as long as you like'
+    : b === 'annual' ? `${C.fmt.money(annualTotal(p) / 12)}/mo billed yearly · 2 months free`
+      : `or ${money0(annualTotal(p))}/yr, 2 months free`);
   const signupUrl = (id, b) => `${APP}#/signup?plan=${id}&billing=${b}`;
   const fmtBullet = (s) => esc(s).replace(/([\w.+-]+@[\w-]+\.[\w.]+)/g, '<code>$1</code>');
+  const onBilling = []; // redrawn when the billing toggle changes (the estimator)
 
-  // In a swipe row on phones, each card lists this many features until "Show all" is tapped.
+  // Each card lists this many features until "Show all" is tapped: in a swipe row, and on the pricing page.
   const SHORT_LIST = 5;
 
-  function planCard(p) {
+  // Pricing-page cards open with the same limits in the same order, so the rows line up across plans.
+  const SPECS = [
+    ['Employees', (p) => C.fmt.num(p.limits.seats)],
+    ['Locations', (p) => C.fmt.num(p.limits.locations)],
+    ['Cloud storage', (p) => C.fmtStorage(p.limits.storageGB)],
+    ['Customers', (p) => (p.limits.customers === Infinity ? 'Unlimited' : `Up to ${C.fmt.num(p.limits.customers)}`)],
+    ['Inventory items', (p) => C.fmt.num(p.limits.items)],
+    ['Cenbot AI', (p) => (p.limits.cenbotReplies ? `${C.fmt.num(p.limits.cenbotReplies)} replies/mo` : null)],
+    ['Centrx card fee', (p) => (p.cardFeePct ? `${p.cardFeePct}%` : 'None')],
+  ];
+  // Bullets those rows already say ("10 employees", "100 GB cloud storage", "Cenbot AI, 2,500 replies / month").
+  const IN_SPECS = /(employees?|locations?|cloud storage|inventory items|customers)$|^Cenbot AI/i;
+
+  function planCard(p, specs) {
     const parent = p.inherits && C.PLANS[p.inherits];
     const second = (p.id === 'business' || p.id === 'enterprise')
       ? `<a class="btn btn-lg btn-block btn-ghost sub-btn" href="/contact">Talk to sales</a>`
       : `<a class="btn btn-lg btn-block btn-ghost sub-btn" href="${APP}?demo#/">Try the live demo</a>`;
-    return `<article class="plan${p.popular ? ' popular' : ''}" data-plan="${p.id}">
+    const bullets = specs ? p.bullets.filter((b) => !IN_SPECS.test(b)) : p.bullets;
+    const spec = ([label, fn]) => {
+      const v = fn(p);
+      return `<div><dt>${label}</dt><dd${v == null ? ' class="off"' : p.cardFeePct && label === 'Centrx card fee' ? ' class="fee"' : ''}>${v == null ? 'Not included' : esc(v)}</dd></div>`;
+    };
+    return `<article class="plan${p.popular ? ' popular' : ''}${p.price ? '' : ' free'}" data-plan="${p.id}">
       <div class="plan-top"><h3 class="plan-name">${esc(p.name)}</h3>${p.popular ? '<span class="pill-plan">Most popular</span>' : ''}</div>
       <p class="plan-tag">${esc(p.tagline)}</p>
-      <div class="price"><span class="price-amt num" data-amt>${money0(priceFor(p, billing))}</span><span class="price-per" data-per>${perFor(billing)}</span></div>
+      <div class="price"><span class="price-amt num" data-amt>${money0(priceFor(p, billing))}</span><span class="price-per" data-per>${perFor(p, billing)}</span></div>
       <p class="price-note" data-note>${noteFor(p, billing)}</p>
-      <a class="btn btn-lg btn-block${p.popular ? ' btn-primary' : ''}" data-cta href="${signupUrl(p.id, billing)}" data-waitlist="${page || 'site'}" data-wl-label="Join the waitlist">Choose ${esc(p.name)}</a>
+      <a class="btn btn-lg btn-block${p.popular ? ' btn-primary' : ''}" data-cta href="${signupUrl(p.id, billing)}" data-waitlist="${page || 'site'}" data-wl-label="Join the waitlist">${p.price ? `Choose ${esc(p.name)}` : 'Start for free'}</a>
       ${second}
+      ${specs ? `<dl class="plan-specs">${SPECS.map(spec).join('')}</dl>` : ''}
       <ul class="plan-list">
         ${parent ? `<li class="inherit">Everything in ${esc(parent.name)}, plus:</li>` : ''}
-        ${p.bullets.map((b, i) => `<li${i >= SHORT_LIST ? ' class="more"' : ''}>${fmtBullet(b)}</li>`).join('')}
+        ${bullets.map((b, i) => `<li${i >= SHORT_LIST ? ' class="more"' : ''}>${fmtBullet(b)}</li>`).join('')}
       </ul>
-      ${p.bullets.length > SHORT_LIST ? `<button type="button" class="plan-more" data-plan-more aria-expanded="false">Show all ${p.bullets.length} features</button>` : ''}
+      ${bullets.length > SHORT_LIST ? `<button type="button" class="plan-more" data-plan-more aria-expanded="false">Show all ${bullets.length} features</button>` : ''}
     </article>`;
   }
 
@@ -121,19 +145,20 @@
       const amt = $('[data-amt]', card);
       const apply = () => {
         amt.textContent = money0(priceFor(p, next));
-        $('[data-per]', card).textContent = perFor(next);
+        $('[data-per]', card).textContent = perFor(p, next);
         $('[data-note]', card).textContent = noteFor(p, next);
         $('[data-cta]', card).href = signupUrl(p.id, next);
         amt.classList.remove('swap');
       };
-      if (!animate || RM) return apply();
+      if (!p.price || !animate || RM) return apply();
       amt.classList.add('swap');
       setTimeout(apply, 170);
     });
     $$('[data-th-price]').forEach((el) => {
       const p = C.PLANS[el.dataset.thPrice];
-      el.textContent = `${money0(priceFor(p, next))}${next === 'annual' ? '/yr' : '/mo'}`;
+      el.textContent = p.price ? `${money0(priceFor(p, next))}${next === 'annual' ? '/yr' : '/mo'}` : money0(0);
     });
+    onBilling.forEach((fn) => fn());
   }
 
   // On narrow screens a .swipe row of cards scrolls sideways; a segmented switch above it
@@ -170,8 +195,10 @@
 
   function renderPlans() {
     $$('[data-plans]').forEach((el) => {
-      el.innerHTML = C.PAID_PLAN_ORDER.map((id) => planCard(C.PLANS[id])).join('');
-      if (el.classList.contains('swipe')) {
+      // data-plans="all" (the pricing page): Free too, each card opening with its limits.
+      const all = el.dataset.plans === 'all', ids = all ? C.PLAN_ORDER : C.PAID_PLAN_ORDER;
+      el.innerHTML = ids.map((id) => planCard(C.PLANS[id], all)).join('');
+      if (el.classList.contains('swipe') || all) {
         // One tap opens every card's list, so the row stays even as you swipe.
         el.addEventListener('click', (e) => {
           if (!e.target.closest('[data-plan-more]')) return;
@@ -181,7 +208,7 @@
             b.textContent = open ? 'Show fewer features' : `Show all ${$$('.plan-list li:not(.inherit)', b.closest('.plan')).length} features`;
           });
         });
-        swipeRow(el, C.PAID_PLAN_ORDER.map((id) => C.PLANS[id].name), Math.max(0, C.PAID_PLAN_ORDER.findIndex((id) => C.PLANS[id].popular)));
+        if (el.classList.contains('swipe')) swipeRow(el, ids.map((id) => C.PLANS[id].name), Math.max(0, ids.findIndex((id) => C.PLANS[id].popular)));
       }
     });
     $$('[data-billing]').forEach((el) => {
@@ -193,54 +220,153 @@
     setBilling(billing, false);
   }
 
-  // Email and SMS packs: three cards per channel, shaped like the plan cards, one channel at a time.
+  // Email and SMS packs: a price list, one channel at a time, like a row of the panel's Plan & billing.
   function renderPacks() {
-    const el = $('[data-packs]'), toggle = $('[data-pack-toggle]');
+    const el = $('[data-packs]');
     if (!el || !C.ADDONS) return;
+    const toggle = $('[data-pack-toggle]', el);
     const rate = (ch, pk) => (ch === 'email'
-      ? `${C.fmt.money((pk.price / pk.qty) * 1000)} per 1,000 emails`
+      ? `${C.fmt.money((pk.price / pk.qty) * 1000)} per 1,000`
       : `${+(pk.price / pk.qty).toFixed(2)}¢ per text`);
     const draw = (ch) => {
       const a = C.ADDONS[ch];
       $$('[data-pack-ch]', toggle).forEach((b) => { const on = b.dataset.packCh === ch; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
-      $('[data-pack-cards]', el).innerHTML = a.packs.map((pk, k) => `<article class="plan pack-card${pk.popular ? ' popular' : ''}" style="--k:${k}">
-        <div class="plan-top"><h3 class="plan-name">${C.fmt.num(pk.qty)} ${esc(a.unit)}</h3>${pk.popular ? '<span class="pill-plan">Most popular</span>' : ''}</div>
-        <p class="plan-tag">${esc(pk.tagline)}</p>
-        <div class="price"><span class="price-amt num">${money0(pk.price)}</span><span class="price-per">/month</span></div>
-        <p class="price-note">${rate(ch, pk)}</p>
-        <a class="btn btn-lg btn-block${pk.popular ? ' btn-primary' : ''}" href="${APP}#/settings/billing?addon=${ch}">Add to your plan</a>
-      </article>`).join('');
-      swipeRow($('[data-pack-cards]', el), a.packs.map((pk) => C.fmt.num(pk.qty)), Math.max(0, a.packs.findIndex((pk) => pk.popular)));
-      $('[data-pack-includes]', el).innerHTML = `<div class="includes-head">Every ${ch === 'sms' ? 'SMS' : 'email'} pack includes</div>
-        <ul class="rings-list">${a.includes.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`;
-      $('[data-pack-more]', el).innerHTML = `Go over your pack and you pay ${esc(a.overage.label)}. Sending far more? <a href="#custom">Custom plans</a> include volume pricing.`;
+      $('[data-pack-rows]', el).innerHTML = a.packs.map((pk, k) => `<div class="pack-row${pk.popular ? ' popular' : ''}" style="--k:${k}">
+        <div class="pack-what"><b>${C.fmt.num(pk.qty)} ${esc(a.unit)}${pk.popular ? '<span class="pill-plan">Most popular</span>' : ''}</b><small>${esc(pk.tagline)}</small></div>
+        <span class="pack-rate">${rate(ch, pk)}</span>
+        <span class="pack-price num">${money0(pk.price)}<small>/mo</small></span>
+      </div>`).join('');
       // SMS only: the texting-number options (one toll-free number is included with every pack).
-      const nb = $('[data-pack-numbers]', el);
-      if (nb) {
-        nb.hidden = ch !== 'sms';
-        if (ch === 'sms' && C.SMS_NUMBERS) {
-          nb.innerHTML = `<div class="numbers-head"><h3 class="h4">Your texting number</h3>
-            <p>US carriers require every business to text from its own registered number. We register it with the carriers for you.</p></div>
-            <div class="numbers-grid">${C.SMS_NUMBER_ORDER.map((k) => { const n = C.SMS_NUMBERS[k]; return `<div class="num-opt">
-              <div class="num-name">${esc(n.name)}</div>
-              <div class="num-price">${n.price ? `${money0(n.price)}<span>/month</span>` : 'Included'}</div>
-              <p>${esc(n.blurb)}</p>
-              <small>${n.setup ? `${money0(n.setup)} one-time setup` : 'No setup fee'} · ready ${esc(n.review.replace('usually ', 'in about '))}</small>
-            </div>`; }).join('')}</div>
-            <p class="numbers-foot">Setup fees are waived on annual billing. Extra numbers, for example one per location, are ${money0(C.EXTRA_NUMBER)}/month each.${C.PHONE_LINE ? ` Want customers to call you too? A business phone line for calls and texts is ${money0(C.PHONE_LINE.price)}/month with ${C.fmt.num(C.PLANS.business.limits.phoneMinutes)} minutes included. Enterprise includes it with ${C.fmt.num(C.PLANS.enterprise.limits.phoneMinutes)} minutes.` : ''}</p>`;
-        }
-      }
+      const numbers = ch === 'sms' && C.SMS_NUMBERS ? `<div class="pack-numbers">
+          <h4 class="h4">Your texting number</h4>
+          <p class="pack-note">US carriers require every business to text from its own registered number. We register it with the carriers for you.</p>
+          ${C.SMS_NUMBER_ORDER.map((k) => { const n = C.SMS_NUMBERS[k]; return `<div class="num-row">
+            <div class="pack-what"><b>${esc(n.name)}</b><small>${esc(n.blurb)} ${n.setup ? `${money0(n.setup)} one-time setup` : 'No setup fee'}, ready ${esc(n.review.replace('usually ', 'in about '))}.</small></div>
+            <span class="pack-price num">${n.price ? `${money0(n.price)}<small>/mo</small>` : '<span class="incl">Included</span>'}</span>
+          </div>`; }).join('')}
+          <p class="pack-note">Setup fees are waived on annual billing. Extra numbers, for example one per location, are ${money0(C.EXTRA_NUMBER)}/month each.</p>
+        </div>` : '';
+      $('[data-pack-body]', el).innerHTML = `<h4 class="h4">Every ${ch === 'sms' ? 'SMS' : 'email'} pack includes</h4>
+        <ul class="rings-list">${a.includes.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
+        <p class="pack-note">Go over your pack and you pay ${esc(a.overage.label)}. Sending far more? <a href="#custom">Custom plans</a> include volume pricing.</p>
+        ${numbers}`;
     };
     toggle.addEventListener('click', (e) => { const b = e.target.closest('[data-pack-ch]'); if (b && !b.classList.contains('on')) draw(b.dataset.packCh); });
     draw('email');
   }
 
+  // The other add-ons, priced from data/plans.js.
+  function renderExtras() {
+    const el = $('[data-extras]');
+    if (!el) return;
+    const ent = C.PLANS.enterprise, minutes = C.fmt.num(C.PLANS.business.limits.phoneMinutes);
+    const ROWS = [
+      ['Business Email', C.BUSINESS_EMAIL.price, '/mo per domain',
+        `Send from you@yourbusiness.com, and replies come into your shared inbox. Business and Enterprise connect with one click (coming soon); other plans follow a few copy-and-paste steps. <a href="/help/custom-domain">See how</a>`],
+      ['Business phone line', C.PHONE_LINE.price, '/mo',
+        `A number customers can call and text, answered right in Centrx. Includes ${minutes} minutes a month, then ${C.PHONE_LINE.overageCents}¢ a minute. Get a new local or toll-free number, or bring yours.`,
+        `Included on ${esc(ent.name)} with ${C.fmt.num(ent.limits.phoneMinutes)} minutes`],
+      ['Extra cloud storage', C.STORAGE_ADDON.price, `/mo per ${C.fmtStorage(C.STORAGE_ADDON.gb)}`,
+        'More room for inventory photos, proof videos, ID scans and call recordings. Add or remove it anytime.'],
+      ['Extra location', C.EXTRA_LOCATION.price, '/mo each',
+        `For each location beyond what your plan includes, on ${esc(C.PLANS.business.name)} and ${esc(ent.name)}. On ${esc(C.PLANS.starter.name)} and ${esc(C.PLANS.growth.name)}, the next plan up includes more.`],
+    ];
+    el.innerHTML = ROWS.map(([name, cents, per, body, note]) => `<div class="addon-row">
+      <div class="pack-what"><b>${name}</b><small>${body}</small>${note ? `<span class="tag">${note}</span>` : ''}</div>
+      <span class="pack-price num">${money0(cents)}<small>${per}</small></span>
+    </div>`).join('');
+  }
+
+  // The cheapest pack for a month's volume, counting overage: going a little over a pack can beat the next one up.
+  function cheapestPack(ch, n) {
+    if (!n) return null;
+    return C.ADDONS[ch].packs
+      .map((pk) => { const over = Math.max(0, n - pk.qty); return { pk, over, cents: pk.price + C.overageCents(ch, over) }; })
+      .reduce((a, b) => (b.cents < a.cents ? b : a));
+  }
+
+  // Estimator: a plan plus the packs and add-ons a business would use, totalled like the panel's bill.
+  function renderEstimate() {
+    const el = $('[data-estimate]');
+    if (!el || !C.ADDONS) return;
+    const pick = C.PLAN_ORDER.find((id) => C.PLANS[id].popular) || C.PAID_PLAN_ORDER[0];
+    const range = (name, label, max, step, value) => `<div class="field"><label class="label" for="est-${name}">${label}<output class="num" data-out="${name}"></output></label>
+      <input class="est-range" type="range" id="est-${name}" name="${name}" min="0" max="${max}" step="${step}" value="${value}"></div>`;
+    const toggle = (name, label) => `<label class="est-toggle"><span><b>${label}</b><small data-hint="${name}"></small></span><span class="switch"><input type="checkbox" name="${name}"></span></label>`;
+    el.innerHTML = `<div class="panel-head"><div><h3>Estimate your monthly bill</h3><p class="xs muted">Pick a plan and what you'd send. Packs are chosen for the lowest price.</p></div></div>
+      <div class="est">
+        <form class="est-form" novalidate>
+          <div class="field"><label class="label" for="est-plan">Plan</label>
+            <select class="select" id="est-plan" name="plan">${C.PLAN_ORDER.map((id) => `<option value="${id}"${id === pick ? ' selected' : ''}>${esc(C.PLANS[id].name)}</option>`).join('')}</select></div>
+          <div class="field"><label class="label" for="est-sales">Card payments a month</label>
+            <div class="input-prefix-wrap"><span class="input-prefix">$</span><input class="input num" id="est-sales" name="sales" inputmode="numeric" autocomplete="off" value="3,000"></div></div>
+          ${range('email', 'Campaign emails a month', 200000, 1000, 10000)}
+          ${range('sms', 'Texts a month', 10000, 100, 500)}
+          ${toggle('domain', C.BUSINESS_EMAIL.name)}
+          ${toggle('phone', C.PHONE_LINE.name)}
+        </form>
+        <div class="est-bill">
+          <div class="est-lines" data-est-lines aria-live="polite"></div>
+          <div class="est-total"><span>Estimated total</span><b class="num" data-est-total></b><small>/month</small></div>
+          <p class="est-tip" data-est-tip></p>
+          <a class="btn btn-lg btn-block btn-primary" data-est-cta data-waitlist="${page || 'site'}"></a>
+          <p class="est-foot">${PRELAUNCH ? 'Join the waitlist before November 18 and your first 2 months on any paid plan are free. ' : ''}Stripe, PayPal and Square charge their own card fees.</p>
+        </div>
+      </div>`;
+    const form = $('form', el), f = form.elements;
+    let autoPhone = false; // switched on because the plan includes the line, so it switches off again with a plan that doesn't
+    const line =(name, sub, cents) => `<div class="est-line"><span>${name}<small>${sub}</small></span><span class="num">${cents == null ? 'Included' : money0(cents)}</span></div>`;
+    const draw = () => {
+      const p = C.PLANS[f.plan.value], paid = p.price > 0, annual = billing === 'annual' && paid;
+      const sales = (parseInt(f.sales.value.replace(/\D/g, ''), 10) || 0) * 100;
+      const email = +f.email.value, sms = +f.sms.value, phoneIncluded = p.features.phoneLine;
+      $('[data-out="email"]', el).textContent = C.fmt.num(email);
+      $('[data-out="sms"]', el).textContent = C.fmt.num(sms);
+      [f.email, f.sms, f.domain].forEach((x) => { x.disabled = !paid; });
+      f.phone.disabled = !paid || phoneIncluded;
+      if (phoneIncluded && !f.phone.checked) { f.phone.checked = true; autoPhone = true; }
+      else if (!phoneIncluded && autoPhone) { f.phone.checked = false; autoPhone = false; }
+      $('[data-hint="domain"]', el).textContent = paid ? `${money0(C.BUSINESS_EMAIL.price)}/month for one domain` : 'Needs a paid plan';
+      $('[data-hint="phone"]', el).textContent = !paid ? 'Needs a paid plan' : phoneIncluded ? `Included on ${p.name}` : `${money0(C.PHONE_LINE.price)}/month with ${C.fmt.num(p.limits.phoneMinutes)} minutes`;
+
+      const planCents = annual ? Math.round(annualTotal(p) / 12) : p.price;
+      const rows = [[`${p.name} plan`, !paid ? 'Free for as long as you like' : annual ? `Billed yearly at ${money0(annualTotal(p))}` : 'Billed monthly', planCents]];
+      let tip;
+      if (!paid) {
+        const fee = Math.round((sales * p.cardFeePct) / 100), up = C.PLANS[C.PAID_PLAN_ORDER[0]];
+        const upCents = billing === 'annual' ? Math.round(annualTotal(up) / 12) : up.price;
+        rows.push(['Centrx card fee', `${p.cardFeePct}% of ${money0(sales)} in card payments`, fee]);
+        tip = fee > upCents
+          ? `${up.name} would cost ${money0(fee - upCents)} less: ${money0(upCents)} a month and no Centrx fee.`
+          : 'Packs and add-ons need a paid plan.';
+      } else {
+        const e = cheapestPack('email', email), s = cheapestPack('sms', sms);
+        if (e) rows.push(['Email pack', `${C.fmt.num(e.pk.qty)} emails${e.over ? `, plus ${C.fmt.num(e.over)} extra` : ''}`, e.cents]);
+        if (s) rows.push(['SMS pack', `${C.fmt.num(s.pk.qty)} texts${s.over ? `, plus ${C.fmt.num(s.over)} extra` : ''}, toll-free number included`, s.cents]);
+        if (f.domain.checked) rows.push([C.BUSINESS_EMAIL.name, 'One domain', C.BUSINESS_EMAIL.price]);
+        if (phoneIncluded) rows.push([C.PHONE_LINE.name, `${C.fmt.num(p.limits.phoneMinutes)} minutes a month`, null]);
+        else if (f.phone.checked) rows.push([C.PHONE_LINE.name, `${C.fmt.num(p.limits.phoneMinutes)} minutes, then ${C.PHONE_LINE.overageCents}¢ a minute`, C.PHONE_LINE.price]);
+        tip = `No Centrx fee on your ${money0(sales)} in card payments.`;
+      }
+      $('[data-est-lines]', el).innerHTML = rows.map(([n, s, c]) => line(n, s, c)).join('');
+      $('[data-est-total]', el).textContent = money0(rows.reduce((t, r) => t + (r[2] || 0), 0));
+      $('[data-est-tip]', el).textContent = tip;
+      const cta = $('[data-est-cta]', el);
+      cta.href = signupUrl(p.id, billing);
+      cta.textContent = PRELAUNCH ? 'Join the waitlist' : paid ? `Choose ${p.name}` : 'Start for free';
+    };
+    form.addEventListener('input', draw);
+    form.addEventListener('submit', (e) => e.preventDefault());
+    f.sales.addEventListener('blur', () => { const n = parseInt(f.sales.value.replace(/\D/g, ''), 10) || 0; f.sales.value = C.fmt.num(n); });
+    onBilling.push(draw);
+    draw();
+  }
+
   // Free: $0, with Centrx keeping a share of card payments. One wide card under the paid plans, so
   // the four-up row stays intact. It isn't a .plan[data-plan], so the billing toggle leaves it alone.
   function renderFree() {
-    const p = C.PLANS.free, up = C.PLANS[C.PAID_PLAN_ORDER[0]];
+    const p = C.PLANS.free;
     if (!p) return;
-    const breakEven = (up.price * 100) / p.cardFeePct; // monthly card sales where the cheapest paid plan costs less
     $$('[data-free-plan]').forEach((el) => {
       el.innerHTML = `<article class="plan-free" id="free">
         <div class="pf-head">
@@ -250,7 +376,7 @@
         </div>
         <ul class="pf-list">${p.bullets.map((b) => `<li>${fmtBullet(b)}</li>`).join('')}</ul>
         <div class="pf-side">
-          <p class="pf-fee"><span class="pf-pct num">${p.cardFeePct}%</span><span>On Free, Centrx keeps ${p.cardFeePct}% of each card payment. Paid plans have no Centrx fee, so once you take more than ${money0(breakEven)} a month by card, ${esc(up.name)} costs less.</span></p>
+          <p class="pf-fee"><span class="pf-pct num">${p.cardFeePct}%</span><span>On Free, Centrx keeps ${p.cardFeePct}% of each card payment. Paid plans have no Centrx fee.</span></p>
           <a class="btn btn-lg btn-block" href="${APP}#/signup?plan=${p.id}" data-waitlist="${page || 'site'}" data-wl-label="Join the waitlist">Start for free</a>
         </div>
       </article>`;
@@ -344,6 +470,8 @@
     renderFree();
     renderCustom();
     renderPacks();
+    renderExtras();
+    renderEstimate();
     renderCompare();
     setBilling(billing, false);
     $$('[data-overage]').forEach((el) => { el.textContent = C.ADDONS[el.dataset.overage].overage.label; });
@@ -404,7 +532,6 @@
       'sms-overage': A.sms && A.sms.overage.label,
       'annual-list': ((l) => `${l.slice(0, -1).join(', ')} or ${l[l.length - 1]}`)(C.PAID_PLAN_ORDER.map((id) => `${C.PLANS[id].name} ${money0(annualTotal(C.PLANS[id]))}`)),
       'free-fee': C.PLANS.free && `${C.PLANS.free.cardFeePct}%`,
-      'free-breakeven': C.PLANS.free && money0((C.PLANS[C.PAID_PLAN_ORDER[0]].price * 100) / C.PLANS.free.cardFeePct),
     };
     $$('[data-fact]').forEach((el) => { if (FACTS[el.dataset.fact]) el.textContent = FACTS[el.dataset.fact]; });
     // Pack tables: one row per pack, straight from the pricing data.
@@ -614,7 +741,6 @@
      opens it too. Emails go to the Centrx server (server/src/waitlist.mjs), which answers the same
      for a new email and one already on the list. Closing it keeps it shut for a week; joining, for good.
      Cenbot (assets/brand/cenbot-wave.svg) waves from the left and counts down the days to launch. */
-  const LAUNCH = new Date('2026-11-18T00:00:00-05:00');
   const WL_KEY = 'centrx.waitlist';
   const wlSeen = () => { try { const v = localStorage.getItem(WL_KEY); return v === 'joined' || (v && Date.now() - Number(v) < 7 * 864e5); } catch { return false; } };
   const wlSave = (v) => { try { localStorage.setItem(WL_KEY, v); } catch { /* private mode: it just shows again */ } };
@@ -701,9 +827,11 @@
     });
     setTimeout(() => input.focus(), 30);
   }
-  if (Date.now() < LAUNCH) {
+  if (PRELAUNCH) {
     // Before launch: [data-prelaunch] shows, and [data-wl-label] swaps its words (icons stay) for the waitlist's.
     $$('[data-prelaunch]').forEach((el) => { el.hidden = false; });
+    const days = Math.max(1, Math.ceil((LAUNCH - Date.now()) / 864e5));
+    $$('[data-launch-days]').forEach((el) => { el.textContent = days === 1 ? 'Opens tomorrow' : `${days} days to go`; });
     $$('[data-wl-label]').forEach((el) => {
       const t = [...el.childNodes].find((n) => n.nodeType === 3 && n.textContent.trim());
       if (t) t.textContent = el.dataset.wlLabel + (t.nextSibling ? ' ' : '');

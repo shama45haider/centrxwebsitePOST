@@ -320,16 +320,34 @@
   .plans[data-plans] .price-amt { font-size: 38px; }
 }
 @media (min-width: 961px) and (max-width: 1180px) { .plans[data-plans] { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Pricing page: all five plans. Each card opens with the same limit rows; on wide screens the cards share
+   one set of rows (subgrid), so names, prices, buttons and limits line up across the row. */
+.plan-specs { display: grid; margin: 22px 0 0; border-top: 1px solid var(--border); font-size: 13.5px; }
+.plan-specs div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.plan-specs dt { color: var(--muted); }
+.plan-specs dd { margin: 0; color: var(--ink); font-weight: 500; text-align: right; font-variant-numeric: tabular-nums; }
+.plan-specs dd.off { color: var(--faint); font-weight: 400; }
+.plan-specs dd.fee { color: var(--warn); font-weight: 600; }
+.plans[data-plans="all"] .plan-list { align-content: start; margin-top: 0; padding-top: 18px; border-top: 0; }
+.plans[data-plans="all"] .plan.free { background: var(--surface); }
+.plans[data-plans="all"] .plan-tag { min-height: 0; }
+@media (min-width: 1180px) {
+  .plans[data-plans="all"] { grid-template-columns: repeat(5, minmax(0, 1fr)); column-gap: 12px; row-gap: 0; }
+  .plans[data-plans="all"] > .plan { display: grid; grid-row: span 9; grid-template-rows: subgrid; align-content: start; padding: 22px 20px; }
+  .plans[data-plans="all"] .price-amt { font-size: 36px; }
+  .plans[data-plans="all"] .plan-specs { font-size: 13px; }
+}
 /* Swipeable card rows (pricing): one card at a time with the next one peeking in */
 .swipe-switch { display: none; }
-@media (max-width: 960px) {
+@media (max-width: 1179px) {
   .swipe-switch { display: flex; justify-content: center; margin-bottom: 16px; }
   .swipe-switch .segmented { position: relative; padding: 3px; border-radius: 8px; }
   .swipe-switch .segmented button { height: 34px; padding: 0 16px; font-size: 14px; border-radius: 6px; transition: background-color 200ms var(--ease), color 200ms var(--ease), box-shadow 200ms var(--ease); }
   .plans.swipe { position: relative; display: flex; max-width: none; gap: 12px; margin: 0 calc(var(--gutter) * -1); padding: 4px var(--gutter) 12px;
     overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
   .plans.swipe::-webkit-scrollbar { display: none; }
-  .plans.swipe > .plan { flex: 0 0 min(86%, 420px); scroll-snap-align: center; }
+  .plans.swipe > .plan { flex: 0 0 min(86%, 360px); scroll-snap-align: center; }
 }
 
 /* Custom plan: a light card with a soft blue-to-sky wash, so it stands apart from the three self-serve
@@ -411,7 +429,7 @@
 .billing-toggle { display: inline-flex; align-items: center; gap: 12px; padding-top: 18px; margin-top: 24px; }
 .billing-toggle .segmented { padding: 3px; border-radius: 8px; }
 .billing-toggle .segmented button { position: relative; height: 36px; padding: 0 18px; font-size: 14px; border-radius: 6px; }
-.save-pill { display: inline-flex; align-items: center; height: 24px; padding: 0 9px; border-radius: 999px; background: var(--success-tint); color: var(--success); font-size: 12.5px; font-weight: 600; }
+.save-pill { display: inline-flex; align-items: center; white-space: nowrap; height: 24px; padding: 0 9px; border-radius: 999px; background: var(--success-tint); color: var(--success); font-size: 12.5px; font-weight: 600; }
 .crown { position: absolute; left: 50%; top: -17px; width: 20px; height: 14px; pointer-events: none; transform: translateX(-50%); animation: crown-bob 2.8s ease-in-out infinite; transform-origin: 50% 100%; }
 .crown svg { display: block; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 1px 1px rgba(181, 71, 8, .25)); transition: transform 260ms var(--ease); }
 .segmented button.on .crown svg { transform: scale(1.15); }
@@ -427,30 +445,117 @@
 @media (max-width: 860px) { .includes .rings-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 20px; } }
 @media (max-width: 560px) { .includes { padding: 20px; } .includes .rings-list { grid-template-columns: minmax(0, 1fr); gap: 8px; margin-top: 12px; } .includes .rings-list li { padding-left: 18px; font-size: 14px; } .includes .rings-list li::before { width: 7px; height: 7px; } }
 
-/* ---------- Email & SMS packs: same card shape as the plans, one channel at a time ---------- */
-.pack-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 32px; }
-.pack-head .section-head { margin-bottom: 0; }
+/* ---------- Pricing page: hero, launch offer, notes under the plans ---------- */
+.price-hero { padding: 76px 0 48px; }
+.price-hero .display { font-size: clamp(38px, 5vw, 64px); max-width: 11ch; }
+/* Before launch: the waitlist offer, in the waitlist popup's sky wash with Cenbot waving from the corner */
+.launch-strip { position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: center; gap: 12px 20px; min-height: 76px; margin-bottom: 24px; padding: 14px 16px 14px 96px; border-radius: 14px;
+  background: linear-gradient(125deg, #EEF4FF 0%, #F8FBFF 48%, #EAF7FF 100%); box-shadow: inset 0 0 0 1px rgba(10, 92, 255, .14); }
+.launch-strip[hidden] { display: none; }
+.ls-bot { position: absolute; left: 26px; bottom: -30px; width: 54px; height: auto; }
+.launch-strip p { flex: 1 1 auto; min-width: 0; font-size: 15px; color: var(--ink-2); }
+.launch-strip p b { font-weight: 600; color: var(--ink); }
+.ls-act { display: flex; align-items: center; gap: 12px; flex: none; }
+.ls-act .badge { background: rgba(255, 255, 255, .8); box-shadow: inset 0 0 0 1px var(--accent-tint-2); }
+.price-notes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; margin: 32px 0 0; }
+.price-notes div { padding-top: 16px; border-top: 1px solid var(--border); }
+.price-notes dt { font-size: 15px; font-weight: 600; color: var(--ink); }
+.price-notes dd { margin: 6px 0 0; font-size: 14.5px; line-height: 1.55; color: var(--muted); }
+[data-page="pricing"] .includes { margin-top: 32px; }
+@media (max-width: 860px) {
+  .price-notes { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+}
+@media (max-width: 720px) {
+  .launch-strip { flex-wrap: wrap; padding: 16px 16px 16px 80px; }
+  .ls-bot { left: 16px; bottom: auto; top: 14px; width: 48px; }
+  .launch-strip p { flex-basis: 100%; font-size: 14.5px; }
+  /* The text sits beside Cenbot; the button row runs under him, across the whole strip */
+  .ls-act { flex: 1 1 100%; justify-content: space-between; margin-left: -64px; }
+}
+
+/* ---------- Pricing page: add-ons as price lists, like the panel's Plan & billing ---------- */
+.addons { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.addons .panel + .panel { margin-top: 0; }
+.addon-panel .panel-head { flex-wrap: wrap; padding: 16px 20px; }
+.addon-panel .panel-head h3, .est-panel .panel-head h3 { font-size: 15px; }
+.addon-panel .panel-head p, .est-panel .panel-head p { margin-top: 2px; }
 .pack-toggle { padding: 3px; border-radius: 8px; }
-.pack-toggle button { height: 36px; padding: 0 22px; font-size: 14px; border-radius: 6px; }
-.pack-card { animation: pack-in 420ms var(--ease) both; animation-delay: calc(var(--k, 0) * 60ms); }
-.pack-card .plan-tag { min-height: 44px; }
-@keyframes pack-in { from { opacity: 0; transform: translateY(8px); } }
-.pack-more { margin-top: 18px; font-size: 14.5px; color: var(--muted); }
-/* SMS view: texting-number options */
-.numbers { margin-top: 16px; padding: 28px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg); animation: pack-in 420ms var(--ease) both; }
-.numbers[hidden] { display: none; }
-.numbers-head p { margin-top: 4px; max-width: 640px; font-size: 14.5px; color: var(--muted); }
-.numbers-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 20px; border-top: 1px solid var(--border); }
-.num-opt { padding: 18px 24px 4px 0; }
-.num-opt + .num-opt { padding-left: 24px; border-left: 1px solid var(--border); }
-.num-name { font-size: 14.5px; font-weight: 600; color: var(--ink); }
-.num-price { margin-top: 6px; font-size: 26px; font-weight: 600; letter-spacing: -0.03em; color: var(--ink); font-variant-numeric: tabular-nums; }
-.num-price span { margin-left: 2px; font-size: 13.5px; font-weight: 400; letter-spacing: 0; color: var(--muted); }
-.num-opt p { margin-top: 6px; font-size: 14px; color: var(--ink-2); }
-.num-opt small { display: block; margin-top: 6px; font-size: 12.5px; color: var(--muted); }
-.numbers-foot { margin-top: 16px; font-size: 13.5px; color: var(--muted); }
-@media (max-width: 860px) { .numbers-grid { grid-template-columns: minmax(0, 1fr); } .num-opt, .num-opt + .num-opt { padding: 16px 0 4px; border-left: 0; } .num-opt + .num-opt { border-top: 1px solid var(--border); } }
-@media (max-width: 960px) { .pack-card .plan-tag { min-height: 0; } }
+.pack-toggle button { height: 32px; padding: 0 20px; font-size: 14px; border-radius: 6px; }
+.pack-row, .addon-row, .num-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 4px 20px; padding: 15px 20px; border-bottom: 1px solid var(--border); }
+.addon-row { grid-template-columns: minmax(0, 1fr) auto; align-items: start; }
+.addon-row:last-child { border-bottom: 0; }
+.pack-row { animation: pack-in 380ms var(--ease) both; animation-delay: calc(var(--k, 0) * 50ms); }
+.pack-row.popular { box-shadow: inset 2px 0 0 var(--accent); background: linear-gradient(90deg, var(--accent-tint), rgba(238, 243, 255, 0) 70%); }
+@keyframes pack-in { from { opacity: 0; transform: translateY(6px); } }
+.pack-what { min-width: 0; }
+.pack-what b { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; font-size: 14.5px; font-weight: 600; color: var(--ink); }
+.pack-what small { display: block; margin-top: 3px; font-size: 13.5px; line-height: 1.5; color: var(--muted); }
+.pack-what .tag { height: auto; min-height: 24px; margin-top: 8px; white-space: normal; line-height: 1.35; padding: 3px 8px; }
+.pack-rate { font-size: 13px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.pack-price { min-width: 64px; text-align: right; white-space: nowrap; font-size: 22px; font-weight: 600; letter-spacing: -0.025em; color: var(--ink); }
+.pack-price small { margin-left: 2px; font-size: 13px; font-weight: 400; letter-spacing: 0; color: var(--muted); }
+.addon-row .pack-price { display: grid; justify-items: end; line-height: 1.15; }
+.addon-row .pack-price small { margin: 4px 0 0; }
+.pack-price .incl { font-size: 14px; font-weight: 600; letter-spacing: 0; color: var(--success); }
+.pack-body { padding: 18px 20px 20px; animation: pack-in 380ms var(--ease) both; }
+.pack-body .h4 { font-size: 14px; }
+.pack-body .rings-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 20px; margin-top: 10px; }
+.pack-body .rings-list li { padding-left: 18px; font-size: 13.5px; }
+.pack-body .rings-list li::before { width: 7px; height: 7px; }
+.pack-note { margin-top: 14px; font-size: 13.5px; color: var(--muted); }
+.pack-numbers { margin: 20px -20px 0; padding: 18px 20px 0; border-top: 1px solid var(--border); }
+.pack-numbers .pack-note:first-of-type { margin-top: 4px; }
+.num-row { grid-template-columns: minmax(0, 1fr) auto; margin: 0 -20px; padding: 12px 20px; }
+.num-row:first-of-type { margin-top: 10px; border-top: 1px solid var(--border); }
+.num-row .pack-price { font-size: 18px; }
+
+/* Estimator: the form on the left, the bill on the right */
+.est-panel { margin-top: 16px; }
+.est-panel .panel-head { padding: 16px 20px; }
+.est { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+.est-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 24px; align-content: start; padding: 20px; }
+.est-form .field + .field { margin-top: 0; }
+.est-form .label output { color: var(--ink); font-weight: 600; }
+.est-form .input { font-size: 15px; }
+.est-range { width: 100%; height: 24px; margin: 4px 0 0; accent-color: var(--accent); cursor: pointer; }
+.est-range:disabled { cursor: not-allowed; opacity: .5; }
+.est-toggle { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--r-lg); cursor: pointer; }
+.est-toggle b { display: block; font-size: 14px; font-weight: 500; color: var(--ink); }
+.est-toggle small { display: block; margin-top: 1px; font-size: 12.5px; color: var(--muted); }
+.est-toggle:has(input:disabled) { cursor: default; }
+.est-bill { display: flex; flex-direction: column; padding: 20px; border-left: 1px solid var(--border); border-radius: 0 0 var(--r-lg) 0; background: var(--surface); }
+.est-line { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 500; color: var(--ink); animation: pack-in 260ms var(--ease) both; }
+.est-line:first-child { padding-top: 0; }
+.est-line small { display: block; margin-top: 1px; font-size: 12.5px; font-weight: 400; color: var(--muted); }
+.est-line .num { white-space: nowrap; }
+.est-total { display: flex; align-items: baseline; gap: 4px; padding-top: 14px; }
+.est-total span { flex: 1; font-size: 14px; font-weight: 600; color: var(--ink); }
+.est-total b { font-size: 32px; font-weight: 600; letter-spacing: -0.03em; line-height: 1; color: var(--ink); }
+.est-total small { font-size: 13.5px; color: var(--muted); }
+.est-tip { margin-top: 10px; font-size: 13.5px; color: var(--ink-2); }
+.est-bill .btn { margin-top: 18px; }
+.est-foot { margin-top: 12px; font-size: 12.5px; color: var(--faint); }
+
+@media (max-width: 960px) {
+  .addons { grid-template-columns: minmax(0, 1fr); }
+  .est { grid-template-columns: minmax(0, 1fr); }
+  .est-bill { border-left: 0; border-top: 1px solid var(--border); border-radius: 0 0 var(--r-lg) var(--r-lg); }
+}
+@media (max-width: 560px) {
+  .addon-panel .panel-head, .est-panel .panel-head { padding: 14px 16px; }
+  .pack-row { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "what price" "rate price"; padding: 14px 16px; }
+  .pack-row .pack-what { grid-area: what; }
+  .pack-row .pack-rate { grid-area: rate; }
+  .pack-row .pack-price { grid-area: price; }
+  .addon-row { gap: 4px 14px; padding: 14px 16px; }
+  .addon-row .pack-price small { max-width: 76px; white-space: normal; text-align: right; }
+  .pack-body { padding: 16px; }
+  .pack-body .rings-list { grid-template-columns: minmax(0, 1fr); }
+  .pack-numbers { margin: 18px -16px 0; padding: 16px 16px 0; }
+  .num-row { margin: 0 -16px; padding: 12px 16px; }
+  .est-form { grid-template-columns: minmax(0, 1fr); gap: 18px; padding: 16px; }
+  .est-bill { padding: 16px; }
+}
 
 /* Comparison table */
 .compare-switch { display: none; margin-bottom: 16px; }
@@ -721,7 +826,7 @@
   .pc-app, .pc-steps .now .pc-dot::before { animation: none; }
   .pc-steps li { opacity: 1; transform: none; transition: none; }
   .pc-blade { transition: none; }
-  .pack-card, .numbers { animation: none; }
+  .pack-row, .pack-body, .est-line { animation: none; }
   .js [data-ai-chat] .s1, .js [data-ai-chat] .s2, .js [data-ai-chat] .s3 { opacity: 1; transform: none; animation: none; }
   [data-ai-chat] .ai-typing { display: none; }
   .js .rings i { opacity: 1; transition: none; }
@@ -736,11 +841,9 @@
 
 /* ---------- Pricing on phones: shorter lists, full-width switches, tighter rhythm ---------- */
 .plan-more { display: none; }
-@media (max-width: 960px) {
-  .plans.swipe:not(.expanded) .plan-list li.more { display: none; }
-  .plans.swipe.expanded .plan-list li.more { animation: rise 220ms var(--ease) both; }
-  .plans.swipe .plan-more { display: block; align-self: flex-start; margin-top: 14px; padding: 4px 0; border: 0; background: none; font: inherit; font-size: 14.5px; font-weight: 600; color: var(--accent); cursor: pointer; }
-}
+.plans[data-plans="all"]:not(.expanded) .plan-list li.more { display: none; }
+.plans[data-plans="all"].expanded .plan-list li.more { animation: rise 220ms var(--ease) both; }
+.plans[data-plans="all"] .plan-more { display: block; align-self: start; justify-self: start; margin-top: 14px; padding: 4px 0; border: 0; background: none; font: inherit; font-size: 14px; font-weight: 600; color: var(--accent); cursor: pointer; }
 @media (max-width: 720px) {
   .site[data-page="pricing"] { --section-y: 56px; }
   [data-page="pricing"] .page-hero { padding: 40px 0 28px; }
@@ -751,8 +854,9 @@
   .swipe-switch, .compare-switch { justify-content: stretch; }
   .swipe-switch .segmented, .compare-switch .segmented, .pack-toggle { display: flex; width: 100%; }
   .swipe-switch .segmented button, .compare-switch .segmented button, .pack-toggle button { flex: 1 1 0; height: 36px; padding: 0 8px; font-size: 14px; border-radius: 6px; }
+  /* Five plan names: each button as wide as its name, so "Enterprise" still fits on a small phone */
+  .swipe-switch .segmented button, .compare-switch .segmented button { flex: 1 1 auto; padding: 0 6px; font-size: 13.5px; }
   .compare-switch .segmented { padding: 3px; border-radius: 8px; }
-  [data-page="pricing"] .pack-head { margin-bottom: 20px; gap: 18px; }
   [data-page="pricing"] .plan { padding: 22px; }
   [data-page="pricing"] .plan .btn { margin-top: 18px; }
   [data-page="pricing"] .plan .sub-btn { margin-top: 6px; }
@@ -764,7 +868,7 @@
   [data-page="pricing"] .cta-band .hero-cta { width: 100%; }
   [data-page="pricing"] .cta-band .hero-cta .btn { flex: 1 1 auto; justify-content: center; }
 }
-@media (prefers-reduced-motion: reduce) { .plans.swipe.expanded .plan-list li.more { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .plans[data-plans="all"].expanded .plan-list li.more { animation: none; } }
 
 /* ---------- Help center: hub with search, guides on the legal reading layout ---------- */
 .help-search { position: relative; display: block; max-width: 560px; margin-top: 28px; }

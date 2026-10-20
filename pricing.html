@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="/assets/css/tokens.css?v=13">
   <link rel="stylesheet" href="/assets/css/base.css?v=13">
   <link rel="stylesheet" href="/assets/css/components.css?v=13">
-  <link rel="stylesheet" href="/assets/css/site.css?v=17">
+  <link rel="stylesheet" href="/assets/css/site.css?v=18">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body class="site" data-page="pricing">
@@ -34,12 +34,12 @@
   <header class="site-header" data-site-header></header>
 
   <main id="main">
-    <section class="page-hero">
+    <section class="page-hero price-hero">
       <div class="rings" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
       <div class="container hero-top">
         <h1 class="display" data-reveal>Pricing that grows with you.</h1>
         <div class="hero-side" data-reveal style="--d:2">
-          <p class="lead">Choose the plan that fits your team and volume. Just you? Start on Free and upgrade whenever you need more.</p>
+          <p class="lead">Start on Free and move up when you need more people, locations or Cenbot. Paid plans take no cut of your card payments.</p>
           <div class="billing-toggle">
             <div class="segmented" role="group" aria-label="Billing period" data-billing>
               <button type="button" data-value="monthly" class="on" aria-pressed="true">Monthly</button>
@@ -60,11 +60,19 @@
       </div>
     </section>
 
-    <section class="section tight">
+    <section class="section tight" id="plans">
       <div class="container">
-        <div class="plans swipe" data-plans data-reveal></div>
-        <div data-free-plan data-reveal></div>
-        <div data-custom-plan data-reveal></div>
+        <div class="launch-strip" data-prelaunch hidden data-reveal>
+          <img class="ls-bot" src="/assets/brand/cenbot-wave.svg" width="150" height="211" alt="">
+          <p><b>Centrx opens November 18.</b> Join the waitlist before then and your first 2 months on any paid plan are free.</p>
+          <div class="ls-act"><span class="badge accent plain num" data-launch-days></span><a class="btn btn-primary" href="#" data-waitlist="pricing">Join the waitlist</a></div>
+        </div>
+        <div class="plans swipe" data-plans="all" data-reveal></div>
+        <dl class="price-notes" data-reveal>
+          <div><dt>The card fee on Free</dt><dd>On Free, Centrx keeps <span data-fact="free-fee">5%</span> of each card payment, on top of the payment provider's own fee. Paid plans have no Centrx fee.</dd></div>
+          <div><dt>When a paid plan ends</dt><dd>You keep your plan until the end of the period you paid for, then your workspace moves to Free. The same happens if a payment can't be collected. Nothing is deleted, and you can upgrade again anytime.</dd></div>
+          <div><dt>Annual billing</dt><dd>Pay yearly and get two months free: <span data-annual-list></span> a year. Change plans anytime from Settings → Plan &amp; billing.</dd></div>
+        </dl>
         <div class="includes" data-reveal>
           <div class="includes-head">Included on every plan</div>
           <ul class="rings-list">
@@ -78,31 +86,34 @@
             <li>Receipts and order emails at no extra cost</li>
           </ul>
         </div>
+        <div data-custom-plan data-reveal></div>
       </div>
     </section>
 
     <section class="section tint" id="addons">
       <div class="container">
-        <div class="pack-head" data-reveal>
-          <div class="section-head">
-            <h2 class="h2">Email and SMS add-ons</h2>
-            <p class="lead">Add a monthly pack to any paid plan and change it anytime. Receipts and order emails are always free; packs cover campaign email and every text you send.</p>
+        <div class="section-head" data-reveal>
+          <h2 class="h2">Add-ons, priced by what you use.</h2>
+          <p class="lead">Add any of these to a paid plan and change them whenever you like. Receipts, payment links and order emails are always included at no extra cost.</p>
+        </div>
+        <div class="addons" data-reveal>
+          <div class="panel addon-panel" data-packs>
+            <div class="panel-head">
+              <div><h3>Email and SMS packs</h3><p class="xs muted">Campaign email and every text you send. Billed monthly.</p></div>
+              <div class="segmented pack-toggle" role="group" aria-label="Add-on type" data-pack-toggle>
+                <button type="button" data-pack-ch="email" class="on" aria-pressed="true">Email</button>
+                <button type="button" data-pack-ch="sms" aria-pressed="false">SMS</button>
+              </div>
+            </div>
+            <div class="pack-rows" data-pack-rows></div>
+            <div class="pack-body" data-pack-body></div>
           </div>
-          <div class="segmented pack-toggle" role="group" aria-label="Add-on type" data-pack-toggle>
-            <button type="button" data-pack-ch="email" class="on" aria-pressed="true">Email</button>
-            <button type="button" data-pack-ch="sms" aria-pressed="false">SMS</button>
+          <div class="panel addon-panel">
+            <div class="panel-head"><div><h3>More for your plan</h3><p class="xs muted">Billed monthly. Add or remove anytime.</p></div></div>
+            <div class="pack-rows" data-extras></div>
           </div>
         </div>
-        <div data-packs data-reveal>
-          <div class="plans pack-plans swipe" data-pack-cards></div>
-          <div class="includes" data-pack-includes></div>
-          <div class="numbers" data-pack-numbers hidden></div>
-          <p class="pack-more" data-pack-more></p>
-        </div>
-        <div class="numbers" data-reveal>
-          <div class="numbers-head"><h3 class="h4">Business Email: send from your own domain</h3>
-            <p>Add it to any paid plan for <span data-fact="business-email">$9/month</span> per domain you already own. Customers get email from you@yourbusiness.com, and replies come into your shared inbox. Business and Enterprise connect with one click, coming soon. Other plans follow a few copy-and-paste steps, and <a href="/help/custom-domain">the guide</a> shows how.</p></div>
-        </div>
+        <div class="panel est-panel" data-estimate data-reveal></div>
       </div>
     </section>
 
@@ -126,7 +137,7 @@
         <div class="faq" data-reveal>
           <details>
             <summary>Is there a free plan?<span data-i="plus"></span></summary>
-            <div class="answer">Yes. Free costs $0 a month for one person at one location, with up to 50 customers, 25 inventory items, 1 GB of storage and unlimited orders and payment links. On Free, Centrx keeps <span data-fact="free-fee">5%</span> of each card payment, on top of the payment provider's own fee. Paid plans have no Centrx fee, so once you take more than <span data-fact="free-breakeven">$780</span> a month by card, Hobby costs less. Cenbot, automations and add-ons need a paid plan.</div>
+            <div class="answer">Yes. Free costs $0 a month for one person at one location, with up to 50 customers, 25 inventory items, 1 GB of storage and unlimited orders and payment links. On Free, Centrx keeps <span data-fact="free-fee">5%</span> of each card payment, on top of the payment provider's own fee. Paid plans have no Centrx fee. Cenbot, automations and add-ons need a paid plan.</div>
           </details>
           <details>
             <summary>Is there a free trial?<span data-i="plus"></span></summary>
@@ -166,7 +177,7 @@
           </details>
           <details>
             <summary>Do I get my own number for texting?<span data-i="plus"></span></summary>
-            <div class="answer">Yes. US carriers require every business to text from its own registered number, so every SMS pack includes a dedicated toll-free number, and we handle the carrier registration for you. You can upgrade to a local number in your area code, or text from the business number your customers already know. See the options under Email and SMS add-ons, or read <a href="/help/texting-number">how to set up your texting number</a>.</div>
+            <div class="answer">Yes. US carriers require every business to text from its own registered number, so every SMS pack includes a dedicated toll-free number, and we handle the carrier registration for you. You can upgrade to a local number in your area code, or text from the business number your customers already know. See the options under <a href="#addons">SMS packs</a>, or read <a href="/help/texting-number">how to set up your texting number</a>.</div>
           </details>
           <details>
             <summary>Can customers call my business through Centrx?<span data-i="plus"></span></summary>
@@ -218,6 +229,6 @@
   <script src="/assets/js/core/icons.js?v=14"></script>
   <script src="/assets/js/data/plans.js?v=16"></script>
   <script src="/assets/js/people.js?v=13"></script>
-  <script src="/assets/js/site.js?v=18"></script>
+  <script src="/assets/js/site.js?v=19"></script>
 </body>
 </html>
