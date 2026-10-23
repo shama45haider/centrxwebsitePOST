@@ -187,12 +187,14 @@
       </article>`;
   }
 
-  // Add-ons in three plain groups: a title and one line beside the cards (above them on phones).
+  // Add-ons in three groups: an icon, title and one line beside the cards (above them on phones).
   // Every price and limit comes from data/plans.js.
   function renderAddons() {
     const el = $('[data-addons]');
     if (!el || !C.ADDONS) return;
     const ent = C.PLANS.enterprise, biz = C.PLANS.business, pro = C.PLANS.growth;
+    const badge = (icon) => `<span class="ao-icon" aria-hidden="true">${C.icon(icon, 18)}</span>`;
+    const note = (text) => `<p class="ao-note">${C.icon('info', 15)}<span>${text}</span></p>`;
     const per = (cents, unit) => `<span class="num">${money0(cents)}</span><small>${unit}</small>`;
     const table = (rows) => `<table class="ao-table"><tbody>${rows.join('')}</tbody></table>`;
     const row = (name, sub, price, rate, popular) => `<tr${popular ? ' class="popular"' : ''}><th scope="row">${name}${popular ? '<span class="pill-plan">Most popular</span>' : ''}<small>${sub}</small></th><td>${price}<small class="ao-rate">${rate}</small></td></tr>`;
@@ -200,44 +202,44 @@
       const a = C.ADDONS[ch];
       const rate = (pk) => (ch === 'email' ? `${C.fmt.money((pk.price / pk.qty) * 1000)} per 1,000` : `${+(pk.price / pk.qty).toFixed(2)}¢ a text`);
       return `<article class="ao-card">
-        <div class="ao-head"><h4 class="h4">${ch === 'email' ? 'Email packs' : 'SMS packs'}</h4><p>${esc(a.covers)}</p></div>
+        <div class="ao-head"><div class="ao-title">${badge(ch === 'email' ? 'mail' : 'message')}<h4 class="h4">${ch === 'email' ? 'Email packs' : 'SMS packs'}</h4></div><p>${esc(a.covers)}</p></div>
         ${table(a.packs.map((pk) => row(`${C.fmt.num(pk.qty)} ${esc(a.unit)}`, esc(pk.tagline), per(pk.price, '/mo'), rate(pk), pk.popular)))}
-        <p class="ao-note">Go over and your messages keep sending at ${esc(a.overage.label)}.</p>
+        ${note(`Go over and your messages keep sending at ${esc(a.overage.label)}.`)}
       </article>`;
     };
     const numbers = `<article class="ao-card wide">
-      <div class="ao-head"><h4 class="h4">Your texting number</h4><p>US carriers require every business to text from its own registered number. Every SMS pack comes with one, and we register it for you.</p></div>
+      <div class="ao-head"><div class="ao-title">${badge('hash')}<h4 class="h4">Your texting number</h4></div><p>US carriers require every business to text from its own registered number. Every SMS pack comes with one, and we register it for you.</p></div>
       ${table(C.SMS_NUMBER_ORDER.map((k) => { const n = C.SMS_NUMBERS[k]; return row(esc(n.name), `${esc(n.blurb)} Ready ${esc(n.review.replace('usually ', 'in about '))}.`,
         n.price ? per(n.price, '/mo') : '<span class="ao-incl">Included</span>', n.setup ? `+ ${money0(n.setup)} setup` : 'with any SMS pack'); }))}
-      <p class="ao-note">Setup fees are waived on annual billing. Extra numbers, for example one per location, are ${money0(C.EXTRA_NUMBER)}/month each.</p>
+      ${note(`Setup fees are waived on annual billing. Extra numbers, for example one per location, are ${money0(C.EXTRA_NUMBER)}/month each.`)}
     </article>`;
-    const single = (name, cents, unit, text, facts) => `<article class="ao-card">
-      <div class="ao-top"><h4 class="h4">${name}</h4><span class="ao-price">${per(cents, unit)}</span></div>
+    const single = (icon, name, cents, unit, text, facts) => `<article class="ao-card">
+      <div class="ao-top"><div class="ao-title">${badge(icon)}<h4 class="h4">${name}</h4></div><span class="ao-price">${per(cents, unit)}</span></div>
       <p class="ao-text">${text}</p>
       <dl class="ao-facts">${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
     </article>`;
     const GROUPS = [
-      ['Email and texting', 'Campaign email and every text you send, in monthly packs. Receipts, payment links and order emails are always included at no cost.',
+      ['send', 'Email and texting', Math.min(C.ADDONS.email.packs[0].price, C.ADDONS.sms.packs[0].price), 'Campaign email and every text you send, in monthly packs. Receipts, payment links and order emails are always included at no cost.',
         [pack('email'), pack('sms'), numbers]],
-      ['Your own email and phone', 'Email from your own domain and a business number customers can call, both answered in Centrx.', [
-        single(C.BUSINESS_EMAIL.name, C.BUSINESS_EMAIL.price, '/mo per domain',
+      ['globe', 'Your own email and phone', Math.min(C.BUSINESS_EMAIL.price, C.PHONE_LINE.price), 'Email from your own domain and a business number customers can call, both answered in Centrx.', [
+        single('at', C.BUSINESS_EMAIL.name, C.BUSINESS_EMAIL.price, '/mo per domain',
           'Send from you@yourbusiness.com instead of notify@centrx.co. Replies come into your shared inbox.',
           [['Available on', 'Every paid plan'], ['Setup', `Guided steps, or one click on ${esc(biz.name)} and ${esc(ent.name)} (coming soon)`], ['Guide', '<a href="/help/custom-domain">Connect your domain</a>']]),
-        single(C.PHONE_LINE.name, C.PHONE_LINE.price, '/mo',
+        single('phoneCall', C.PHONE_LINE.name, C.PHONE_LINE.price, '/mo',
           'A number customers can call and text. Get a new local or toll-free number, or bring the one you have.',
           [['Minutes', `${C.fmt.num(biz.limits.phoneMinutes)} a month, then ${C.PHONE_LINE.overageCents}¢ a minute`], ['Available on', 'Every paid plan'], ['Included on', `${esc(ent.name)}, with ${C.fmt.num(ent.limits.phoneMinutes)} minutes`]]),
       ]],
-      ['Room to grow', 'More space and more locations, without moving up a plan.', [
-        single(C.STORAGE_ADDON.name, C.STORAGE_ADDON.price, `/mo per ${C.fmtStorage(C.STORAGE_ADDON.gb)}`,
+      ['layers', 'Room to grow', Math.min(C.STORAGE_ADDON.price, C.EXTRA_LOCATION.price), 'More space and more locations, without moving up a plan.', [
+        single('cloud', C.STORAGE_ADDON.name, C.STORAGE_ADDON.price, `/mo per ${C.fmtStorage(C.STORAGE_ADDON.gb)}`,
           'More room for inventory photos, proof videos, ID scans and call recordings.',
           [['Available on', 'Every paid plan'], ['Change it', 'Add or remove blocks anytime']]),
-        single(C.EXTRA_LOCATION.name, C.EXTRA_LOCATION.price, '/mo each',
+        single('pin', C.EXTRA_LOCATION.name, C.EXTRA_LOCATION.price, '/mo each',
           'Each location beyond the ones your plan includes.',
           [['Available on', `${esc(biz.name)} and ${esc(ent.name)}`], ['On smaller plans', `Move up instead: ${esc(pro.name)} includes ${pro.limits.locations} locations, ${esc(biz.name)} ${biz.limits.locations}`]]),
       ]],
     ];
-    el.innerHTML = GROUPS.map(([title, lead, cards]) => `<section class="addon-group" data-reveal>
-      <div class="ag-side"><h3 class="h3">${title}</h3><p>${lead}</p></div>
+    el.innerHTML = GROUPS.map(([icon, title, from, lead, cards]) => `<section class="addon-group" data-reveal>
+      <div class="ag-side"><span class="ag-icon" aria-hidden="true">${C.icon(icon, 22)}</span><h3 class="h3">${title}</h3><p>${lead}</p><span class="ag-from">From <b>${money0(from)}</b>/month</span></div>
       <div class="ag-cards">${cards.join('')}</div>
     </section>`).join('');
   }
