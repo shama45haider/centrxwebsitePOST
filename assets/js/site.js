@@ -18,7 +18,9 @@
     ['/help', 'Help', 'help'],
     ['/contact', 'Contact', 'contact'],
   ];
-  const brand = `<a class="site-brand" href="/" aria-label="Centrx home">${C.brandMark(22)}<span>Centrx</span></a>`;
+  const brand = `<a class="site-brand" href="/" aria-label="Centrx home">${C.brandLogo(34)}</a>`;
+  // The mark drawn large and faint behind a card, as on the brand board. Its two ribbons drift apart on hover.
+  const ghostMark = (cls) => `<svg class="ghost-mark ${cls}" viewBox="${C.BRAND_VIEWBOX}" aria-hidden="true">${C.BRAND_PATHS.map((d, k) => `<path class="gm-${k}" d="${d}"/>`).join('')}</svg>`;
   const navLinks = NAV.map(([href, label, id]) => `<a href="${href}"${id === page ? ' aria-current="page"' : ''}>${label}</a>`).join('');
 
   const header = $('[data-site-header]');
@@ -90,46 +92,39 @@
   const fmtBullet = (s) => esc(s).replace(/([\w.+-]+@[\w-]+\.[\w.]+)/g, '<code>$1</code>');
   const onBilling = []; // redrawn when the billing toggle changes (the estimator)
 
-  // Each card lists this many features until "Show all" is tapped: in a swipe row, and on the pricing page.
-  const SHORT_LIST = 5;
-
-  // Pricing-page cards open with the same limits in the same order, so the rows line up across plans.
-  const SPECS = [
-    ['Employees', (p) => C.fmt.num(p.limits.seats)],
-    ['Locations', (p) => C.fmt.num(p.limits.locations)],
-    ['Cloud storage', (p) => C.fmtStorage(p.limits.storageGB)],
-    ['Customers', (p) => (p.limits.customers === Infinity ? 'Unlimited' : `Up to ${C.fmt.num(p.limits.customers)}`)],
-    ['Inventory items', (p) => C.fmt.num(p.limits.items)],
-    ['Cenbot AI', (p) => (p.limits.cenbotReplies ? `${C.fmt.num(p.limits.cenbotReplies)} replies/mo` : null)],
-    ['Centrx card fee', (p) => (p.cardFeePct ? `${p.cardFeePct}%` : 'None')],
-  ];
-  // Bullets those rows already say ("10 employees", "100 GB cloud storage", "Cenbot AI, 2,500 replies / month").
-  const IN_SPECS = /(employees?|locations?|cloud storage|inventory items|customers)$|^Cenbot AI/i;
-
-  function planCard(p, specs) {
+  // Home page cards: the plan's full feature list.
+  function planCard(p) {
     const parent = p.inherits && C.PLANS[p.inherits];
     const second = (p.id === 'business' || p.id === 'enterprise')
       ? `<a class="btn btn-lg btn-block btn-ghost sub-btn" href="/contact">Talk to sales</a>`
       : `<a class="btn btn-lg btn-block btn-ghost sub-btn" href="${APP}?demo#/">Try the live demo</a>`;
-    const bullets = specs ? p.bullets.filter((b) => !IN_SPECS.test(b)) : p.bullets;
-    const spec = ([label, fn]) => {
-      const v = fn(p);
-      return `<div><dt>${label}</dt><dd${v == null ? ' class="off"' : p.cardFeePct && label === 'Centrx card fee' ? ' class="fee"' : ''}>${v == null ? 'Not included' : esc(v)}</dd></div>`;
-    };
-    return `<article class="plan${p.popular ? ' popular' : ''}${p.price ? '' : ' free'}" data-plan="${p.id}">
-      <div class="plan-top"><h3 class="plan-name">${esc(p.name)}</h3>${p.popular ? '<span class="pill-plan">Most popular</span>' : ''}</div>
+    return `<article class="plan${p.popular ? ' popular' : ''}" data-plan="${p.id}">
+      ${cardTop(p)}
+      ${second}
+      <ul class="plan-list">
+        ${parent ? `<li class="inherit">Everything in ${esc(parent.name)}, plus:</li>` : ''}
+        ${p.bullets.map((b) => `<li>${fmtBullet(b)}</li>`).join('')}
+      </ul>
+    </article>`;
+  }
+
+  // Pricing page cards: name, price, one button, then only what sets the plan apart.
+  // The comparison table further down has everything else.
+  function priceCard(p) {
+    const lines = [...p.highlights, p.limits.cenbotReplies && `Cenbot AI, ${C.fmt.num(p.limits.cenbotReplies)} replies a month`].filter(Boolean);
+    return `<article class="plan price-card${p.popular ? ' popular' : ''}" data-plan="${p.id}">
+      ${cardTop(p)}
+      <ul class="plan-list">${lines.map((b) => `<li>${fmtBullet(b)}</li>`).join('')}</ul>
+    </article>`;
+  }
+
+  // Name, price and button: the part setBilling() updates.
+  function cardTop(p) {
+    return `<div class="plan-top"><h3 class="plan-name">${esc(p.name)}</h3>${p.popular ? '<span class="pill-plan">Most popular</span>' : ''}</div>
       <p class="plan-tag">${esc(p.tagline)}</p>
       <div class="price"><span class="price-amt num" data-amt>${money0(priceFor(p, billing))}</span><span class="price-per" data-per>${perFor(p, billing)}</span></div>
       <p class="price-note" data-note>${noteFor(p, billing)}</p>
-      <a class="btn btn-lg btn-block${p.popular ? ' btn-primary' : ''}" data-cta href="${signupUrl(p.id, billing)}" data-waitlist="${page || 'site'}" data-wl-label="Join the waitlist">${p.price ? `Choose ${esc(p.name)}` : 'Start for free'}</a>
-      ${second}
-      ${specs ? `<dl class="plan-specs">${SPECS.map(spec).join('')}</dl>` : ''}
-      <ul class="plan-list">
-        ${parent ? `<li class="inherit">Everything in ${esc(parent.name)}, plus:</li>` : ''}
-        ${bullets.map((b, i) => `<li${i >= SHORT_LIST ? ' class="more"' : ''}>${fmtBullet(b)}</li>`).join('')}
-      </ul>
-      ${bullets.length > SHORT_LIST ? `<button type="button" class="plan-more" data-plan-more aria-expanded="false">Show all ${bullets.length} features</button>` : ''}
-    </article>`;
+      <a class="btn btn-lg btn-block${p.popular ? ' btn-primary' : ''}" data-cta href="${signupUrl(p.id, billing)}" data-waitlist="${page || 'site'}" data-wl-label="Join the waitlist">Choose ${esc(p.name)}</a>`;
   }
 
   function setBilling(next, animate = true) {
@@ -161,56 +156,9 @@
     onBilling.forEach((fn) => fn());
   }
 
-  // On narrow screens a .swipe row of cards scrolls sideways; a segmented switch above it
-  // jumps to a card and follows along as you swipe. Wide screens hide the switch.
-  function swipeRow(row, labels, start) {
-    let sw = row.previousElementSibling;
-    if (!sw || !sw.hasAttribute('data-swipe-switch')) {
-      sw = document.createElement('div');
-      sw.className = 'swipe-switch';
-      sw.setAttribute('data-swipe-switch', '');
-      row.before(sw);
-      sw.addEventListener('click', (e) => {
-        const b = e.target.closest('[data-to]');
-        if (b) go(+b.dataset.to, !RM);
-      });
-      row.addEventListener('scroll', () => {
-        const mid = row.scrollLeft + row.clientWidth / 2;
-        const cards = [...row.children];
-        let k = 0;
-        cards.forEach((c, i) => { if (Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid) < Math.abs(cards[k].offsetLeft + cards[k].offsetWidth / 2 - mid)) k = i; });
-        mark(k);
-      }, { passive: true });
-    }
-    sw.innerHTML = `<div class="segmented" role="group" aria-label="Choose a card">${labels.map((l, i) => `<button type="button" data-to="${i}">${esc(l)}</button>`).join('')}</div>`;
-    function mark(k) { $$('[data-to]', sw).forEach((b) => { const on = +b.dataset.to === k; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); }); }
-    function go(k, smooth) {
-      const c = row.children[k];
-      if (!c) return;
-      row.scrollTo({ left: c.offsetLeft - (row.clientWidth - c.offsetWidth) / 2, behavior: smooth ? 'smooth' : 'auto' });
-      mark(k);
-    }
-    go(start, false);
-  }
-
   function renderPlans() {
-    $$('[data-plans]').forEach((el) => {
-      // data-plans="all" (the pricing page): Free too, each card opening with its limits.
-      const all = el.dataset.plans === 'all', ids = all ? C.PLAN_ORDER : C.PAID_PLAN_ORDER;
-      el.innerHTML = ids.map((id) => planCard(C.PLANS[id], all)).join('');
-      if (el.classList.contains('swipe') || all) {
-        // One tap opens every card's list, so the row stays even as you swipe.
-        el.addEventListener('click', (e) => {
-          if (!e.target.closest('[data-plan-more]')) return;
-          const open = el.classList.toggle('expanded');
-          $$('[data-plan-more]', el).forEach((b) => {
-            b.setAttribute('aria-expanded', open);
-            b.textContent = open ? 'Show fewer features' : `Show all ${$$('.plan-list li:not(.inherit)', b.closest('.plan')).length} features`;
-          });
-        });
-        if (el.classList.contains('swipe')) swipeRow(el, ids.map((id) => C.PLANS[id].name), Math.max(0, ids.findIndex((id) => C.PLANS[id].popular)));
-      }
-    });
+    $$('[data-plans]').forEach((el) => { el.innerHTML = C.PAID_PLAN_ORDER.map((id) => planCard(C.PLANS[id])).join(''); });
+    $$('[data-price-cards]').forEach((el) => { el.innerHTML = C.PAID_PLAN_ORDER.map((id) => priceCard(C.PLANS[id])).join(''); });
     $$('[data-billing]').forEach((el) => {
       el.addEventListener('click', (e) => {
         const b = e.target.closest('button[data-value]');
@@ -220,61 +168,78 @@
     setBilling(billing, false);
   }
 
-  // Email and SMS packs: a price list, one channel at a time, like a row of the panel's Plan & billing.
-  function renderPacks() {
-    const el = $('[data-packs]');
-    if (!el || !C.ADDONS) return;
-    const toggle = $('[data-pack-toggle]', el);
-    const rate = (ch, pk) => (ch === 'email'
-      ? `${C.fmt.money((pk.price / pk.qty) * 1000)} per 1,000`
-      : `${+(pk.price / pk.qty).toFixed(2)}¢ per text`);
-    const draw = (ch) => {
-      const a = C.ADDONS[ch];
-      $$('[data-pack-ch]', toggle).forEach((b) => { const on = b.dataset.packCh === ch; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
-      $('[data-pack-rows]', el).innerHTML = a.packs.map((pk, k) => `<div class="pack-row${pk.popular ? ' popular' : ''}" style="--k:${k}">
-        <div class="pack-what"><b>${C.fmt.num(pk.qty)} ${esc(a.unit)}${pk.popular ? '<span class="pill-plan">Most popular</span>' : ''}</b><small>${esc(pk.tagline)}</small></div>
-        <span class="pack-rate">${rate(ch, pk)}</span>
-        <span class="pack-price num">${money0(pk.price)}<small>/mo</small></span>
-      </div>`).join('');
-      // SMS only: the texting-number options (one toll-free number is included with every pack).
-      const numbers = ch === 'sms' && C.SMS_NUMBERS ? `<div class="pack-numbers">
-          <h4 class="h4">Your texting number</h4>
-          <p class="pack-note">US carriers require every business to text from its own registered number. We register it with the carriers for you.</p>
-          ${C.SMS_NUMBER_ORDER.map((k) => { const n = C.SMS_NUMBERS[k]; return `<div class="num-row">
-            <div class="pack-what"><b>${esc(n.name)}</b><small>${esc(n.blurb)} ${n.setup ? `${money0(n.setup)} one-time setup` : 'No setup fee'}, ready ${esc(n.review.replace('usually ', 'in about '))}.</small></div>
-            <span class="pack-price num">${n.price ? `${money0(n.price)}<small>/mo</small>` : '<span class="incl">Included</span>'}</span>
-          </div>`; }).join('')}
-          <p class="pack-note">Setup fees are waived on annual billing. Extra numbers, for example one per location, are ${money0(C.EXTRA_NUMBER)}/month each.</p>
-        </div>` : '';
-      $('[data-pack-body]', el).innerHTML = `<h4 class="h4">Every ${ch === 'sms' ? 'SMS' : 'email'} pack includes</h4>
-        <ul class="rings-list">${a.includes.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
-        <p class="pack-note">Go over your pack and you pay ${esc(a.overage.label)}. Sending far more? <a href="#custom">Custom plans</a> include volume pricing.</p>
-        ${numbers}`;
-    };
-    toggle.addEventListener('click', (e) => { const b = e.target.closest('[data-pack-ch]'); if (b && !b.classList.contains('on')) draw(b.dataset.packCh); });
-    draw('email');
+  // Free and Custom sit under the paid plans as two slim cards: the way in, and the way past Enterprise.
+  function renderPlanSides() {
+    const el = $('[data-plan-sides]'), f = C.PLANS.free, c = C.CUSTOM_PLAN;
+    if (!el || !f || !c) return;
+    el.innerHTML = `<article class="side-card" id="free">
+        <div class="side-head"><h3 class="plan-name">${esc(f.name)}</h3><span class="side-price num">${money0(0)}<small>/month</small></span></div>
+        <p class="side-text">For one person at one location, with ${C.fmtStorage(f.limits.storageGB)} of storage, up to ${C.fmt.num(f.limits.customers)} customers and ${C.fmt.num(f.limits.items)} inventory items.</p>
+        <p class="side-fee">On Free, Centrx keeps <b>${f.cardFeePct}%</b> of each card payment. Paid plans have no Centrx fee.</p>
+        <div class="side-cta"><a class="btn" href="${APP}#/signup?plan=${f.id}" data-waitlist="${page || 'site'}" data-wl-label="Join the waitlist">Start for free</a></div>
+      </article>
+      <article class="side-card custom" id="custom">
+        ${ghostMark('pc-mark')}
+        <div class="side-head"><h3 class="plan-name">${esc(c.name)}</h3><span class="pc-tag">By application</span></div>
+        <p class="side-text">${esc(c.tagline)} More locations and storage, volume pricing on email and SMS, and a dedicated support contact, priced to your volume.</p>
+        <p class="side-fee">${esc(c.review)}</p>
+        <div class="side-cta"><a class="btn btn-primary" href="${APP}#/custom-plan">Apply for Custom</a><a class="btn btn-ghost" href="/contact">Talk to sales</a></div>
+      </article>`;
   }
 
-  // The other add-ons, priced from data/plans.js.
-  function renderExtras() {
-    const el = $('[data-extras]');
-    if (!el) return;
-    const ent = C.PLANS.enterprise, minutes = C.fmt.num(C.PLANS.business.limits.phoneMinutes);
-    const ROWS = [
-      ['Business Email', C.BUSINESS_EMAIL.price, '/mo per domain',
-        `Send from you@yourbusiness.com, and replies come into your shared inbox. Business and Enterprise connect with one click (coming soon); other plans follow a few copy-and-paste steps. <a href="/help/custom-domain">See how</a>`],
-      ['Business phone line', C.PHONE_LINE.price, '/mo',
-        `A number customers can call and text, answered right in Centrx. Includes ${minutes} minutes a month, then ${C.PHONE_LINE.overageCents}¢ a minute. Get a new local or toll-free number, or bring yours.`,
-        `Included on ${esc(ent.name)} with ${C.fmt.num(ent.limits.phoneMinutes)} minutes`],
-      ['Extra cloud storage', C.STORAGE_ADDON.price, `/mo per ${C.fmtStorage(C.STORAGE_ADDON.gb)}`,
-        'More room for inventory photos, proof videos, ID scans and call recordings. Add or remove it anytime.'],
-      ['Extra location', C.EXTRA_LOCATION.price, '/mo each',
-        `For each location beyond what your plan includes, on ${esc(C.PLANS.business.name)} and ${esc(ent.name)}. On ${esc(C.PLANS.starter.name)} and ${esc(C.PLANS.growth.name)}, the next plan up includes more.`],
+  // Add-ons in three plain groups: a title and one line beside the cards (above them on phones).
+  // Every price and limit comes from data/plans.js.
+  function renderAddons() {
+    const el = $('[data-addons]');
+    if (!el || !C.ADDONS) return;
+    const ent = C.PLANS.enterprise, biz = C.PLANS.business, pro = C.PLANS.growth;
+    const per = (cents, unit) => `<span class="num">${money0(cents)}</span><small>${unit}</small>`;
+    const table = (rows) => `<table class="ao-table"><tbody>${rows.join('')}</tbody></table>`;
+    const row = (name, sub, price, rate, popular) => `<tr${popular ? ' class="popular"' : ''}><th scope="row">${name}${popular ? '<span class="pill-plan">Most popular</span>' : ''}<small>${sub}</small></th><td>${price}<small class="ao-rate">${rate}</small></td></tr>`;
+    const pack = (ch) => {
+      const a = C.ADDONS[ch];
+      const rate = (pk) => (ch === 'email' ? `${C.fmt.money((pk.price / pk.qty) * 1000)} per 1,000` : `${+(pk.price / pk.qty).toFixed(2)}¢ a text`);
+      return `<article class="ao-card">
+        <div class="ao-head"><h4 class="h4">${ch === 'email' ? 'Email packs' : 'SMS packs'}</h4><p>${esc(a.covers)}</p></div>
+        ${table(a.packs.map((pk) => row(`${C.fmt.num(pk.qty)} ${esc(a.unit)}`, esc(pk.tagline), per(pk.price, '/mo'), rate(pk), pk.popular)))}
+        <p class="ao-note">Go over and your messages keep sending at ${esc(a.overage.label)}.</p>
+      </article>`;
+    };
+    const numbers = `<article class="ao-card wide">
+      <div class="ao-head"><h4 class="h4">Your texting number</h4><p>US carriers require every business to text from its own registered number. Every SMS pack comes with one, and we register it for you.</p></div>
+      ${table(C.SMS_NUMBER_ORDER.map((k) => { const n = C.SMS_NUMBERS[k]; return row(esc(n.name), `${esc(n.blurb)} Ready ${esc(n.review.replace('usually ', 'in about '))}.`,
+        n.price ? per(n.price, '/mo') : '<span class="ao-incl">Included</span>', n.setup ? `+ ${money0(n.setup)} setup` : 'with any SMS pack'); }))}
+      <p class="ao-note">Setup fees are waived on annual billing. Extra numbers, for example one per location, are ${money0(C.EXTRA_NUMBER)}/month each.</p>
+    </article>`;
+    const single = (name, cents, unit, text, facts) => `<article class="ao-card">
+      <div class="ao-top"><h4 class="h4">${name}</h4><span class="ao-price">${per(cents, unit)}</span></div>
+      <p class="ao-text">${text}</p>
+      <dl class="ao-facts">${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
+    </article>`;
+    const GROUPS = [
+      ['Email and texting', 'Campaign email and every text you send, in monthly packs. Receipts, payment links and order emails are always included at no cost.',
+        [pack('email'), pack('sms'), numbers]],
+      ['Your own email and phone', 'Email from your own domain and a business number customers can call, both answered in Centrx.', [
+        single(C.BUSINESS_EMAIL.name, C.BUSINESS_EMAIL.price, '/mo per domain',
+          'Send from you@yourbusiness.com instead of notify@centrx.co. Replies come into your shared inbox.',
+          [['Available on', 'Every paid plan'], ['Setup', `Guided steps, or one click on ${esc(biz.name)} and ${esc(ent.name)} (coming soon)`], ['Guide', '<a href="/help/custom-domain">Connect your domain</a>']]),
+        single(C.PHONE_LINE.name, C.PHONE_LINE.price, '/mo',
+          'A number customers can call and text. Get a new local or toll-free number, or bring the one you have.',
+          [['Minutes', `${C.fmt.num(biz.limits.phoneMinutes)} a month, then ${C.PHONE_LINE.overageCents}¢ a minute`], ['Available on', 'Every paid plan'], ['Included on', `${esc(ent.name)}, with ${C.fmt.num(ent.limits.phoneMinutes)} minutes`]]),
+      ]],
+      ['Room to grow', 'More space and more locations, without moving up a plan.', [
+        single(C.STORAGE_ADDON.name, C.STORAGE_ADDON.price, `/mo per ${C.fmtStorage(C.STORAGE_ADDON.gb)}`,
+          'More room for inventory photos, proof videos, ID scans and call recordings.',
+          [['Available on', 'Every paid plan'], ['Change it', 'Add or remove blocks anytime']]),
+        single(C.EXTRA_LOCATION.name, C.EXTRA_LOCATION.price, '/mo each',
+          'Each location beyond the ones your plan includes.',
+          [['Available on', `${esc(biz.name)} and ${esc(ent.name)}`], ['On smaller plans', `Move up instead: ${esc(pro.name)} includes ${pro.limits.locations} locations, ${esc(biz.name)} ${biz.limits.locations}`]]),
+      ]],
     ];
-    el.innerHTML = ROWS.map(([name, cents, per, body, note]) => `<div class="addon-row">
-      <div class="pack-what"><b>${name}</b><small>${body}</small>${note ? `<span class="tag">${note}</span>` : ''}</div>
-      <span class="pack-price num">${money0(cents)}<small>${per}</small></span>
-    </div>`).join('');
+    el.innerHTML = GROUPS.map(([title, lead, cards]) => `<section class="addon-group" data-reveal>
+      <div class="ag-side"><h3 class="h3">${title}</h3><p>${lead}</p></div>
+      <div class="ag-cards">${cards.join('')}</div>
+    </section>`).join('');
   }
 
   // The cheapest pack for a month's volume, counting overage: going a little over a pack can beat the next one up.
@@ -383,43 +348,6 @@
     });
   }
 
-  // Custom: by application from inside the app, never a self-serve checkout.
-  function renderCustom() {
-    const el = $('[data-custom-plan]'), c = C.CUSTOM_PLAN;
-    if (!el || !c) return;
-    // The logo's four blades, drawn separately so they can spread apart on hover.
-    const blades = (C.BRAND_PATH || '').split('Z').filter(Boolean).map((d, k) => `<path class="pc-blade b${k}" d="${d}Z"/>`).join('');
-    // A preview of the real application flow (assets/js/pages/custom-plan.js), mid-review.
-    const STEPS = [
-      ['done', 'Tell us what you need', '9 locations · 12,000 orders a month'],
-      ['done', 'Confirm your business', 'LLC · EIN ••-•••4567 · Oregon filing'],
-      ['now', 'Our team reviews it', 'Usually within two business days'],
-      ['next', 'Your limits and price go live', 'Set to the volume you told us'],
-    ];
-    el.innerHTML = `<article class="plan-custom" id="custom">
-      <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="pcBlade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A5CFF"/><stop offset="1" stop-color="#38BDF8"/></linearGradient></defs>${blades}</svg>
-      <div class="pc-main">
-        <div class="pc-top">${C.brandMark(22)}<h3 class="plan-name">${esc(c.name)}</h3><span class="pc-tag">By application</span></div>
-        <p class="pc-title">Sized to <span>your business.</span></p>
-        <p class="pc-lead">${esc(c.tagline)} We'll size limits and pricing to your volume.</p>
-        <ul class="pc-list">
-          <li class="inherit">Everything in ${esc(C.PLANS[c.inherits].name)}, plus:</li>
-          ${c.bullets.map((b) => `<li>${esc(b)}</li>`).join('')}
-        </ul>
-        <div class="pc-cta">
-          <a class="btn btn-primary" href="${APP}#/custom-plan">Apply for Custom <span class="nudge" data-i="arrowRight"></span></a>
-          <a class="btn" href="/contact">Talk to sales</a>
-        </div>
-      </div>
-      <div class="pc-preview" aria-hidden="true">
-        <div class="panel pc-app">
-          <div class="panel-head"><div><h3>Custom plan application</h3><div class="xs muted mono">CX-7Q4K2</div></div><span class="badge warn">Under review</span></div>
-          <ol class="pc-steps">${STEPS.map(([s, t, d], k) => `<li class="${s}" style="--k:${k}"><span class="pc-dot">${s === 'done' ? C.icon('check', 12) : ''}</span><div><b>${t}</b><small>${d}</small></div></li>`).join('')}</ol>
-        </div>
-      </div>
-    </article>`;
-  }
-
   function renderCompare() {
     const el = $('[data-compare]');
     if (!el) return;
@@ -468,9 +396,8 @@
   if (hasPlans) {
     renderPlans();
     renderFree();
-    renderCustom();
-    renderPacks();
-    renderExtras();
+    renderPlanSides();
+    renderAddons();
     renderEstimate();
     renderCompare();
     setBilling(billing, false);
@@ -619,7 +546,7 @@
     const grid = [0.25, 0.5, 0.75].map((f) => `<line class="grid-line" x1="0" x2="${W}" y1="${H * f}" y2="${H * f}" vector-effect="non-scaling-stroke"/>`).join('');
     chart.innerHTML = `<svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">
       <defs>
-        <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0A5CFF" stop-opacity=".12"/><stop offset="1" stop-color="#0A5CFF" stop-opacity="0"/></linearGradient>
+        <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2064DB" stop-opacity=".12"/><stop offset="1" stop-color="#2064DB" stop-opacity="0"/></linearGradient>
         <clipPath id="chartReveal"><rect class="reveal-rect" width="${W}" height="${H}"/></clipPath>
       </defs>
       ${grid}
@@ -752,13 +679,11 @@
     // Whole days left until launch, counted the way people say it: "Tomorrow" on the last day.
     const days = Math.max(1, Math.ceil((LAUNCH - Date.now()) / 864e5));
     const countdown = days === 1 ? 'Tomorrow’s the day!' : `${days} days to go!`;
-    // The X mark's four blades, faint behind Cenbot, as on the Custom plan card.
-    const blades = (C.BRAND_PATH || '').split('Z').filter(Boolean).map((d) => `<path d="${d}Z"/>`).join('');
     box.innerHTML = `<div class="overlay-scrim" data-wl-close></div>
       <div class="modal wl-modal" role="dialog" aria-modal="true" aria-labelledby="wl-title" aria-describedby="wl-sub">
         <button class="btn btn-ghost btn-icon wl-x" type="button" data-wl-close aria-label="Close">${C.icon('x', 18)}</button>
         <div class="wl-art">
-          <svg class="wl-mark" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="wlBlade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A5CFF"/><stop offset="1" stop-color="#38BDF8"/></linearGradient></defs>${blades}</svg>
+          ${ghostMark('wl-mark')}
           <p class="wl-say wl-pop" data-wl-say>${countdown} Leave your email and I’ll keep you posted.</p>
           <img class="wl-bot" src="/assets/brand/cenbot-wave.svg" width="150" height="211" alt="">
         </div>

@@ -12,7 +12,7 @@
 .btn:hover { background: var(--surface); }
 .btn:active { background: var(--surface-2); }
 .btn:disabled, .btn[aria-disabled="true"] { opacity: .5; pointer-events: none; }
-.btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 1px 2px rgba(10,92,255,.25); }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 1px 2px var(--accent-ring); }
 .btn-primary svg { opacity: 1; }
 .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
 .btn-primary:active { background: var(--accent-press); }
@@ -286,10 +286,10 @@ kbd, .kbd { display: inline-flex; align-items: center; justify-content: center; 
 /* ---------- Toasts ---------- */
 #toasts { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
 .toast { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: var(--r-lg); background: var(--ink); color: #fff; font-size: 13.5px; box-shadow: var(--shadow-pop); animation: rise 160ms var(--ease); pointer-events: auto; max-width: calc(100vw - 32px); }
-.toast svg { color: #7EA8FF; }
+.toast svg { color: #6BB1FC; }
 .toast.success svg { color: #6CE9A6; }
 .toast.error svg { color: #FDA29B; }
-.toast .link-btn { color: #9DBBFF; margin-left: 6px; }
+.toast .link-btn { color: #6BB1FC; margin-left: 6px; }
 .toast.out { opacity: 0; transform: translateY(4px); transition: all 160ms var(--ease); }
 
 /* ---------- Command palette ---------- */

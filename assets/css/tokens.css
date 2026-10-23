@@ -2,24 +2,34 @@
 :root {
   /* Surfaces */
   --bg: #FFFFFF;
-  --surface: #F7F8FA;
-  --surface-2: #F1F3F6;
-  --border: #E4E7EC;
-  --border-strong: #D0D5DD;
+  --surface: #F6F8FC;
+  --surface-2: #EEF2F8;
+  --border: #E2E7F0;
+  --border-strong: #CDD5E2;
 
-  /* Ink */
-  --ink: #0B1220;
-  --ink-2: #344054;
-  --muted: #5B6474;
-  --faint: #8A93A3;
+  /* Ink: navy-black, from the logo's lettering */
+  --ink: #091230;
+  --ink-2: #2F3A55;
+  --muted: #59637B;
+  --faint: #8A92A6;
 
-  /* Accent — electric blue */
-  --accent: #0A5CFF;
-  --accent-hover: #0047E0;
-  --accent-press: #003BBA;
-  --accent-tint: #EEF3FF;
-  --accent-tint-2: #DCE7FF;
-  --accent-ring: rgba(10, 92, 255, .25);
+  /* Brand palette (October 2026 brand board) */
+  --blue-900: #062B71;
+  --blue-700: #1349AC;
+  --blue-500: #2064DB;
+  --blue-400: #3D86FB;
+  --blue-300: #6BB1FC;
+  --brand-gradient: linear-gradient(135deg, #3D86FB 0%, #2064DB 45%, #062B71 100%);
+  --brand-text: linear-gradient(90deg, #3D86FB 0%, #2064DB 55%, #1349AC 100%);
+  --night: #04070D; /* the board's near-black, for dark bands */
+
+  /* Accent: brand blue */
+  --accent: #2064DB;
+  --accent-hover: #1349AC;
+  --accent-press: #062B71;
+  --accent-tint: #EEF5FF;
+  --accent-tint-2: #D5E7FE;
+  --accent-ring: rgba(32, 100, 219, .25);
 
   /* Status (reserved; always paired with a label) */
   --success: #067647;
