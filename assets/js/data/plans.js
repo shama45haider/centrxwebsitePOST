@@ -32,7 +32,7 @@
       features: {
         meetup: true, customDeposit: false, requireProof: false, esignature: false, proofVideo: false, signatureExport: false,
         segments: false, csv: true, customDomain: true, removeBranding: false,
-        whiteLabel: false, webhooks: false, sso: false, enforceMfa: false,
+        whiteLabel: false, webhooks: false, sso: false, enforceMfa: false, fileLock: false,
         timelineExport: false, auditExport: false, granularPerms: false,
         onlineStore: false, storeCustomDomain: false, extraLocations: false, phoneLine: false,
         inboxTeam: false, inboxRules: false, connectMailbox: false, autoConnectDomain: false,
@@ -43,9 +43,9 @@
       // id stays 'growth' so saved accounts and signup links keep matching.
       id: 'growth', name: 'Pro', price: 9900, inherits: 'starter',
       tagline: 'For growing teams with repeat customers.',
-      highlights: ['10 employees · 2 locations', '15 GB cloud storage', 'Online Store included', 'Custom branding'],
+      highlights: ['5 employees · 2 locations', '15 GB cloud storage', 'Online Store included', 'Custom branding'],
       bullets: [
-        '10 employees', '2 locations', '15 GB cloud storage',
+        '5 employees', '2 locations', 'Password-lock private files', '15 GB cloud storage',
         'Advanced analytics', 'Advanced automations', 'Employee permissions',
         'Online Store with a drag-and-drop editor', 'Cenbot AI, 2,500 replies / month', 'Assign conversations and add internal notes', 'Campaign segments and tags', 'Custom branding', 'Webhooks and API keys',
         'Require two-factor sign-in for your team', 'Priority support',
@@ -54,14 +54,14 @@
       limits: {
         orderPhotos: 25, orderVideos: 2, videoSeconds: 60,
         items: U, categories: U, customStatuses: U,
-        seats: 10, locations: 2, customers: U, orders: U, links: U, labels: U, storageGB: 15,
+        seats: 5, locations: 2, customers: U, orders: U, links: U, labels: U, storageGB: 15,
         paymentProviders: 3, shippingProviders: 3, customRoles: 5,
         auditDays: 90, apiKeys: 2, automations: 25, timelineMonths: U, cenbotReplies: 2500, phoneMinutes: 500,
       },
       features: {
         meetup: true, customDeposit: true, requireProof: true, esignature: true, proofVideo: true, signatureExport: false,
         segments: true, csv: true, customDomain: true, removeBranding: true,
-        whiteLabel: false, webhooks: true, sso: false, enforceMfa: true,
+        whiteLabel: false, webhooks: true, sso: false, enforceMfa: true, fileLock: true,
         timelineExport: false, auditExport: false, granularPerms: false,
         onlineStore: true, storeCustomDomain: false, extraLocations: false, phoneLine: false,
         inboxTeam: true, inboxRules: false, connectMailbox: false, autoConnectDomain: false,
@@ -72,9 +72,9 @@
     business: {
       id: 'business', name: 'Business', price: 19900, inherits: 'growth',
       tagline: 'For established businesses running several locations.',
-      highlights: ['Unlimited employees · 5 locations', '50 GB cloud storage', 'Unlimited customers and orders', 'Your Online Store on your own domain'],
+      highlights: ['10 employees · 5 locations', '50 GB cloud storage', 'Unlimited customers and orders', 'Your Online Store on your own domain'],
       bullets: [
-        'Unlimited employees', 'Up to 5 locations', '50 GB cloud storage',
+        'Up to 10 employees', 'Up to 5 locations', '50 GB cloud storage',
         'Cenbot AI, 10,000 replies / month', 'Advanced reporting', 'Advanced permissions', 'Unlimited automations',
         'Your Online Store on your own domain', 'One-click domain setup for Business Email (coming soon)', 'Inbox rules and auto-assign', 'Extra locations at $20/month each', '1-year audit log with export',
         'Timeline and signature record export', 'Priority support',
@@ -83,14 +83,14 @@
       limits: {
         orderPhotos: 50, orderVideos: 5, videoSeconds: 120,
         items: U, categories: U, customStatuses: U,
-        seats: U, locations: 5, customers: U, orders: U, links: U, labels: U, storageGB: 50,
+        seats: 10, locations: 5, customers: U, orders: U, links: U, labels: U, storageGB: 50,
         paymentProviders: U, shippingProviders: U, customRoles: U,
         auditDays: 365, apiKeys: U, automations: U, timelineMonths: U, cenbotReplies: 10000, phoneMinutes: 500,
       },
       features: {
         meetup: true, customDeposit: true, requireProof: true, esignature: true, proofVideo: true, signatureExport: true,
         segments: true, csv: true, customDomain: true, removeBranding: true,
-        whiteLabel: false, webhooks: true, sso: false, enforceMfa: true,
+        whiteLabel: false, webhooks: true, sso: false, enforceMfa: true, fileLock: true,
         timelineExport: true, auditExport: true, granularPerms: true,
         onlineStore: true, storeCustomDomain: true, extraLocations: true, phoneLine: false,
         inboxTeam: true, inboxRules: true, connectMailbox: true, autoConnectDomain: true,
@@ -117,7 +117,7 @@
       features: {
         meetup: true, customDeposit: true, requireProof: true, esignature: true, proofVideo: true, signatureExport: true,
         segments: true, csv: true, customDomain: true, removeBranding: true,
-        whiteLabel: true, webhooks: true, sso: true, enforceMfa: true,
+        whiteLabel: true, webhooks: true, sso: true, enforceMfa: true, fileLock: true,
         timelineExport: true, auditExport: true, granularPerms: true,
         onlineStore: true, storeCustomDomain: true, extraLocations: true, phoneLine: true,
         inboxTeam: true, inboxRules: true, connectMailbox: true, autoConnectDomain: true,
@@ -257,6 +257,7 @@
       ['Photos, videos, IDs, receipts & recordings', () => 'Counted in your storage'],
       ['Extra storage', () => `${C.fmtStorage(C.STORAGE_ADDON.gb)} for ${C.fmt.money0(C.STORAGE_ADDON.price)}/mo`],
       ['Private by default and backed up', () => true],
+      ['Password-lock files and folders', F('fileLock')],
     ] },
     { group: 'Payments & shipping', rows: [
       ['Payment providers', () => 'Stripe, PayPal + Square'],
