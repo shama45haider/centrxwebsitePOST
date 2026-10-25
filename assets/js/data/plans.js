@@ -13,9 +13,9 @@
       // id stays 'starter' so saved accounts and signup links keep matching.
       id: 'starter', name: 'Hobby', price: 3900, // cents / month
       tagline: 'For small shops getting organized.',
-      highlights: ['2 employees · 1 location', '10 GB cloud storage', 'Unlimited customers and orders', 'Stripe, PayPal + Square'],
+      highlights: ['2 employees · 1 location', '5 GB cloud storage', 'Unlimited customers and orders', 'Stripe, PayPal + Square'],
       bullets: [
-        '2 employees', '1 location', '10 GB cloud storage', 'Unlimited customers, orders and payment links',
+        '2 employees', '1 location', '5 GB cloud storage', 'Unlimited customers, orders and payment links',
         'Unlimited shipping labels',
         'Customer management', 'Order management', 'Cenbot AI, 500 replies / month', 'Stripe, PayPal and Square',
         'CSV import and export', 'Basic analytics', 'Basic automations', 'Email support',
@@ -25,7 +25,7 @@
       limits: {
         orderPhotos: 10, orderVideos: 0, videoSeconds: 0,
         items: U, categories: 5, customStatuses: 2,
-        seats: 2, locations: 1, customers: U, orders: U, links: U, labels: U, storageGB: 10,
+        seats: 2, locations: 1, customers: U, orders: U, links: U, labels: U, storageGB: 5,
         paymentProviders: 3, shippingProviders: 1, customRoles: 0,
         auditDays: 30, apiKeys: 0, automations: 3, timelineMonths: 12, cenbotReplies: 500, phoneMinutes: 500,
       },
@@ -43,9 +43,9 @@
       // id stays 'growth' so saved accounts and signup links keep matching.
       id: 'growth', name: 'Pro', price: 9900, inherits: 'starter',
       tagline: 'For growing teams with repeat customers.',
-      highlights: ['10 employees · 2 locations', '50 GB cloud storage', 'Online Store included', 'Custom branding'],
+      highlights: ['10 employees · 2 locations', '15 GB cloud storage', 'Online Store included', 'Custom branding'],
       bullets: [
-        '10 employees', '2 locations', '50 GB cloud storage',
+        '10 employees', '2 locations', '15 GB cloud storage',
         'Advanced analytics', 'Advanced automations', 'Employee permissions',
         'Online Store with a drag-and-drop editor', 'Cenbot AI, 2,500 replies / month', 'Assign conversations and add internal notes', 'Campaign segments and tags', 'Custom branding', 'Webhooks and API keys',
         'Require two-factor sign-in for your team', 'Priority support',
@@ -54,7 +54,7 @@
       limits: {
         orderPhotos: 25, orderVideos: 2, videoSeconds: 60,
         items: U, categories: U, customStatuses: U,
-        seats: 10, locations: 2, customers: U, orders: U, links: U, labels: U, storageGB: 50,
+        seats: 10, locations: 2, customers: U, orders: U, links: U, labels: U, storageGB: 15,
         paymentProviders: 3, shippingProviders: 3, customRoles: 5,
         auditDays: 90, apiKeys: 2, automations: 25, timelineMonths: U, cenbotReplies: 2500, phoneMinutes: 500,
       },
@@ -72,9 +72,9 @@
     business: {
       id: 'business', name: 'Business', price: 19900, inherits: 'growth',
       tagline: 'For established businesses running several locations.',
-      highlights: ['Unlimited employees · 5 locations', '200 GB cloud storage', 'Unlimited customers and orders', 'Your Online Store on your own domain'],
+      highlights: ['Unlimited employees · 5 locations', '50 GB cloud storage', 'Unlimited customers and orders', 'Your Online Store on your own domain'],
       bullets: [
-        'Unlimited employees', 'Up to 5 locations', '200 GB cloud storage',
+        'Unlimited employees', 'Up to 5 locations', '50 GB cloud storage',
         'Cenbot AI, 10,000 replies / month', 'Advanced reporting', 'Advanced permissions', 'Unlimited automations',
         'Your Online Store on your own domain', 'One-click domain setup for Business Email (coming soon)', 'Inbox rules and auto-assign', 'Extra locations at $20/month each', '1-year audit log with export',
         'Timeline and signature record export', 'Priority support',
@@ -83,7 +83,7 @@
       limits: {
         orderPhotos: 50, orderVideos: 5, videoSeconds: 120,
         items: U, categories: U, customStatuses: U,
-        seats: U, locations: 5, customers: U, orders: U, links: U, labels: U, storageGB: 200,
+        seats: U, locations: 5, customers: U, orders: U, links: U, labels: U, storageGB: 50,
         paymentProviders: U, shippingProviders: U, customRoles: U,
         auditDays: 365, apiKeys: U, automations: U, timelineMonths: U, cenbotReplies: 10000, phoneMinutes: 500,
       },
@@ -100,9 +100,9 @@
     enterprise: {
       id: 'enterprise', name: 'Enterprise', price: 34900, inherits: 'business',
       tagline: 'For high-volume businesses that need more.',
-      highlights: ['Unlimited employees · 15 locations', '500 GB cloud storage', 'Unlimited customers and orders', 'Business phone line'],
+      highlights: ['Unlimited employees · 15 locations', '150 GB cloud storage', 'Unlimited customers and orders', 'Business phone line'],
       bullets: [
-        'Up to 15 locations', '500 GB cloud storage',
+        'Up to 15 locations', '150 GB cloud storage',
         'Business phone line included (2,000 minutes)', 'Cenbot AI, 50,000 replies / month',
         'Single sign-on (SSO)', 'White-label dashboard', '2-year audit log', 'Priority phone support',
       ],
@@ -110,7 +110,7 @@
       limits: {
         orderPhotos: 100, orderVideos: 10, videoSeconds: 300,
         items: U, categories: U, customStatuses: U,
-        seats: U, locations: 15, customers: U, orders: U, links: U, labels: U, storageGB: 500,
+        seats: U, locations: 15, customers: U, orders: U, links: U, labels: U, storageGB: 150,
         paymentProviders: U, shippingProviders: U, customRoles: U,
         auditDays: 730, apiKeys: U, automations: U, timelineMonths: U, cenbotReplies: 50000, phoneMinutes: 2000,
       },
