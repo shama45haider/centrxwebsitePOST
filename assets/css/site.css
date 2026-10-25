@@ -898,3 +898,17 @@
 .inbox-note { padding: 8px 10px; border: 1px dashed #F2C879; border-radius: 8px; background: var(--warn-tint); color: var(--warn); font-size: 12.5px; line-height: 1.45; }
 .inbox-assign { justify-self: center; }
 @media (max-width: 520px) { .inbox-body { grid-template-columns: minmax(0, 1fr); } .inbox-list { border-right: 0; border-bottom: 1px solid var(--border); } .inbox-row:nth-child(n+3) { display: none; } }
+
+/* Files mock (features): colored folders, a few files and the storage meter, like the panel's Files page. */
+.files-mock .fd-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.files-mock .fd { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 12px; align-items: center; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; min-width: 0; }
+.files-mock .fd svg { grid-row: span 2; }
+.files-mock .fd b, .files-mock .fl b { font-size: 13.5px; font-weight: 600; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.files-mock .fd span, .files-mock .fl > span:last-child { font-size: 12px; color: var(--muted); }
+.files-mock .fl-list { display: grid; margin-top: 14px; border-top: 1px solid var(--border); }
+.files-mock .fl { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); min-width: 0; }
+.files-mock .fl b { flex: 1; }
+.files-mock .fk { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 7px; color: var(--kc); background: color-mix(in srgb, var(--kc) 12%, transparent); }
+.files-mock .fk [data-i] { width: 16px; height: 16px; }
+.files-mock .btn [data-i] { width: 14px; height: 14px; }
+@media (max-width: 420px) { .files-mock .fd-grid { grid-template-columns: minmax(0, 1fr); } }
