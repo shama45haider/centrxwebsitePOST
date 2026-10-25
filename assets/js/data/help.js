@@ -37,7 +37,7 @@
       id: 'billing', cat: 'billing', href: '/help/billing',
       title: 'Change plans, switch to annual or cancel',
       summary: 'Upgrade, downgrade, pay yearly or cancel from Plan & billing.',
-      keywords: 'upgrade downgrade cancel annual yearly monthly trial payment card invoice billing',
+      keywords: 'upgrade downgrade cancel annual yearly monthly waitlist free months payment card invoice billing',
     },
   ];
 })();

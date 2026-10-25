@@ -25,7 +25,7 @@
       <nav class="site-nav" aria-label="Main">${navLinks}</nav>
       <div class="site-actions">
         <a class="btn btn-ghost" href="${APP}#/login">Sign in</a>
-        <a class="btn btn-primary" href="${APP}#/signup">Start free trial</a>
+        <a class="btn btn-primary" href="${APP}#/signup">Get started</a>
       </div>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-sheet" aria-label="Open menu">${I('menu')}</button>
       <div class="nav-sheet" id="nav-sheet">
@@ -33,7 +33,7 @@
         <a href="${APP}?demo#/">Live demo</a>
         <div class="sheet-cta">
           <a class="btn btn-lg" href="${APP}#/login">Sign in</a>
-          <a class="btn btn-lg btn-primary" href="${APP}#/signup">Start free trial</a>
+          <a class="btn btn-lg btn-primary" href="${APP}#/signup">Get started</a>
         </div>
       </div>
     </div>`;
@@ -98,7 +98,7 @@
       <p class="plan-tag">${esc(p.tagline)}</p>
       <div class="price"><span class="price-amt num" data-amt>${money0(priceFor(p, billing))}</span><span class="price-per" data-per>${perFor(billing)}</span></div>
       <p class="price-note" data-note>${noteFor(p, billing)}</p>
-      <a class="btn btn-lg btn-block${p.popular ? ' btn-primary' : ''}" data-cta href="${signupUrl(p.id, billing)}">Start free trial</a>
+      <a class="btn btn-lg btn-block${p.popular ? ' btn-primary' : ''}" data-cta href="${signupUrl(p.id, billing)}">Get started</a>
       ${second}
       <ul class="plan-list">
         ${parent ? `<li class="inherit">Everything in ${esc(parent.name)}, plus:</li>` : ''}
@@ -639,7 +639,7 @@
     const isSignup = (a) => /\/app#\/(signup|custom-plan)|\/app#\/settings\/billing\?addon=/.test(a.getAttribute('href') || '');
     const relabel = (a) => {
       const t = [...a.childNodes].find((n) => n.nodeType === 3 && /\S/.test(n.nodeValue));
-      if (t) t.nodeValue = t.nodeValue.replace(/Start free trial|Apply for Custom|Add to your plan/, 'Join the waitlist');
+      if (t) t.nodeValue = t.nodeValue.replace(/Get started|Apply for Custom|Add to your plan/, 'Join the waitlist');
     };
     const prep = () => $$('a').filter(isSignup).forEach((a) => { a.dataset.waitlist = ''; relabel(a); });
     prep();
@@ -663,12 +663,12 @@
     const formHtml = (id) => WAITLIST.endpoint || !WAITLIST.jotform ? ownForm(id) : `
       <span class="badge wl-badge">${esc(WAITLIST.offer)}</span>
       <h2 class="h3" id="${id === 'wl' ? 'wl-title' : ''}">Join the Centrx waitlist</h2>
-      <p class="body-muted" style="margin:8px 0 12px">Everyone on the waitlist gets <strong>${esc(WAITLIST.offer)}</strong> after their trial.</p>
+      <p class="body-muted" style="margin:8px 0 12px">Everyone on the waitlist gets <strong>${esc(WAITLIST.offer)}</strong> on their first plan.</p>
       <iframe class="wl-frame" title="Waitlist sign-up" loading="lazy" src="https://form.jotform.com/${WAITLIST.jotform}"></iframe>`;
     const ownForm = (id) => `
       <span class="badge wl-badge">${esc(WAITLIST.offer)}</span>
       <h2 class="h3" id="${id === 'wl' ? 'wl-title' : ''}">Join the Centrx waitlist</h2>
-      <p class="body-muted" style="margin-top:8px">Be first in when we open. Everyone on the waitlist gets <strong>${esc(WAITLIST.offer)}</strong> after their trial.</p>
+      <p class="body-muted" style="margin-top:8px">Be first in when we open. Everyone on the waitlist gets <strong>${esc(WAITLIST.offer)}</strong> on their first plan.</p>
       <form data-waitlist-form novalidate>
         <div class="field form-row"><label class="label" for="${id}-email">Work email</label><input class="input" id="${id}-email" name="email" type="email" autocomplete="email" inputmode="email"><span class="error-text" aria-live="polite"></span></div>
         <div class="field form-row"><label class="label" for="${id}-biz">Business name</label><input class="input" id="${id}-biz" name="business" autocomplete="organization"><span class="error-text" aria-live="polite"></span></div>
@@ -677,7 +677,7 @@
         <input class="wl-hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
         <button class="btn btn-primary btn-lg btn-block" type="submit" style="margin-top:18px">Join the waitlist</button>
         <p class="error-text wl-fail" role="alert" hidden></p>
-        <p class="micro" style="margin-top:10px">No card. We'll only email you about Centrx. <a href="/privacy">Privacy</a></p>
+        <p class="micro" style="margin-top:10px">No card needed. We'll only email you about Centrx. <a href="/privacy">Privacy</a></p>
       </form>`;
     const wire = (form) => {
       const EM = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
