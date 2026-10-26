@@ -224,7 +224,7 @@
       ['globe', 'Your own email and phone', Math.min(C.BUSINESS_EMAIL.price, C.PHONE_LINE.price), 'Email from your own domain and a business number customers can call, both answered in Centrx.', [
         single('at', C.BUSINESS_EMAIL.name, C.BUSINESS_EMAIL.price, '/mo per domain',
           'Send from you@yourbusiness.com instead of notify@centrx.co. Replies come into your shared inbox.',
-          [['Available on', 'Every paid plan'], ['Setup', `Guided steps, or one click on ${esc(biz.name)} and ${esc(ent.name)} (coming soon)`], ['Guide', '<a href="/help/custom-domain">Connect your domain</a>']]),
+          [['Available on', 'Every plan, Free too'], ['Setup', `Guided steps, or one click on ${esc(biz.name)} and ${esc(ent.name)} (coming soon)`], ['Guide', '<a href="/help/custom-domain">Connect your domain</a>']]),
         single('phoneCall', C.PHONE_LINE.name, C.PHONE_LINE.price, '/mo',
           'A number customers can call and text. Get a new local or toll-free number, or bring the one you have.',
           [['Minutes', `${C.fmt.num(biz.limits.phoneMinutes)} a month, then ${C.PHONE_LINE.overageCents}¢ a minute`], ['Available on', 'Every paid plan'], ['Included on', `${esc(ent.name)}, with ${C.fmt.num(ent.limits.phoneMinutes)} minutes`]]),
@@ -289,11 +289,11 @@
       const email = +f.email.value, sms = +f.sms.value, phoneIncluded = p.features.phoneLine;
       $('[data-out="email"]', el).textContent = C.fmt.num(email);
       $('[data-out="sms"]', el).textContent = C.fmt.num(sms);
-      [f.email, f.sms, f.domain].forEach((x) => { x.disabled = !paid; });
+      [f.email, f.sms].forEach((x) => { x.disabled = !paid; });
       f.phone.disabled = !paid || phoneIncluded;
       if (phoneIncluded && !f.phone.checked) { f.phone.checked = true; autoPhone = true; }
       else if (!phoneIncluded && autoPhone) { f.phone.checked = false; autoPhone = false; }
-      $('[data-hint="domain"]', el).textContent = paid ? `${money0(C.BUSINESS_EMAIL.price)}/month for one domain` : 'Needs a paid plan';
+      $('[data-hint="domain"]', el).textContent = `${money0(C.BUSINESS_EMAIL.price)}/month for one domain`;
       $('[data-hint="phone"]', el).textContent = !paid ? 'Needs a paid plan' : phoneIncluded ? `Included on ${p.name}` : `${money0(C.PHONE_LINE.price)}/month with ${C.fmt.num(p.limits.phoneMinutes)} minutes`;
 
       const planCents = annual ? Math.round(annualTotal(p) / 12) : p.price;
@@ -305,7 +305,8 @@
         rows.push(['Centrx card fee', `${p.cardFeePct}% of ${money0(sales)} in card payments`, fee]);
         tip = fee > upCents
           ? `${up.name} would cost ${money0(fee - upCents)} less: ${money0(upCents)} a month and no Centrx fee.`
-          : 'Packs and add-ons need a paid plan.';
+          : 'Packs and the phone line need a paid plan.';
+        if (f.domain.checked) rows.push([C.BUSINESS_EMAIL.name, 'One domain', C.BUSINESS_EMAIL.price]);
       } else {
         const e = cheapestPack('email', email), s = cheapestPack('sms', sms);
         if (e) rows.push(['Email pack', `${C.fmt.num(e.pk.qty)} emails${e.over ? `, plus ${C.fmt.num(e.over)} extra` : ''}`, e.cents]);
