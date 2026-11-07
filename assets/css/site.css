@@ -220,11 +220,12 @@
 .usage-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: 13px; }
 .usage-head b { font-weight: 600; }
 .usage-head span { font-size: 12px; color: var(--faint); }
-.usage-item { --ug: linear-gradient(90deg, var(--blue-300), var(--blue-500)); --ue: rgba(32, 100, 219, .35); display: grid; grid-template-columns: 42px minmax(0, 1fr); column-gap: 14px; row-gap: 6px; align-items: center; }
-.usage-item.warn { --ug: linear-gradient(90deg, #FDB022, #DC6803); --ue: rgba(220, 104, 3, .35); }
-/* Filled illustrations in the style of the Files mock's folders; each has a small idle motion. */
-.usage-ic { grid-row: span 3; width: 42px; height: 42px; overflow: visible; filter: drop-shadow(0 3px 5px var(--ue)); }
-.usage-ic .ui-arrow, .usage-ic .ui-letter, .usage-ic .ui-dots circle { transform-box: fill-box; }
+.usage-item { --ua: var(--accent); --ug: linear-gradient(90deg, var(--blue-300), var(--blue-500)); --ue: rgba(32, 100, 219, .35); display: grid; row-gap: 7px; }
+.usage-item.warn { --ua: #DC6803; --ug: linear-gradient(90deg, #FDB022, #DC6803); --ue: rgba(220, 104, 3, .35); }
+/* Quiet line icons: a gray outline with one detail in the meter's color, drawn in once. */
+.usage-ic { flex: none; color: var(--faint); }
+.usage-ic .ua { stroke: var(--ua); }
+.usage-ic .ud { fill: var(--ua); }
 .usage-row { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 13px; }
 .usage-row b { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .usage-pct { margin-left: auto; font-weight: 600; font-variant-numeric: tabular-nums; }
@@ -240,16 +241,12 @@
 .js .usage-flag { opacity: 0; transform: translateX(-4px) scale(.92); transition: opacity 400ms var(--ease) 1250ms, transform 400ms var(--ease) 1250ms; }
 .js .is-in .usage-flag { opacity: 1; transform: none; }
 .js .is-in .usage-flag::before { animation: usage-ping 2.2s ease-out 1.7s infinite; }
-.js .usage-ic { opacity: 0; transform: scale(.6) rotate(-8deg); transition: opacity 450ms var(--ease), transform 600ms cubic-bezier(.3, 1.5, .5, 1); transition-delay: calc(200ms + var(--k, 0) * 120ms); }
-.js .is-in .usage-ic { opacity: 1; transform: none; }
-.js .is-in .ui-arrow { animation: ui-lift 3.6s var(--ease) 1.8s infinite; }
-.js .is-in .ui-letter { animation: ui-bob 3.2s ease-in-out 1.9s infinite; }
-.js .is-in .ui-dots circle { animation: ui-type 1.6s ease-in-out 2s infinite; }
-.js .is-in .ui-dots circle:nth-child(2) { animation-delay: 2.18s; }
-.js .is-in .ui-dots circle:nth-child(3) { animation-delay: 2.36s; }
-@keyframes ui-lift { 0%, 55%, 100% { transform: none; opacity: 1; } 25% { transform: translateY(-4px); opacity: 0; } 26% { transform: translateY(4px); opacity: 0; } }
-@keyframes ui-bob { 0%, 100% { transform: none; } 50% { transform: translateY(-2.5px); } }
-@keyframes ui-type { 0%, 60%, 100% { transform: none; opacity: .65; } 30% { transform: translateY(-2px); opacity: 1; } }
+.js .usage-ic .ua { stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; transition: stroke-dashoffset 800ms var(--ease), opacity 200ms; transition-delay: calc(450ms + var(--k, 0) * 150ms); }
+.js .usage-ic .ud circle { opacity: 0; transition: opacity 300ms var(--ease) calc(450ms + var(--k, 0) * 150ms); }
+.js .usage-ic .ud circle:nth-child(2) { transition-delay: calc(570ms + var(--k, 0) * 150ms); }
+.js .usage-ic .ud circle:nth-child(3) { transition-delay: calc(690ms + var(--k, 0) * 150ms); }
+.js .is-in .usage-ic .ua { stroke-dashoffset: 0; opacity: 1; }
+.js .is-in .usage-ic .ud circle { opacity: 1; }
 @keyframes usage-sheen { 0% { transform: translateX(-100%); } 40%, 100% { transform: translateX(100%); } }
 @keyframes usage-ping { 0% { box-shadow: 0 0 0 0 rgba(247, 144, 9, .55); } 70%, 100% { box-shadow: 0 0 0 6px rgba(247, 144, 9, 0); } }
 .auto-flow { display: grid; gap: 8px; }
@@ -825,9 +822,8 @@
   .chart .reveal-rect { transition: none; }
   .bars i, .bubble, .mock-toast, .price-amt, .paycard-state .badge, .tour-tab .desc { transition: none; }
   .bars i { transform: scaleY(var(--h, .5)); }
-  .js .usage-bar i, .js .usage-flag, .js .usage-ic { transition: none; }
-  .js .usage-ic { opacity: 1; transform: none; }
-  .js .is-in .usage-bar i::after, .js .is-in .usage-flag::before, .js .is-in .ui-arrow, .js .is-in .ui-letter, .js .is-in .ui-dots circle { animation: none; }
+  .js .usage-bar i, .js .usage-flag, .js .usage-ic .ua, .js .usage-ic .ud circle { transition: none; }
+  .js .is-in .usage-bar i::after, .js .is-in .usage-flag::before { animation: none; }
   .caret { display: none; }
   .crown, .crown .spark, .tour-pane:not([hidden]), .faq details[open] .answer, .nav-sheet, .form-done, .compare .cgroup.open tr.row { animation: none; }
   .compare tr.group button [data-i], .est-details summary [data-i] { transition: none; }
