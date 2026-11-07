@@ -414,12 +414,29 @@
           <div class="panel pop" data-inview>
             <div class="panel-head"><h3>Revenue by week</h3><span class="kpi-delta up small">↑ 12.4%</span></div>
             <div class="panel-body">
-              <div class="bars" aria-hidden="true" style="height:140px">
+              <div class="bars" aria-hidden="true" style="height:112px">
                 <i style="--h:.35;--k:0"></i><i style="--h:.5;--k:1"></i><i style="--h:.42;--k:2"></i><i style="--h:.6;--k:3"></i><i style="--h:.55;--k:4"></i><i style="--h:.7;--k:5"></i><i style="--h:.64;--k:6"></i><i style="--h:.78;--k:7"></i><i style="--h:.72;--k:8"></i><i style="--h:.88;--k:9"></i><i class="hi" style="--h:1;--k:10"></i>
               </div>
-              <div class="meter-stack" style="margin-top:20px">
-                <div><div class="meter-row"><span>Cloud storage</span><span class="num">41 GB / 100 GB</span></div><div class="meter"><i style="width:41%"></i></div></div>
-                <div><div class="meter-row"><span>Campaign emails this month</span><span class="num">18,400 / 50,000</span></div><div class="meter"><i style="width:37%"></i></div></div>
+              <div class="usage" role="img" aria-label="Usage this month: cloud storage 41 GB of 100 GB, campaign emails 18,400 of 50,000, and texts 1,640 of 2,000, flagged as running low">
+                <div class="usage-head" aria-hidden="true"><b>Usage this month</b><span>Nov 1 – 30</span></div>
+                <div class="usage-item" style="--p:.41;--k:0" aria-hidden="true">
+                  <span class="usage-ic"><span data-i="cloud"></span></span>
+                  <div class="usage-row"><b>Cloud storage</b><span class="usage-pct"><span data-count="41">41</span>%</span></div>
+                  <div class="usage-bar"><i></i></div>
+                  <small class="usage-of"><span data-count="41">41</span> GB of 100 GB</small>
+                </div>
+                <div class="usage-item" style="--p:.368;--k:1" aria-hidden="true">
+                  <span class="usage-ic"><span data-i="mail"></span></span>
+                  <div class="usage-row"><b>Campaign emails</b><span class="usage-pct"><span data-count="37">37</span>%</span></div>
+                  <div class="usage-bar"><i></i></div>
+                  <small class="usage-of"><span data-count="18400">18,400</span> of 50,000</small>
+                </div>
+                <div class="usage-item warn" style="--p:.82;--k:2" aria-hidden="true">
+                  <span class="usage-ic"><span data-i="message"></span></span>
+                  <div class="usage-row"><b>Texts</b><span class="usage-flag">Running low</span><span class="usage-pct"><span data-count="82">82</span>%</span></div>
+                  <div class="usage-bar"><i></i></div>
+                  <small class="usage-of"><span data-count="1640">1,640</span> of 2,000</small>
+                </div>
               </div>
             </div>
           </div>
